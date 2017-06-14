@@ -20,16 +20,29 @@ def importData(login_file, data_file, schema_file):
 	db.commit()
 	
 	#read in schema 
-	readSchemaFile(schema_file)
+	schema = readSchemaFile(schema_file)
+	stmt = "create table DATA ( "
+	for i in range(0,length(schema)-1)
+		stmt = stmt + schema + ","
+	stmt = stmt + schema + ");"
+	print stmt
 	#create new data table
 	#add new records
 	db.close()
 
+#method to read schema file 
+#Preconditions
+# * schema_file - a text file containing the MySQL schema for the table
+#	Assumptions: column_name data_type
+#	Assumptions: On separate lines, the file contains the MySQL schema for creation of the DATA table
+#Postconditions: Returns list object with 
 def readSchemaFile(schema_file):
 	f = open(schema_file, 'r')
-	schema = list(f)
-	schema.strip('\n')
-	print schema
+	schema = []
+	for line in f:
+		schema.append(line.strip("\n"))
+	f.close()
+	return schema
 
 #method to connect the MySQL database
 #Preconditions:
