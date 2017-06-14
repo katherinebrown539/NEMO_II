@@ -17,13 +17,19 @@ def importData(login_file, data_file, schema_file):
 	cursor = db.cursor()
 	#delete if exists DATA
 	cursor.execute("drop table if exists DATA;")
-	cursor.execute("create table DATA(num INTEGER);")
 	db.commit()
 	
 	#read in schema 
+	readSchemaFile(schema_file)
 	#create new data table
 	#add new records
 	db.close()
+
+def readSchemaFile(schema_file):
+	f = open(schema_file, 'r')
+	schema = list(f)
+	print schema
+
 #method to connect the MySQL database
 #Preconditions:
 # * login_file - a text file containing the login and database information
@@ -36,7 +42,7 @@ def connectToDatabase(login_file):
 	user_ = fileio.readline().strip('\n')
 	passw_ = fileio.readline().strip('\n')
 	database_ = fileio.readline().strip('\n')
-
+	fileio.close()
 
 	db = MySQLdb.connect(host = host_, port = int(port_), user = user_, passwd = passw_, db = database_)
 	return db
