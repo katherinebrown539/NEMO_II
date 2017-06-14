@@ -27,18 +27,36 @@ def importData(login_file, data_file, schema_file):
 		stmt = stmt + schema.pop() + ", "
 	
 	stmt = stmt + schema.pop() + " );"
+	#create new data table
 	cursor.execute(stmt);
 	db.commit()
-	#create new data table
+	
 	#add new records
+	data = readDataFile(data_file)
+	while len(data) > 0:
+		stmt = "insert into DATA values ()"
+		curr = data.pop()
+		for i in range(0, len(curr)-1):
+			stmt = stmt + "%s, "
+		stmt = stmt + "%s )"
+		cursor.execute(stmt, curr)
+	db.commit()
+	#close the database
 	db.close()
 
+def readDataFile(data_file):
+	f = open(data_file, 'r')
+	data = []
+	for line in f:
+		data.append(f.readline().split())
+	return data
+	
 #method to read schema file 
 #Preconditions
 # * schema_file - a text file containing the MySQL schema for the table
 #	Assumptions: column_name data_type
 #	Assumptions: On separate lines, the file contains the MySQL schema for creation of the DATA table
-#Postconditions: Returns list object with 
+#Postconditions: Returns list object with schema
 def readSchemaFile(schema_file):
 	f = open(schema_file, 'r')
 	schema = []
