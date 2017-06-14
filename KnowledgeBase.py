@@ -68,12 +68,12 @@ class KnowledgeBase:
 		schema.reverse()
 		return schema
 
-	#method to connect the MySQL database
+	#Constructor
 	#Preconditions:
 	# * login_file - a text file containing the login and database information
 	#	Assumptions: On separate lines, the file must contain HOST, PORT, MySQL USER NAME, PASSWORD, DATABASE	
-	#Postconditions: Returns the connection to the database
-	def __init__(login_file):
+	#Postconditions: Connects to database
+	def __init__(self, login_file):
 		fileio = open(login_file, 'r')
 		self.HOST = fileio.readline().strip('\n')
 		self.PORT = int(fileio.readline().strip('\n'))
