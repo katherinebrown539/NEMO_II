@@ -37,7 +37,7 @@ def importData(login_file, data_file, schema_file):
 		print line
 		stmt = "insert into DATA values ( "
 		curr = tuple(line.split())
-		print tuple
+		print curr
 		for i in range(0, len(curr)):
 			stmt = stmt + "%s, "
 		stmt = stmt + "%s )"
