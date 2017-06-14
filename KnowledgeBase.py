@@ -26,7 +26,7 @@ def importData(login_file, data_file, schema_file):
 	while len(schema) > 1:
 		stmt = stmt + schema.pop() + ","
 	
-	stmt = stmt + schema + ");"
+	stmt = stmt + schema.pop() + ");"
 	print stmt
 	#create new data table
 	#add new records
