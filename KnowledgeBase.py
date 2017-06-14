@@ -39,7 +39,7 @@ def importData(login_file, data_file, schema_file):
 		curr_ = line.split(',')
 		
 		for i in range(0,len(curr_)):
-			curr_[i] = strip(curr_[i])
+			curr_[i] = curr_[i].strip(',')
 
 		curr = tuple(curr_)
 		print curr
