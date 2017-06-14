@@ -36,12 +36,12 @@ def importData(login_file, data_file, schema_file):
 	for line in f:
 		print line
 		stmt = "insert into DATA values ( "
-		curr = tuple(line.split(','))
+		curr = tuple(line.split(',').strip())
 		print curr
 		for i in range(0, len(curr)):
 			stmt = stmt + "%s, "
 		stmt = stmt + "%s )"
-		print stmt
+		print stmt % curr
 		cursor.execute(stmt, curr)
 	db.commit()
 	#close the database
