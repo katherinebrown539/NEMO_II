@@ -34,7 +34,7 @@ def importData(login_file, data_file, schema_file):
 	#add new records
 	data = readDataFile(data_file)
 	while len(data) > 0:
-		stmt = "insert into DATA values ()"
+		stmt = "insert into DATA values ( "
 		curr = data.pop()
 		print curr
 		for i in range(0, len(curr)-1):
