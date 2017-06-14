@@ -10,11 +10,24 @@ import sys
 #				 The first value for the line is the value to classify
 #				 The remaining lines are the attributes
 # * schema_file - a text file containing the MySQL schema for the table
+#	Assumptions: column_name data_type
 #	Assumptions: On separate lines, the file contains the MySQL schema for creation of the DATA table
 def importData(login_file, data_file, schema_file):
 	cursor = connectToDatabase(login_file)
 	print cursor
+	#delete if exists DATA
+	cursor.execute("delete if exists DATA")
+	cursor.commit()
 	
+	#read in schema 
+	#create new data table
+	#add new records
+	cursor.close()
+#method to connect the MySQL database
+#Preconditions:
+# * login_file - a text file containing the login and database information
+#	Assumptions: On separate lines, the file must contain HOST, PORT, MySQL USER NAME, PASSWORD, DATABASE	
+#Postconditions: Returns the cursor to the database
 def connectToDatabase(login_file):
 	fileio = open(login_file, 'r')
 	host_ = fileio.readline().strip('\n')
