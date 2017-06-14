@@ -17,6 +17,7 @@ def importData(login_file, data_file, schema_file):
 	cursor = db.cursor()
 	#delete if exists DATA
 	cursor.execute("drop table if exists DATA;")
+	cursor.execute("create table DATA(num INTEGER);")
 	db.commit()
 	
 	#read in schema 
