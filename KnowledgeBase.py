@@ -88,7 +88,6 @@ class KnowledgeBase:
 	def __del__(self):
 		self.db.commit()
 		self.db.close()
-		self.db.commit()
 		
 def main():
 	kb = KnowledgeBase("config/login_file.txt")
