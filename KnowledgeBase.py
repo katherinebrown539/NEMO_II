@@ -5,8 +5,7 @@ import sys
 class KnowledgeBase:
 	#method to import data into the MySQL server
 	#Preconditions:
-	# * login_file - a text file containing the login and database information
-	#	Assumptions: On separate lines, the file must contain HOST, PORT, MySQL USER NAME, PASSWORD, DATABASE
+	# * KnowledgeBase object is created with connection to db established
 	# * data_file - a text file containing the data to be added to the databases
 	#	Assumptions: The file is one comma-delimited record per line.
 	#				 The first value for the line is the value to classify
@@ -51,7 +50,8 @@ class KnowledgeBase:
 			self.cursor.execute(stmt, curr)
 		self.db.commit()
 		#close the database
-		self.db.close()
+		
+		f.close()
 		
 	#method to read schema file 
 	#Preconditions
@@ -84,6 +84,11 @@ class KnowledgeBase:
 
 		self.db = MySQLdb.connect(host = self.HOST, port = self.PORT, user = self.USER, passwd = self.PASSWD, db = self.DATABASE)
 		self.cursor = self.db.cursor()
+		
+	def __del__(self):
+		self.db.commit()
+		self.db.close()
+		self.db.commit()
 		
 def main():
 	kb = KnowledgeBase("config/login_file.txt")
