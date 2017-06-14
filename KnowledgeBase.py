@@ -22,7 +22,11 @@ def importData(login_file, data_file, schema_file):
 	#read in schema 
 	schema = readSchemaFile(schema_file)
 	stmt = "create table DATA ( "
+<<<<<<< HEAD
 	for i in range(0,length(schema)-1):
+=======
+	for i in range(0,len(schema)-1):
+>>>>>>> bd4e8ecbf0e0fd7dc810766e394dbbbc7023a0c1
 		stmt = stmt + schema + ","
 	stmt = stmt + schema + ");"
 	print stmt
