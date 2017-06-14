@@ -48,7 +48,7 @@ def readDataFile(data_file):
 	f = open(data_file, 'r')
 	data = []
 	for line in f:
-		data.append(f.readline().split())
+		data.append(line.split())
 	return data
 	
 #method to read schema file 
