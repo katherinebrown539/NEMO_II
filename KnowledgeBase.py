@@ -36,9 +36,12 @@ def importData(login_file, data_file, schema_file):
 	for line in f:
 		print line
 		stmt = "insert into DATA values ( "
-		curr = tuple(line.split(','))
-		for i in curr:
-			i = i.split('\n')
+		curr_ = line.split(',')
+		
+		for i in range(0,len(curr_)):
+			curr_[i] = strip(curr_[i])
+
+		curr = tuple(curr_)
 		print curr
 		for i in range(0, len(curr)):
 			stmt = stmt + "%s, "
