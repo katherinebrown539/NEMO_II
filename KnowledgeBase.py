@@ -43,6 +43,7 @@ def importData(login_file, data_file, schema_file):
 
 		curr = tuple(curr_)
 		print curr
+		print len(curr)
 		for i in range(0, len(curr)):
 			stmt = stmt + "%s, "
 		stmt = stmt + "%s )"
