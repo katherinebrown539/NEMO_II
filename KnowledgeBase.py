@@ -27,7 +27,8 @@ def importData(login_file, data_file, schema_file):
 		stmt = stmt + schema.pop() + ", "
 	
 	stmt = stmt + schema.pop() + " );"
-	print stmt
+	cursor.execute(stmt);
+	db.commit()
 	#create new data table
 	#add new records
 	db.close()
