@@ -28,7 +28,7 @@ def connectToDatabase(login_file):
 	return cursor
 	
 def main():
-	importData("config/login_template.txt", "data/SPECT.data", "data/SPECT.schema")
+	importData("config/login_file.txt", "data/SPECT.data", "data/SPECT.schema")
 
 if __name__ == "__main__":
 	main()
