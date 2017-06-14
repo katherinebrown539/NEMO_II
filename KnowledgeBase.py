@@ -17,13 +17,14 @@ def importData(login_file, data_file, schema_file):
 	
 def connectToDatabase(login_file):
 	fileio = open(login_file, 'r')
-	host = fileio.readline()
-	port = int(fileio.readline())
-	user = fileio.readline()
-	passw = fileio.readline()
-	database = fileio.readline()
+	host_ = fileio.readline().strip('\n')
+	port_ = fileio.readline().strip('\n')
+	user_ = fileio.readline().strip('\n')
+	passw_ = fileio.readline().strip('\n')
+	database_ = fileio.readline().strip('\n')
 
-	db = MySQLdb.connect(host, port, user, passw, database)
+
+	db = MySQLdb.connect(host = host_, port = int(port_), user = user_, passwd = passw_, db = database_)
 	cursor =  db.cursor()
 	return cursor
 	
