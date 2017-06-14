@@ -45,6 +45,7 @@ def readSchemaFile(schema_file):
 	for line in f:
 		schema.append(line.strip("\n"))
 	f.close()
+	schema.reverse()
 	return schema
 
 #method to connect the MySQL database
