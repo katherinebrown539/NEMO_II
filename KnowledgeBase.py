@@ -85,10 +85,10 @@ class KnowledgeBase:
 		self.db = MySQLdb.connect(host = self.HOST, port = self.PORT, user = self.USER, passwd = self.PASSWD, db = self.DATABASE)
 		self.cursor = self.db.cursor()
 		
-	def main():
-		kb = KnowledgeBase("config/login_file.txt")
-		kb.importData("data/SPECT.data", "data/SPECT.schema")
-		#importData("config/login_file.txt", "data/SPECTF.data", "data/SPECTF.schema")
+def main():
+	kb = KnowledgeBase("config/login_file.txt")
+	kb.importData("data/SPECT.data", "data/SPECT.schema")
+	#importData("config/login_file.txt", "data/SPECTF.data", "data/SPECTF.schema")
 
-	if __name__ == "__main__":
-		main()
+if __name__ == "__main__":
+	main()
