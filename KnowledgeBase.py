@@ -16,7 +16,7 @@ def importData(login_file, data_file, schema_file):
 	cursor = connectToDatabase(login_file)
 	print cursor
 	#delete if exists DATA
-	cursor.execute("delete if exists DATA")
+	cursor.execute("drop table if exists DATA;")
 	cursor.commit()
 	
 	#read in schema 
