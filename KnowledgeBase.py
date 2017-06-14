@@ -17,7 +17,7 @@ def importData(login_file, data_file, schema_file):
 	
 def connectToDatabase(login_file):
 	fileio = open(login_file, 'r')
-	host = fileio.readline()
+	host = int(fileio.readline())
 	port = fileio.readline()
 	user = fileio.readline()
 	passw = fileio.readline()
