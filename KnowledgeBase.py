@@ -32,12 +32,13 @@ def importData(login_file, data_file, schema_file):
 	db.commit()
 	
 	#add new records
-	data = readDataFile(data_file)
-	while len(data) > 0:
+	f = open(data_file, 'r')
+	for line in f:
+		print line
 		stmt = "insert into DATA values ( "
-		curr = data.pop()
-		print curr
-		for i in range(0, len(curr)-1):
+		curr = tuple(line.split())
+		print tuple
+		for i in range(0, len(curr)):
 			stmt = stmt + "%s, "
 		stmt = stmt + "%s )"
 		print stmt
@@ -45,13 +46,6 @@ def importData(login_file, data_file, schema_file):
 	db.commit()
 	#close the database
 	db.close()
-
-def readDataFile(data_file):
-	f = open(data_file, 'r')
-	data = []
-	for line in f:
-		data.append(line.split())
-	return data
 	
 #method to read schema file 
 #Preconditions
