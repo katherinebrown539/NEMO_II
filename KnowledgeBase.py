@@ -28,6 +28,7 @@ def importData(login_file, data_file, schema_file):
 def readSchemaFile(schema_file):
 	f = open(schema_file, 'r')
 	schema = list(f)
+	schema.strip('\n')
 	print schema
 
 #method to connect the MySQL database
