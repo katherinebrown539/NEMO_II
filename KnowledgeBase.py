@@ -36,9 +36,11 @@ def importData(login_file, data_file, schema_file):
 	while len(data) > 0:
 		stmt = "insert into DATA values ()"
 		curr = data.pop()
+		print curr
 		for i in range(0, len(curr)-1):
 			stmt = stmt + "%s, "
 		stmt = stmt + "%s )"
+		print stmt
 		cursor.execute(stmt, curr)
 	db.commit()
 	#close the database
