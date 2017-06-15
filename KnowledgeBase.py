@@ -19,13 +19,13 @@ class KnowledgeBase:
 		#db.commit()
 		
 		#read in schema 
-		schema = self.readSchemaFile(schema_file)
+		#schema = self.readSchemaFile(schema_file)
 		stmt = "create table DATA ( "
 
-		while len(schema) > 1:
-			stmt = stmt + schema.pop() + ", "
+		while len(self.schema) > 1:
+			stmt = stmt + self.schema.pop() + ", "
 		
-		stmt = stmt + schema.pop() + " );"
+		stmt = stmt + self.schema.pop() + " );"
 		#create new data table
 		self.cursor.execute(stmt);
 		self.db.commit()
@@ -61,12 +61,12 @@ class KnowledgeBase:
 	#Postconditions: Returns list object with schema
 	def readSchemaFile(self, schema_file):
 		f = open(schema_file, 'r')
-		schema = []
+		self.schema = []
 		for line in f:
-			schema.append(line.strip("\n"))
+			self.schema.append(line.strip("\n"))
 		f.close()
 		schema.reverse()
-		return schema
+		#return schema
 
 	#Constructor
 	#Preconditions:
