@@ -22,7 +22,7 @@ class ML_Controller:
 	# * A knowledge base has been set up and read data
 	#Postconditions: 
 	# * Data will be imported from the 
-	def __init__(kb):
+	def __init__(self, kb):
 		cols = ",".join(kb.X)
 		stmt = "select " + cols + " from DATA;"
 		print stmt
