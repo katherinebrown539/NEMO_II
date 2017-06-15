@@ -1,6 +1,23 @@
 import MySQLdb
 import MySQLdb.cursors
 import sys
+##############################################################################################################
+# KnowledgeBase class																						 #
+# Prototype KnowledgeBase for NEMO																			 #
+##############################################################################################################
+# ****** INSTANCE VARIABLES ******                                                                           #
+# HOST     -     host for the database (typically localhost), STRING                                         #
+# PORT     -     Port number for database, MUST BE AN INTEGER!!                                              #
+# USER     -     User name for database, STRING                                                              #
+# PASSWD   -     Password for database, STRING                                                               #
+# DATABASE -     Database name, STRING                                                                       #
+# db       -     object connected to the database, DATABASE CONNECTION OBJECT                                #
+# cursor   -     cursor that executes MySQL commands, CURSOR OBJECT                                          #
+# X        -     attribute names, LIST of STRINGS                                                            #
+# Y        -     target name, SINGLETONE LIST OF STRINGS                                                     # 
+# schema   -     list containing MySQL compatible schema, format: ATTR_NAME ATTR_TYPE, LIST OF STRINGS       #
+#                                                                                                            #
+###############################################################################################################
 
 class KnowledgeBase:
 	#method to import data into the MySQL server
@@ -61,13 +78,26 @@ class KnowledgeBase:
 	#Postconditions: Returns list object with schema
 	def readSchemaFile(self, schema_file):
 		f = open(schema_file, 'r')
-		self.schema = []
+		self.schema = []		
 		for line in f:
 			self.schema.append(line.strip("\n"))
 		f.close()
 		schema.reverse()
 		#return schema
 
+	#method to get a list of names from the attributes and targets 
+	#Preconditions:
+	# * schema has already been read from file (ie readSchemaFile has already been called)
+	#Postconditions: self.X has names of the attributes, self.Y has the names of the target
+	def getXYTokens(self):
+		self.X = []
+		self.Y = []
+		tokens = self.schema[1].split(' ')
+		self.Y.append(tokens[0])
+		for i in range(1,len(self.schema)):
+			tokens = self.schema[i].split(' ')
+			self.X.append(tokens[0])
+		
 	#Constructor
 	#Preconditions:
 	# * login_file - a text file containing the login and database information
