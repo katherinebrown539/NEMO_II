@@ -83,7 +83,7 @@ class KnowledgeBase:
 			self.schema.append(line.strip("\n"))
 		f.close()
 		self.schema.reverse()
-		getXYTokens()
+		self.getXYTokens()
 		#return schema
 
 	#method to get a list of names from the attributes and targets 
