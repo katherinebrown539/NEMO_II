@@ -39,7 +39,7 @@ class ML_Controller:
 		
 		stmt = "insert into AlgorithmResults values (%s,%s,%s,%s,%s,%s)"
 		self.kb.cursor.execute(stmt, results)
-		
+		self.kb.db.commit()
 		
 	def runNN(self):
 		random.seed()
