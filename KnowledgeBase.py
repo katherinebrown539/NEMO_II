@@ -36,7 +36,7 @@ class KnowledgeBase:
 		#db.commit()
 		
 		#read in schema 
-		#schema = self.readSchemaFile(schema_file)
+		self.readSchemaFile(schema_file)
 		stmt = "create table DATA ( "
 
 		while len(self.schema) > 1:
@@ -83,6 +83,7 @@ class KnowledgeBase:
 			self.schema.append(line.strip("\n"))
 		f.close()
 		schema.reverse()
+		getXYTokens()
 		#return schema
 
 	#method to get a list of names from the attributes and targets 
