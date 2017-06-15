@@ -40,7 +40,7 @@ class ML_Controller:
 		num_layers = random.randint(1,25)
 		layerslist = []
 		for i in range(0,num_layers):
-			layerslist.add(random.randint(1,100))
+			layerslist.append(random.randint(1,100))
 		algorithm_name = "NeuralNetwork" + str(tuple(layerslist))
 		print algorithm_name
 		accuracy,precision,recall,f1,cm = SciKit_Controller.NeuralNetwork(self.data, self.target, tuple(layerslist))
