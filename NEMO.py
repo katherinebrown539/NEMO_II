@@ -7,6 +7,7 @@ def main():
 	kb.importData("data/SPECT.data", "data/SPECT.schema")
 	#importData("config/login_file.txt", "data/SPECTF.data", "data/SPECTF.schema")
 	ml = ML_Controller(kb)
+	ml.runAlgorithm()
 	
 if __name__ == "__main__":
 	main()

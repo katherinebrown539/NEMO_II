@@ -4,17 +4,15 @@ import pandas
 from pandas import DataFrame
 import pandas.io.sql as psql
 import KnowledgeBase
+import SciKit_Controller
 
 ##############################################################################################################
 # ML-Controller class																					     #
 # SKLearn interface for NEMO																		 		 #
 ##############################################################################################################
-##############################################################################################################
-##############################################################################################################
-##############################################################################################################
-##############################################################################################################
-##############################################################################################################
-##############################################################################################################
+# ***** INSTANCE VARIABLES*****																				 #
+# data		-		attributes as retrieved from the DATA table 											 #
+# target	-		classes as retrieved from the the DATA table											 #
 ##############################################################################################################
 class ML_Controller:
 	#Constructor
@@ -26,10 +24,14 @@ class ML_Controller:
 	def __init__(self, kb):
 		cols = ",".join(kb.X)
 		stmt = "select " + cols + " from DATA;"
-		print stmt
+		#print stmt
 		self.data = pandas.read_sql_query(stmt, kb.db)
-		print self.data
+		#print self.data
 		stmt = "select " + kb.Y + " from DATA"
-		print stmt
+		#print stmt
 		self.target = pandas.read_sql_query(stmt, kb.db)
-		print self.target
+		#print self.target
+	
+	def runAlgorithm(self):
+		SciKit_Controller.NeuralNetwork(self.data, self.target, (30,30,30))
+		
