@@ -50,7 +50,7 @@ class KnowledgeBase:
 		#add new records
 		f = open(data_file, 'r')
 		for line in f:
-			print line
+			#print line
 			stmt = "insert into DATA values ( "
 			curr_ = line.split(',')
 			
@@ -58,12 +58,12 @@ class KnowledgeBase:
 				curr_[i] = curr_[i].strip('\n')
 
 			curr = tuple(curr_)
-			print curr
-			print len(curr)
+			#print curr
+			#print len(curr)
 			for i in range(0, len(curr)-1):
 				stmt = stmt + "%s, "
 			stmt = stmt + "%s )"
-			print stmt
+			#print stmt
 			self.cursor.execute(stmt, curr)
 		self.db.commit()
 		#close the database

@@ -28,6 +28,8 @@ class ML_Controller:
 		stmt = "select " + cols + " from DATA;"
 		print stmt
 		self.data = pandas.read_sql_query(stmt, kb.db)
+		print self.data
 		stmt = "select " + kb.Y + " from DATA"
 		print stmt
 		self.target = pandas.read_sql_query(stmt, kb.db)
+		print self.target
