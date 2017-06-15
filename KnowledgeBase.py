@@ -82,7 +82,7 @@ class KnowledgeBase:
 		for line in f:
 			self.schema.append(line.strip("\n"))
 		f.close()
-		schema.reverse()
+		self.schema.reverse()
 		getXYTokens()
 		#return schema
 
@@ -115,9 +115,9 @@ class KnowledgeBase:
 		self.db = MySQLdb.connect(host = self.HOST, port = self.PORT, user = self.USER, passwd = self.PASSWD, db = self.DATABASE)
 		self.cursor = self.db.cursor()
 		
-		# self.schema = None
-		# self.X = None
-		# self.Y = None
+		self.schema = None
+		self.X = None
+		self.Y = None
 	
 	#DESTRUCTOR
 	#commits all changes to database and closes the connection
