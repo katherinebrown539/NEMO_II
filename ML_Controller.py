@@ -26,7 +26,7 @@ class ML_Controller:
 		cols = ",".join(kb.X)
 		stmt = "select " + cols + " from DATA;"
 		print stmt
-		#self.data = read_sql_query(stmt, kb.db)
+		self.data = read_sql_query(stmt, kb.db)
 		stmt = "select " + kb.Y + " from DATA"
 		print stmt
-		#self.target = read_sql_query(stmt, kb.db)
+		self.target = read_sql_query(stmt, kb.db)
