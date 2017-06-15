@@ -1,7 +1,7 @@
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import classification_report,confusion_matrix
+from sklearn.metrics import classification_report,confusion_matrix, accuracy_score, precision_score, f1_score
 import pandas
 from pandas import DataFrame
 import pandas.io.sql as psql
@@ -29,9 +29,9 @@ def NeuralNetwork(x, y, layers=None):
 	print(confusion_matrix(y_test,predictions))
 	print(classification_report(y_test,predictions))
 	
-	accuracy = metrics.accuracy_score(y_test,predictions)
-	precision = metrics.precision_score(y_test,predictions)
-	recall = metrics.recall_score(y_test, predictions)
-	f1 = metrics.f1_score(y_test,predictions)
+	accuracy = accuracy_score(y_test,predictions)
+	precision = precision_score(y_test,predictions)
+	recall = recall_score(y_test, predictions)
+	f1 = f1_score(y_test,predictions)
 	cm = confusion_matrix(y_test,predictions)
 	return accuracy,precision,recall,f1,cm
