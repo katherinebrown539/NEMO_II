@@ -29,4 +29,4 @@ class ML_Controller:
 		self.data = read_sql_query(stmt, kb.db)
 		stmt = "select " + kb.Y + " from DATA"
 		print stmt
-		self.target = read_sql_query(stmt, kb.db)
+		self.target = pandas.read_sql_query(stmt, kb.db)
