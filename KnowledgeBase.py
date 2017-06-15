@@ -113,6 +113,10 @@ class KnowledgeBase:
 
 		self.db = MySQLdb.connect(host = self.HOST, port = self.PORT, user = self.USER, passwd = self.PASSWD, db = self.DATABASE)
 		self.cursor = self.db.cursor()
+		
+		self.schema = []
+		self.X = []
+		self.Y = None
 	
 	#DESTRUCTOR
 	#commits all changes to database and closes the connection
