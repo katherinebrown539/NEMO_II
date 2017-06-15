@@ -32,7 +32,8 @@ class ML_Controller:
 		#print stmt
 		self.target = pandas.read_sql_query(stmt, kb.db)
 		#print self.target
-	
+		self.kb = kb
+		
 	def runAlgorithm(self):
 		results = self.runNN()
 		
