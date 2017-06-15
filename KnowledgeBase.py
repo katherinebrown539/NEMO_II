@@ -14,7 +14,7 @@ import sys
 # db       -     object connected to the database, DATABASE CONNECTION OBJECT                                #
 # cursor   -     cursor that executes MySQL commands, CURSOR OBJECT                                          #
 # X        -     attribute names, LIST of STRINGS                                                            #
-# Y        -     target name, SINGLETONE LIST OF STRINGS                                                     # 
+# Y        -     target name, STRING					                                                     # 
 # schema   -     list containing MySQL compatible schema, format: ATTR_NAME ATTR_TYPE, LIST OF STRINGS       #
 #                                                                                                            #
 ###############################################################################################################
@@ -91,9 +91,8 @@ class KnowledgeBase:
 	#Postconditions: self.X has names of the attributes, self.Y has the names of the target
 	def getXYTokens(self):
 		self.X = []
-		self.Y = []
 		tokens = self.schema[1].split(' ')
-		self.Y.append(tokens[0])
+		self.Y = tokens[0]
 		for i in range(1,len(self.schema)):
 			tokens = self.schema[i].split(' ')
 			self.X.append(tokens[0])
@@ -120,11 +119,3 @@ class KnowledgeBase:
 	def __del__(self):
 		self.db.commit()
 		self.db.close()
-		
-def main():
-	kb = KnowledgeBase("config/login_file.txt")
-	kb.importData("data/SPECT.data", "data/SPECT.schema")
-	#importData("config/login_file.txt", "data/SPECTF.data", "data/SPECTF.schema")
-
-if __name__ == "__main__":
-	main()

@@ -1,5 +1,7 @@
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
+from pandas import DataFrame
+import pandas.io.sql as psql
 import KnowledgeBase
 
 ##############################################################################################################
@@ -21,4 +23,6 @@ class ML_Controller:
 	#Postconditions: 
 	# * Data will be imported from the 
 	def __init__(kb):
-		
+		cols = ",".join(kb.X)
+		stmt = "select " + cols + " from DATA;"
+		print stmt
