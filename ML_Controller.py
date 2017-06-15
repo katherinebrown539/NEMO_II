@@ -5,7 +5,7 @@ from pandas import DataFrame
 import pandas.io.sql as psql
 import KnowledgeBase
 import SciKit_Controller
-
+import random
 ##############################################################################################################
 # ML-Controller class																					     #
 # SKLearn interface for NEMO																		 		 #
@@ -33,5 +33,16 @@ class ML_Controller:
 		#print self.target
 	
 	def runAlgorithm(self):
-		SciKit_Controller.NeuralNetwork(self.data, self.target, (30,30,30))
+		self.runNN()
+		
+	def runNN(self):
+		random.seed()
+		num_layers = random.randint(1,25)
+		layerslist = []
+		for i in range(0,num_layers):
+			layerslist.add(random.randint(1,100))
+		algorithm_name = "NeuralNetwork" + str(tuple(layerslist))
+		print algorithm_name
+		accuracy,precision,recall,f1,cm = SciKit_Controller.NeuralNetwork(self.data, self.target, tuple(layerslist))
+		return algorithm_name,accuracy,precision,recall,f1,cm
 		

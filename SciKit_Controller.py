@@ -20,8 +20,18 @@ def NeuralNetwork(x, y, layers=None):
 	scaler.fit(X_train)
 	X_train = scaler.transform(X_train)
 	X_test = scaler.transform(X_test)
+	
 	mlp = MLPClassifier(hidden_layer_sizes=layers)
 	mlp.fit(X_train,y_train)
 	predictions = mlp.predict(X_test)
+	
+	
 	print(confusion_matrix(y_test,predictions))
 	print(classification_report(y_test,predictions))
+	
+	accuracy = metrics.accuracy_score(y_test,predictions)
+	precision = metrics.precision_score(y_test,predictions)
+	recall = metrics.recall_score(y_test, predictions)
+	f1 = metrics.f1_score(y_test,predictions)
+	cm = confusion_matrix(y_test,predictions)
+	return accuracy,precision,recall,f1,cm
