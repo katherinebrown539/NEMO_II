@@ -95,6 +95,7 @@ class KnowledgeBase:
 		for i in range(0,len(self.schema)-1):
 			tokens = self.schema[i].split(' ')
 			self.X.append(tokens[0])
+		self.X.reverse()
 		tokens = self.schema[len(self.schema)-1].split(' ')
 		self.Y = tokens[0]
 	#Constructor
