@@ -1,5 +1,5 @@
-import KnowledgeBase
-import ML_Controller
+from KnowledgeBase import KnowledgeBase
+from ML_Controller import ML_Controller
 
 		
 def main():
