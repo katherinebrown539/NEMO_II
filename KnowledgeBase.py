@@ -92,12 +92,11 @@ class KnowledgeBase:
 	#Postconditions: self.X has names of the attributes, self.Y has the names of the target
 	def getXYTokens(self):
 		self.X = []
-		tokens = self.schema[1].split(' ')
-		self.Y = tokens[0]
-		for i in range(1,len(self.schema)):
+		for i in range(0,len(self.schema)-1):
 			tokens = self.schema[i].split(' ')
 			self.X.append(tokens[0])
-		
+		tokens = self.schema[len(self.schema)-1].split(' ')
+		self.Y = tokens[0]
 	#Constructor
 	#Preconditions:
 	# * login_file - a text file containing the login and database information
