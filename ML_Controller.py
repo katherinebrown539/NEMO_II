@@ -13,6 +13,7 @@ import random
 # ***** INSTANCE VARIABLES*****																				 #
 # data		-		attributes as retrieved from the DATA table 											 #
 # target	-		classes as retrieved from the the DATA table											 #
+# kb		-		instance of knowledge base object														 #
 ##############################################################################################################
 class ML_Controller:
 	#Constructor
@@ -33,7 +34,11 @@ class ML_Controller:
 		#print self.target
 	
 	def runAlgorithm(self):
-		self.runNN()
+		results = self.runNN()
+		
+		stmt = "insert into AlgorithmResults values (%s,%s,%s,%s,%s,%s)"
+		self.kb.cursor.execute(stmt, results)
+		
 		
 	def runNN(self):
 		random.seed()
@@ -44,5 +49,6 @@ class ML_Controller:
 		algorithm_name = "NeuralNetwork" + str(tuple(layerslist))
 		print algorithm_name
 		accuracy,precision,recall,f1,cm = SciKit_Controller.NeuralNetwork(self.data, self.target, tuple(layerslist))
-		return algorithm_name,accuracy,precision,recall,f1,cm
+		to_return =  (algorithm_name,accuracy,precision,recall,f1,cm)
+		return to_return
 		
