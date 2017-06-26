@@ -7,9 +7,16 @@ from pandas import DataFrame
 import pandas.io.sql as psql
 import KnowledgeBase
 
-#NeuralNetworkController.py
 
 class NeuralNetworkController:
+
+	#Creates and processes a neural_network with defined architecture, or a random architecture
+	#Preconditions:
+	# * X - attributes as retrieved from the DATA table 
+	# * Y - classes as retrieved from the the DATA table
+	# * layers - architecture, may be none
+	#Postconditions: returns performance from the neural network
+	#NOTE: Code from kdnuggets
 	def __init__(self, x, y, layers=None):
 		self.algorithm_name = "Neural Network"
 		self.id = "ANN"
@@ -36,7 +43,7 @@ class NeuralNetworkController:
 			num_layers = random.randint(1,25)
 			self.layerslist = []
 			for i in range(0,num_layers):
-			self.layerslist.append(random.randint(1,100))
+				self.layerslist.append(random.randint(1,100))
 		else:
 			self.layerslist = layers
 			
