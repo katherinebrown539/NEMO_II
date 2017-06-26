@@ -55,7 +55,7 @@ class NeuralNetworkController:
 		
 		if layers is not None: #predefined architecture
 			self.layerslist = layers
-		else: self.layerslist = random.sample(xrange(1,100), size)
+		else: self.layerslist = self.generateRandomArchitecture(randint(1,10))
 		# else: #no predefined arch, maybe a size 
 			# if size is not None:
 				# self.layerslist = random.sample(xrange(1,20), size)
@@ -168,6 +168,12 @@ class NeuralNetworkController:
 	def testForConvergence(self, other): 
 		return other == self.layerslist
 		
-	#def optimizeLearningRate(self):
+	def generateRandomArchitecture(self, num):
+		to_return = []
+		random.seed()
+		for i in range(0, num):
+			to_return.append(random.randint(1,20))
+			
+		return to_return
 	
 	
