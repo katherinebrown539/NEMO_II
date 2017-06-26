@@ -98,7 +98,9 @@ class NeuralNetworkController:
 		new_layers_dec = []
 		for i in range(0, len(self.layerslist)):
 			curr = 1 - (percents[i]/100.0);
-			new_layers_dec.append(int(1 + (curr * self.layerslist[i])))
+			new_l = int(curr * self.layerslist[i]) - 1;
+			if new_l < 1: new_l = 1;
+			new_layers_dec.append(new_l)
 		
 		print "Decreased architecture: " + str(new_layers_dec)
 		
