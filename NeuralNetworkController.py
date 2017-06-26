@@ -121,11 +121,11 @@ class NeuralNetworkController:
 		print "Accuracy of increased model: " + str(increase_nn.accuracy)
 		print "Accuracy of decreased model: " + str(decrease_nn.accuracy)
 		
-		if(increase_nn.accuracy > self.accuracy and increase_nn.accuracy > decrease_nn.accuracy):
+		if(increase_nn.accuracy >= self.accuracy and increase_nn.accuracy >= decrease_nn.accuracy):
 			print "Increased Model wins"
 			print increase_nn
 			return increase_nn
-		if(decrease_nn.accuracy > self.accuracy and decrease_nn.accuracy > increase_nn.accuracy):
+		if(decrease_nn.accuracy >= self.accuracy and decrease_nn.accuracy >= increase_nn.accuracy):
 			print "Decreased Model wins"
 			print decrease_nn
 			return decrease_nn
@@ -133,7 +133,9 @@ class NeuralNetworkController:
 			print "Same model wins"
 			print self
 			return self
-		
+			
+	def testForConvergence(self, other): 
+		return other == self.layerslist
 		
 	#def optimizeLearningRate(self):
 	
