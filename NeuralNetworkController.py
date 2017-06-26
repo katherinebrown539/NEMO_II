@@ -82,7 +82,7 @@ class NeuralNetworkController:
 		return self.results
 	
 	def optimize(self):
-		self.optimizeNumberOfNodes()
+		return self.optimizeNumberOfNodes()
 	
 	def optimizeNumberOfNodes(self):
 		#pick random percentages for each layer, this varies shape
