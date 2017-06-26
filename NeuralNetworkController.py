@@ -19,7 +19,7 @@ class NeuralNetworkController:
 	#NOTE: Code from kdnuggets
 	def __init__(self,layers=None):
 		self.algorithm_name = "Neural Network"
-		self.id = "ANN"
+		self.algorithm_id = "ANN"
 		random.seed()
 		for i in range(1,10):
 			self.id = str(random.randint(1,9))
