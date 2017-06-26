@@ -54,7 +54,7 @@ class ML_Controller:
 	
 	def optimizeAlgorithm(self):
 		done = false
-		while !done:
+		while not done:
 			new_alg = self.algorithm.optimize()
 			done = self.algorithm.testForConvergence(new_alg.layerslist)
 			self.algorithm = new_alg
