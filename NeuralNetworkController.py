@@ -102,7 +102,7 @@ class NeuralNetworkController:
 			print "Larger Model wins"
 			print large_net
 			return large_net
-		if(small_net.accuracy >= self.accuracy and small_net.accuracy >= increase_nn.accuracy):
+		if(small_net.accuracy >= self.accuracy and small_net.accuracy >= large_net.accuracy):
 			print "Smaller Model wins"
 			print small_net
 			return small_net
