@@ -17,6 +17,6 @@ def main():
 	for i in range(0,10):
 	#while True:
 		ml.runAlgorithm()
-		ml.optimize()
+		ml.optimizeAlgorithm()
 if __name__ == "__main__":
 	main()
