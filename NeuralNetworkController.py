@@ -36,7 +36,8 @@ class NeuralNetworkController:
 		self.f1 = None
 		self.cm = None
 		self.layerslist = []
-		
+		self.x = x
+		self.y = y
 		
 	def createModel(self):
 		self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.x,self.y)
