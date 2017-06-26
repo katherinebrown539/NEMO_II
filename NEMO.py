@@ -15,7 +15,6 @@ def main():
     # pass
 	
 	ml.runAlgorithm()
-	for i in range(0,10):
-		ml.optimizeAlgorithm()
+	ml.optimizeAlgorithm()
 if __name__ == "__main__":
 	main()
