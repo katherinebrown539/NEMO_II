@@ -41,7 +41,7 @@ class NeuralNetworkController:
 		self.x = []
 		self.y = []
 		
-	def createModel(self, x, y,size = None, layers=None):
+	def createModel(self, x, y, layers=None, size = None,):
 		print "X length " + str(len(x))
 		print "Y length " + str(len(y))
 		self.x = x
@@ -53,17 +53,11 @@ class NeuralNetworkController:
 		self.X_train = scaler.transform(self.X_train)
 		self.X_test = scaler.transform(self.X_test)
 		
-		if size is not None: #there is a predefined size, not predefined architecture
-			if layers is None: #no predefined size or orchitecture
+		if layers is not None: #predefined architecture
+			self.layerslist = layers
+		else: #no predefined arch, maybe a size 
+			if size is not None:
 				self.layerslist = random.sample(xrange(1,20), size)
-			else: #no defined size, but defined architecture
-				self.layerslist = layers
-			self.layerslist = random.sample(xrange(1,20), size) #create random architecture of size size
-		else: #no predefined size, possibly predefined architecture
-			if layers is None: #no predefined size or orchitecture
-				self.layerslist = random.sample(xrange(1,20), random.randint(1,10))
-			else: #no defined size, but defined architecture
-				self.layerslist = layers
 				
 		print str(self.layerslist)
 		
@@ -102,8 +96,8 @@ class NeuralNetworkController:
 		
 		# small_net = NeuralNetworkController()
 		# large_net = NeuralNetworkController()
-		# small_net.createModel(self.x, self.y, small_net_sz)
-		# large_net.createModel(self.x, self.y, large_net_sz)
+		# small_net.createModel(self.x, self.y, None, small_net_sz)
+		# large_net.createModel(self.x, self.y, None, large_net_sz)
 		# small_net.runModel()
 		# large_net.runModel()
 		# small_net.optimizeNumberOfNodes()
