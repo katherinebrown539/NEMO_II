@@ -34,7 +34,7 @@ class ML_Controller:
 		self.target = pandas.read_sql_query(stmt, kb.db)
 		#print self.target
 		self.kb = kb
-		self.algorithm = NeuralNetworkController(kb.X, kb.Y)
+		self.algorithm = NeuralNetworkController.NeuralNetworkController(kb.X, kb.Y)
 		
 	def runAlgorithm(self):
 		
