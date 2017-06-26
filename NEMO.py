@@ -14,9 +14,8 @@ def main():
 	# except KeyboardInterrupt:
     # pass
 	
-	#for i in range(0,10):
-	#while True:
-	ml.runAlgorithm()
-	ml.optimizeAlgorithm()
+	for i in range(0,10):
+		ml.runAlgorithm()
+		ml.optimizeAlgorithm()
 if __name__ == "__main__":
 	main()

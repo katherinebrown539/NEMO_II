@@ -78,8 +78,8 @@ class NeuralNetworkController:
 		self.f1 = f1_score(self.y_test,predictions)
 		self.cm = confusion_matrix(self.y_test,predictions)
 		
-		to_return =  (self.algorithm_id, self.algorithm_name, self.accuracy, self.precision, self.recall, self.f1, self.cm)
-		return to_return
+		self.results =  (self.algorithm_id, self.algorithm_name, self.accuracy, self.precision, self.recall, self.f1, self.cm)
+		return self.results
 	
 	def optimize(self):
 		self.optimizeNumberOfNodes()
