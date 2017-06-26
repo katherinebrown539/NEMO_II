@@ -33,23 +33,17 @@ class ML_Controller:
 		self.target = pandas.read_sql_query(stmt, kb.db)
 		#print self.target
 		self.kb = kb
+		self.algorithm = NeuralNetworkController(kb.X, kb.Y)
 		
 	def runAlgorithm(self):
-		results = self.runNN()
 		
-		stmt = "insert into AlgorithmResults values (%s,%s,%s,%s,%s,%s)"
+		self.algorithm.createModel()
+		results = self.algorithm.runModel()
+		
+		stmt = "insert into AlgorithmResults(algorithm_id, algorithm_name, accuracy, prec, recall, f1, confusion_matrix) values (%s,%s,%s,%s,%s,%s,%s)"
 		self.kb.cursor.execute(stmt, results)
 		self.kb.db.commit()
 		
 	def runNN(self):
-		random.seed()
-		num_layers = random.randint(1,25)
-		layerslist = []
-		for i in range(0,num_layers):
-			layerslist.append(random.randint(1,100))
-		algorithm_name = "NeuralNetwork" + str(tuple(layerslist))
-		print algorithm_name
-		accuracy,precision,recall,f1,cm = SciKit_Controller.NeuralNetwork(self.data, self.target, tuple(layerslist))
-		to_return =  (algorithm_name,accuracy,precision,recall,f1,cm)
-		return to_return
+		algorithm
 		
