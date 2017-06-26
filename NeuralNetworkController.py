@@ -84,7 +84,7 @@ class NeuralNetworkController:
 		#pick random percentages for each layer, this varies shapes
 		random.seed()
 		percents = random.sample(xrange(1,100), len(self.layerslist))
-		
+		pritn "Percents: " + str(percents)
 		print "Current architecture: " + str(self.layerslist)
 		
 		#increase hidden layers by those percentages
