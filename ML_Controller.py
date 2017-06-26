@@ -47,6 +47,6 @@ class ML_Controller:
 		self.kb.cursor.execute(stmt, results)
 		self.kb.db.commit()
 		
-	def runNN(self):
-		algorithm
+	def optimizeAlgorithm(self):
+		self.algorithm.optimize()
 		

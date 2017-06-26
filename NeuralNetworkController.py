@@ -17,7 +17,7 @@ class NeuralNetworkController:
 	# * layers - architecture, may be none
 	#Postconditions: returns performance from the neural network
 	#NOTE: Code from kdnuggets
-	def __init__(self,layers=None):
+	def __init__(self):
 		self.algorithm_name = "Neural Network"
 		self.algorithm_id_abbr = "ANN"
 		self.id = ""
@@ -36,10 +36,10 @@ class NeuralNetworkController:
 		self.recall = None
 		self.f1 = None
 		self.cm = None
-		self.layerslist = layers
-
 		
-	def createModel(self, x, y):
+		self.layerslist = None
+		
+	def createModel(self, x, y,layers=None):
 		print "X length " + str(len(x))
 		print "Y length " + str(len(y))
 
@@ -50,12 +50,11 @@ class NeuralNetworkController:
 		self.X_train = scaler.transform(self.X_train)
 		self.X_test = scaler.transform(self.X_test)
 		
-		random.seed()
-		if self.layerslist is None:
-			num_layers = random.randint(1,10)
-			self.layerslist = []
-			for i in range(0,num_layers):
-				self.layerslist.append(random.randint(1,100))
+		if layers is None:
+			random.seed()
+			#creates a hidden architecture of up to 10 layers where each layer can have up to 10 nodes
+			self.layerslist = random.sample(xrange(1,20), random.randint(1,10))
+		
 		
 		print str(self.layerslist)
 		
@@ -77,4 +76,33 @@ class NeuralNetworkController:
 		
 		to_return =  (self.algorithm_id, self.algorithm_name, self.accuracy, self.precision, self.recall, self.f1, self.cm)
 		return to_return
+	
+	def optimize(self):
+		optimizeNumberOfNodes()
+	
+	def optimizeNumberOfNodes(self):
+		#pick random percentages for each layer, this varies shapes
+		random.seed()
+		percents = random.sample(xrange(1,100), len(self.layerslist))
 		
+		print "Current architecture: " + str(self.layerslist)
+		
+		#increase hidden layers by those percentages
+		new_layers = []
+		for i in range(0, len(self.layerslist))
+			curr = 1 + (percents[i]/100.0);
+			new_layers.append(int(curr * self.layerslist[i]))
+		
+		print "Increased architecture: " + str(new_layers)
+		#decrease hidden layers by those percentages
+		new_layers = []
+		for i in range(0, len(self.layerslist))
+			curr = percents[i]/100.0;
+			new_layers.append(int(curr * self.layerslist[i]))
+		
+		print "Decreased architecture: " + str(new_layers)
+		
+		
+	def optimizeLearningRate(self):
+	
+	
