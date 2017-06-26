@@ -2,7 +2,7 @@ use NEMO_KB;
 
 drop table if exists AlgorithmResults;
 create table AlgorithmResults(
-	algorithm_id varchar(48),
+	algorithm_id varchar(255),
 	algorithm_name varchar(255), 
 	accuracy double, 
 	prec double, 
