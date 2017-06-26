@@ -95,8 +95,8 @@ class NeuralNetworkController:
 		large_net.createModel(self.x, self.y, large_net_sz)
 		small_net.runModel()
 		large_net.runModel()
-		small_net.optimizeModel()
-		large_net.optimizeModel()
+		small_net.optimizeNumberOfNodes()
+		large_net.optimizeNumberOfNodes()
 		
 		if(large_net.accuracy >= self.accuracy and large_net.accuracy >= small_net.accuracy):
 			print "Larger Model wins"
