@@ -38,11 +38,14 @@ class NeuralNetworkController:
 		self.cm = None
 		
 		self.layerslist = None
+		self.x = []
+		self.y = []
 		
 	def createModel(self, x, y,layers=None):
 		print "X length " + str(len(x))
 		print "Y length " + str(len(y))
-
+		self.x = x
+		self.y = y
 		self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(x,y)
 		
 		scaler = StandardScaler()
@@ -61,7 +64,8 @@ class NeuralNetworkController:
 		self.algorithm_id = self.algorithm_id_abbr + self.id +  "( " + str(self.layerslist).strip('[]') + ")"	
 		self.mlp = MLPClassifier(hidden_layer_sizes=self.layerslist)
 		self.mlp.fit(self.X_train, self.y_train)
-		
+	
+	
 	def runModel(self):
 		predictions = self.mlp.predict(self.X_test)	
 		
@@ -81,7 +85,7 @@ class NeuralNetworkController:
 		self.optimizeNumberOfNodes()
 	
 	def optimizeNumberOfNodes(self):
-		#pick random percentages for each layer, this varies shapes
+		#pick random percentages for each layer, this varies shape
 		random.seed()
 		percents = random.sample(xrange(1,100), len(self.layerslist))
 		print "Percents: " + str(percents)
@@ -92,7 +96,7 @@ class NeuralNetworkController:
 		for i in range(0, len(self.layerslist)):
 			curr = 1 + (percents[i]/100.0);
 			new_layers_inc.append(int(1 + (curr * self.layerslist[i])))
-		
+				
 		print "Increased architecture: " + str(new_layers_inc)
 		#decrease hidden layers by those percentages
 		new_layers_dec = []
@@ -103,6 +107,21 @@ class NeuralNetworkController:
 			new_layers_dec.append(new_l)
 		
 		print "Decreased architecture: " + str(new_layers_dec)
+		
+		#create new models, and compare
+		increase_nn = NeuralNetworkController()
+		increase_nn.createModel(self.x, self.y, new_layers_inc)
+		increase_nn.runModel()
+		
+		decrease_nn = NeuralNetworkController()
+		decrease_nn.createModel(self.x, self.y, new_layers_dec)
+		decrease_nn.runModel()
+		
+		if(increase_nn.accuracy > self.accuracy and increase_nn.accuracy > decrease_nn.accuracy):
+			return increase_nn
+		if(decrease_nn.accuracy > self.accuracy and decrease_nn.accuracy > increase_nn.accuracy):
+			return decrease_nn
+		else return self
 		
 		
 	#def optimizeLearningRate(self):
