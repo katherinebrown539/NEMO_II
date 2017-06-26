@@ -117,6 +117,10 @@ class NeuralNetworkController:
 		decrease_nn.createModel(self.x, self.y, new_layers_dec)
 		decrease_nn.runModel()
 		
+		print "Accuracy of current model: " + str(self.accuracy)
+		print "Accuracy of increased model: " + str(increase_nn.accuracy)
+		print "Accuracy of decreased model: " + str(decrease_nn.accuracy)
+		
 		if(increase_nn.accuracy > self.accuracy and increase_nn.accuracy > decrease_nn.accuracy):
 			print "Increased Model wins"
 			return increase_nn
