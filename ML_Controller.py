@@ -29,10 +29,12 @@ class ML_Controller:
 		#print stmt
 		self.data = pandas.read_sql_query(stmt, kb.db)
 		#print self.data
+		print "data length = " + str(len(self.data))
 		stmt = "select " + kb.Y + " from DATA"
 		#print stmt
 		self.target = pandas.read_sql_query(stmt, kb.db)
 		#print self.target
+		print "target length = " + str(len(self.target))
 		self.kb = kb
 		self.algorithm = NeuralNetworkController.NeuralNetworkController()
 		
