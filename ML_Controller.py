@@ -34,11 +34,11 @@ class ML_Controller:
 		self.target = pandas.read_sql_query(stmt, kb.db)
 		#print self.target
 		self.kb = kb
-		self.algorithm = NeuralNetworkController.NeuralNetworkController(kb.X, kb.Y)
+		self.algorithm = NeuralNetworkController.NeuralNetworkController()
 		
 	def runAlgorithm(self):
 		
-		self.algorithm.createModel()
+		self.algorithm.createModel(kb)
 		results = self.algorithm.runModel()
 		
 		stmt = "insert into AlgorithmResults(algorithm_id, algorithm_name, accuracy, prec, recall, f1, confusion_matrix) values (%s,%s,%s,%s,%s,%s,%s)"

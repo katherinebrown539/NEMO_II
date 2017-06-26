@@ -17,7 +17,7 @@ class NeuralNetworkController:
 	# * layers - architecture, may be none
 	#Postconditions: returns performance from the neural network
 	#NOTE: Code from kdnuggets
-	def __init__(self, x, y, layers=None):
+	def __init__(self, layers=None):
 		self.algorithm_name = "Neural Network"
 		self.id = "ANN"
 		random.seed()
@@ -36,11 +36,10 @@ class NeuralNetworkController:
 		self.f1 = None
 		self.cm = None
 		self.layerslist = []
-		self.x = x
-		self.y = y
+
 		
-	def createModel(self):
-		self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.x,self.y)
+	def createModel(self, kb):
+		self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(kb.x,kb.y)
 		scaler = StandardScaler()
 		scaler.fit(self.X_train)
 		self.X_train = scaler.transform(X_train)
