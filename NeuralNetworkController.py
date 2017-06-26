@@ -56,7 +56,7 @@ class NeuralNetworkController:
 			for i in range(0,num_layers):
 				self.layerslist.append(random.randint(1,100))
 
-			
+		self.algorithm_id = self.algorithm_id + "( " + str(layers).strip('[]') + ")"		
 		self.mlp = MLPClassifier(hidden_layer_sizes=self.layerslist)
 		self.mlp.fit(self.X_train, self.y_train)
 		
