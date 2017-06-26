@@ -55,7 +55,7 @@ class NeuralNetworkController:
 		
 		if layers is not None: #predefined architecture
 			self.layerslist = layers
-		else: self.layerslist = self.generateRandomArchitecture(randint(1,10))
+		else: self.layerslist = self.generateRandomArchitecture(random.randint(1,10))
 		# else: #no predefined arch, maybe a size 
 			# if size is not None:
 				# self.layerslist = random.sample(xrange(1,20), size)
