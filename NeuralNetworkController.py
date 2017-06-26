@@ -37,7 +37,8 @@ class NeuralNetworkController:
 		self.f1 = None
 		self.cm = None
 		
-		self.layerslist = layers
+		
+		self.layerslist = layers if layers is not None else None
 		self.x = []
 		self.y = []
 		
