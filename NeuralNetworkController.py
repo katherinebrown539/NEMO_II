@@ -91,8 +91,8 @@ class NeuralNetworkController:
 		
 		small_net = NeuralNetworkController()
 		large_net = NeuralNetworkController()
-		small_net.createModel()
-		large_net.createModel()
+		small_net.createModel(self.x, self.y, small_net_sz)
+		large_net.createModel(self.x, self.y, large_net_sz)
 		small_net.runModel()
 		large_net.runModel()
 		small_net.optimizeModel()
