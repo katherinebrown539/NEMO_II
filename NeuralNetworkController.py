@@ -91,14 +91,14 @@ class NeuralNetworkController:
 		new_layers_inc = []
 		for i in range(0, len(self.layerslist)):
 			curr = 1 + (percents[i]/100.0);
-			new_layers_inc.append(int(curr * self.layerslist[i]))
+			new_layers_inc.append(int(1 + (curr * self.layerslist[i])))
 		
 		print "Increased architecture: " + str(new_layers_inc)
 		#decrease hidden layers by those percentages
 		new_layers_dec = []
 		for i in range(0, len(self.layerslist)):
 			curr = percents[i]/100.0;
-			new_layers_dec.append(int(curr * self.layerslist[i]))
+			new_layers_dec.append(int(1 + (curr * self.layerslist[i])))
 		
 		print "Decreased architecture: " + str(new_layers_dec)
 		
