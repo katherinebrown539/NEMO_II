@@ -103,6 +103,6 @@ class NeuralNetworkController:
 		print "Decreased architecture: " + str(new_layers_dec)
 		
 		
-	def optimizeLearningRate(self):
+	#def optimizeLearningRate(self):
 	
 	
