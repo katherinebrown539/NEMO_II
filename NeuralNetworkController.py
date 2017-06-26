@@ -46,8 +46,8 @@ class NeuralNetworkController:
 		
 		scaler = StandardScaler()
 		scaler.fit(self.X_train)
-		self.X_train = scaler.transform(X_train)
-		self.X_test = scaler.transform(X_test)
+		self.X_train = scaler.transform(self.X_train)
+		self.X_test = scaler.transform(self.X_test)
 		
 		if layers is None:
 			random.seed()
