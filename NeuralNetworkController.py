@@ -38,7 +38,7 @@ class NeuralNetworkController:
 		self.cm = None
 		
 		
-		self.layerslist = layers if layers is not None else None
+		self.layerslist
 		self.x = []
 		self.y = []
 		
@@ -58,7 +58,7 @@ class NeuralNetworkController:
 			random.seed()
 			#creates a hidden architecture of up to 10 layers where each layer can have up to 10 nodes
 			self.layerslist = random.sample(xrange(1,20), random.randint(1,10))
-		
+		else: layerslist = layers
 		
 		print str(self.layerslist)
 		
