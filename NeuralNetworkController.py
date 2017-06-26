@@ -53,9 +53,12 @@ class NeuralNetworkController:
 		self.X_train = scaler.transform(self.X_train)
 		self.X_test = scaler.transform(self.X_test)
 		
+		if size is None:
+			size = random.randint(1,10)
+			
 		if layers is not None: #predefined architecture
 			self.layerslist = layers
-		else: self.layerslist = self.generateRandomArchitecture(random.randint(1,10))
+		else: self.layerslist = self.generateRandomArchitecture(size)
 		# else: #no predefined arch, maybe a size 
 			# if size is not None:
 				# self.layerslist = random.sample(xrange(1,20), size)
