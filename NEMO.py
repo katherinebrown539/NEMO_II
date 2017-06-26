@@ -9,9 +9,8 @@ def main():
 	ml = ML_Controller(kb)
 	
 	#for i in range(0,10):
-	#while True:
-	#	ml.runAlgorithm()
-	ml.runAlgorithm()
+	while True:
+		ml.runAlgorithm()
 	
 if __name__ == "__main__":
 	main()
