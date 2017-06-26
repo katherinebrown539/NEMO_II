@@ -121,7 +121,7 @@ class NeuralNetworkController:
 			return increase_nn
 		if(decrease_nn.accuracy > self.accuracy and decrease_nn.accuracy > increase_nn.accuracy):
 			return decrease_nn
-		else return self
+		else: return self
 		
 		
 	#def optimizeLearningRate(self):
