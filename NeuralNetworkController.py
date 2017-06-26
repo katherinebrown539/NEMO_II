@@ -20,10 +20,11 @@ class NeuralNetworkController:
 	def __init__(self,layers=None):
 		self.algorithm_name = "Neural Network"
 		self.algorithm_id = "ANN"
+		self.id = ""
 		random.seed()
 		for i in range(1,10):
-			self.algorithm_id = self.algorithm_id + str(random.randint(1,9))
-		self.algorithm_id = self.algorithm_id + "( " + str(layers).strip('[]') + ")"	
+			self.id = self.id + str(random.randint(1,9))
+		
 		
 		#initialize remaining instance variables
 		self.X_train = []
@@ -56,7 +57,7 @@ class NeuralNetworkController:
 			for i in range(0,num_layers):
 				self.layerslist.append(random.randint(1,100))
 
-		self.algorithm_id = self.algorithm_id + "( " + str(self.layerslist).strip('[]') + ")"		
+		self.algorithm_id = self.algorithm_id + self.id +  "( " + str(layers).strip('[]') + ")"	
 		self.mlp = MLPClassifier(hidden_layer_sizes=self.layerslist)
 		self.mlp.fit(self.X_train, self.y_train)
 		
