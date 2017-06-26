@@ -54,5 +54,5 @@ class ML_Controller:
 	
 	def optimizeAlgorithm(self):
 		self.algorithm = self.algorithm.optimize()
-		updateDatabase(self.algorithms.results)
+		self.updateDatabase(self.algorithms.results)
 		
