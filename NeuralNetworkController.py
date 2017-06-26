@@ -86,8 +86,8 @@ class NeuralNetworkController:
 	
 	def optimize(self):
 		self.optimizeNumberOfNodes()
-		small_net_sz = self.len(layerslist) - 1
-		large_net_sz = self.len(layerslist) + 1
+		small_net_sz = len(self.layerslist) - 1
+		large_net_sz = len(self.layerslist) + 1
 		
 		small_net = NeuralNetworkController()
 		large_net = NeuralNetworkController()
