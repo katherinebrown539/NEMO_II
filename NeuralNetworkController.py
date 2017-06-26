@@ -50,8 +50,8 @@ class NeuralNetworkController:
 		self.X_train = scaler.transform(self.X_train)
 		self.X_test = scaler.transform(self.X_test)
 		
+		random.seed()
 		if self.layerslist is None:
-			random.seed()
 			num_layers = random.randint(1,10)
 			self.layerslist = []
 			for i in range(0,num_layers):
