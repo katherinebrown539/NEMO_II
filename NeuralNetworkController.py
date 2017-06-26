@@ -53,15 +53,18 @@ class NeuralNetworkController:
 		self.X_train = scaler.transform(self.X_train)
 		self.X_test = scaler.transform(self.X_test)
 		
-		if size is None:
-			if layers is None:
-				random.seed()
-				#creates a hidden architecture of up to 10 layers where each layer can have up to 10 nodes
-				self.layerslist = random.sample(xrange(1,20), random.randint(1,10))
-			elif layers is not None:
+		if size is not None: #there is a predefined size, not predefined architecture
+			if layers is None: #no predefined size or orchitecture
 				self.layerslist = random.sample(xrange(1,20), size)
-			else: self.layerslist = layers
-		
+			else: #no defined size, but defined architecture
+				self.layerslist = layers
+			self.layerslist = random.sample(xrange(1,20), size) #create random architecture of size size
+		else: #no predefined size, possibly predefined architecture
+			if layers is None: #no predefined size or orchitecture
+				self.layerslist = random.sample(xrange(1,20), random.randint(1,10))
+			else: #no defined size, but defined architecture
+				self.layerslist = layers
+				
 		print str(self.layerslist)
 		
 		self.algorithm_id = self.algorithm_id_abbr + self.id +  "( " + str(self.layerslist).strip('[]') + ")"	
