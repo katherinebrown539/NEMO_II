@@ -6,7 +6,7 @@ import pandas
 from pandas import DataFrame
 import pandas.io.sql as psql
 import KnowledgeBase
-
+import random
 
 class NeuralNetworkController:
 
