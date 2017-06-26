@@ -41,7 +41,7 @@ class NeuralNetworkController:
 		self.x = []
 		self.y = []
 		
-	def createModel(self, x, y,layers=None):
+	def createModel(self, x, y,size = None, layers=None):
 		print "X length " + str(len(x))
 		print "Y length " + str(len(y))
 		self.x = x
@@ -53,11 +53,14 @@ class NeuralNetworkController:
 		self.X_train = scaler.transform(self.X_train)
 		self.X_test = scaler.transform(self.X_test)
 		
-		if layers is None:
-			random.seed()
-			#creates a hidden architecture of up to 10 layers where each layer can have up to 10 nodes
-			self.layerslist = random.sample(xrange(1,20), random.randint(1,10))
-		else: self.layerslist = layers
+		if size is None:
+			if layers is None:
+				random.seed()
+				#creates a hidden architecture of up to 10 layers where each layer can have up to 10 nodes
+				self.layerslist = random.sample(xrange(1,20), random.randint(1,10))
+			elif layers is not None:
+				self.layerslist = random.sample(xrange(1,20), size)
+			else: self.layerslist = layers
 		
 		print str(self.layerslist)
 		
@@ -82,7 +85,31 @@ class NeuralNetworkController:
 		return self.results
 	
 	def optimize(self):
-		return self.optimizeNumberOfNodes()
+		self.optimizeNumberOfNodes()
+		small_net_sz = self.len(layerslist) - 1
+		large_net_sz = self.len(layerslist) + 1
+		
+		small_net = NeuralNetworkController()
+		large_net = NeuralNetworkController()
+		small_net.createModel()
+		large_net.createModel()
+		small_net.runModel()
+		large_net.runModel()
+		small_net.optimizeModel()
+		large_net.optimizeModel()
+		
+		if(large_net.accuracy >= self.accuracy and large_net.accuracy >= small_net.accuracy):
+			print "Larger Model wins"
+			print large_net
+			return large_net
+		if(small_net.accuracy >= self.accuracy and small_net.accuracy >= increase_nn.accuracy):
+			print "Smaller Model wins"
+			print small_net
+			return small_net
+		else:
+			print "Same model wins"
+			print self
+			return self
 	
 	def optimizeNumberOfNodes(self):
 		#pick random percentages for each layer, this varies shape
