@@ -82,13 +82,14 @@ class NeuralNetworkController:
 		return self.results
 	
 	def optimize(self):
-	
+		bestModel = self
 		while True:
-			next = self.optimizeNumberOfNodes()
-			if self.testForConvergence(next.layerslist): 
+			next = bestModel.optimizeNumberOfNodes()
+			if bestModel.testForConvergence(next.layerslist): 
+				bestModel = self
 				break
 			else:
-				self = next
+				bestModel = next
 				
 		
 		# small_net_sz = len(self.layerslist) - 1
