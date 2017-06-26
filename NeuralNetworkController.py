@@ -23,7 +23,7 @@ class NeuralNetworkController:
 		random.seed()
 		for i in range(1,10):
 			self.id = str(random.randint(1,9))
-		self.id = "( " + str(layers.strip('[]')) + ")"	
+		self.id = "( " + str(layers).strip('[]') + ")"	
 		
 		#initialize remaining instance variables
 		self.X_train, self.X_test, self.y_train, self.y_test = None
