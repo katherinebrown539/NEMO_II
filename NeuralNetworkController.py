@@ -39,9 +39,10 @@ class NeuralNetworkController:
 
 		
 	def createModel(self, kb):
-		self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(kb.X,kb.Y)
 		print "X length " + len(kb.X)
 		print "Y length " + len(kb.Y)
+		self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(kb.X,kb.Y)
+		
 		scaler = StandardScaler()
 		scaler.fit(self.X_train)
 		self.X_train = scaler.transform(X_train)
