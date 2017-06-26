@@ -26,10 +26,10 @@ class NeuralNetworkController:
 		self.id = "( " + str(layers).strip('[]') + ")"	
 		
 		#initialize remaining instance variables
-		self.X_train = None
-		self.X_test = None
-		self.y_train = None
-		self.y_test = None
+		self.X_train = []
+		self.X_test = []
+		self.y_train = []
+		self.y_test = []
 		self.accuracy = None
 		self.precision = None
 		self.recall = None
