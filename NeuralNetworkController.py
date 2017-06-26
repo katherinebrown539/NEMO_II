@@ -58,7 +58,7 @@ class NeuralNetworkController:
 
 			
 		self.mlp = MLPClassifier(hidden_layer_sizes=self.layerslist)
-		mlp.fit(self.X_train, self.y_train)
+		self.mlp.fit(self.X_train, self.y_train)
 		
 	def runModel(self):
 		predictions = self.mlp.predict(self.X_test)	
