@@ -59,10 +59,7 @@ class NeuralNetworkController:
 		if layers is not None: #predefined architecture
 			self.layerslist = layers
 		else: self.layerslist = self.generateRandomArchitecture(size)
-		# else: #no predefined arch, maybe a size 
-			# if size is not None:
-				# self.layerslist = random.sample(xrange(1,20), size)
-				
+		
 		print str(self.layerslist)
 		
 		self.algorithm_id = self.algorithm_id_abbr + self.id +  "( " + str(self.layerslist).strip('[]') + ")"	
@@ -96,30 +93,30 @@ class NeuralNetworkController:
 				bestModel = next
 				
 		
-		# small_net_sz = len(self.layerslist) - 1
-		# large_net_sz = len(self.layerslist) + 1
+		small_net_sz = len(self.layerslist) - 1
+		large_net_sz = len(self.layerslist) + 1
 		
-		# small_net = NeuralNetworkController()
-		# large_net = NeuralNetworkController()
-		# small_net.createModel(self.x, self.y, None, small_net_sz)
-		# large_net.createModel(self.x, self.y, None, large_net_sz)
-		# small_net.runModel()
-		# large_net.runModel()
-		# small_net.optimizeNumberOfNodes()
-		# large_net.optimizeNumberOfNodes()
+		small_net = NeuralNetworkController()
+		large_net = NeuralNetworkController()
+		small_net.createModel(self.x, self.y, None, small_net_sz)
+		large_net.createModel(self.x, self.y, None, large_net_sz)
+		small_net.runModel()
+		large_net.runModel()
+		small_net.optimizeNumberOfNodes()
+		large_net.optimizeNumberOfNodes()
 		
-		# if(large_net.accuracy >= self.accuracy and large_net.accuracy >= small_net.accuracy):
-			# print "Larger Model wins"
-			# print large_net
-			# return large_net
-		# if(small_net.accuracy >= self.accuracy and small_net.accuracy >= large_net.accuracy):
-			# print "Smaller Model wins"
-			# print small_net
-			# return small_net
-		# else:
-			# print "Same model wins"
-			# print self
-			# return self
+		if(large_net.accuracy >= self.accuracy and large_net.accuracy >= small_net.accuracy):
+			print "Larger Model wins"
+			print large_net
+			return large_net
+		if(small_net.accuracy >= self.accuracy and small_net.accuracy >= large_net.accuracy):
+			print "Smaller Model wins"
+			print small_net
+			return small_net
+		else:
+			print "Same model wins"
+			print self
+			return self
 	
 	def optimizeNumberOfNodes(self):
 	
