@@ -155,10 +155,12 @@ class NeuralNetworkController:
 			if(increase_nn.accuracy >= self.accuracy and increase_nn.accuracy >= decrease_nn.accuracy):
 				print "Increased Model wins"
 				self = increase_nn
-			if(decrease_nn.accuracy >= self.accuracy and decrease_nn.accuracy >= increase_nn.accuracy):
+				continue
+			elif(decrease_nn.accuracy >= self.accuracy and decrease_nn.accuracy >= increase_nn.accuracy):
 				print "Decreased Model wins"
 				print decrease_nn
 				self = decrease_nn
+				continue
 			else:
 				print "Same model wins"
 				print self
