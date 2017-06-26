@@ -38,7 +38,7 @@ class ML_Controller:
 		
 	def runAlgorithm(self):
 		
-		self.algorithm.createModel(kb)
+		self.algorithm.createModel(self.kb)
 		results = self.algorithm.runModel()
 		
 		stmt = "insert into AlgorithmResults(algorithm_id, algorithm_name, accuracy, prec, recall, f1, confusion_matrix) values (%s,%s,%s,%s,%s,%s,%s)"
