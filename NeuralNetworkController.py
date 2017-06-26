@@ -89,6 +89,8 @@ class NeuralNetworkController:
 		while True:
 			next = self.optimizeNumberOfNodes()
 			if self.testForConvergence(next.layerslist): 
+				break
+			else:
 				self = next
 				
 		
