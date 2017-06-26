@@ -37,7 +37,7 @@ class NeuralNetworkController:
 		self.f1 = None
 		self.cm = None
 		
-		self.layerslist = None
+		self.layerslist = layers
 		self.x = []
 		self.y = []
 		
