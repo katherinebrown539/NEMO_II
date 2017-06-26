@@ -1,8 +1,3 @@
-from sklearn.model_selection import train_test_split
-from sklearn.neural_network import MLPClassifier
-import pandas
-from pandas import DataFrame
-import pandas.io.sql as psql
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
@@ -66,7 +61,7 @@ class NeuralNetworkController:
 		mlp.fit(self.X_train, self.y_train)
 		
 	def runModel(self):
-		predictions = mlp.predict(self.X_test)	
+		predictions = self.mlp.predict(self.X_test)	
 		
 		print(confusion_matrix(self.y_test,predictions))
 		print(classification_report(self.y_test,predictions))
