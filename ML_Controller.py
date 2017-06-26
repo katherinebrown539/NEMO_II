@@ -53,12 +53,5 @@ class ML_Controller:
 		self.kb.db.commit()
 	
 	def optimizeAlgorithm(self):
-		done = False
-		while not done:
-			new_alg = self.algorithm.optimize()
-			done = self.algorithm.testForConvergence(new_alg.layerslist)
-			self.algorithm = new_alg
-			self.updateDatabase(self.algorithm.results) #currently here for debugging
-		print self.algorithm
-		self.updateDatabase(self.algorithm.results)
+		self.optimize()
 		

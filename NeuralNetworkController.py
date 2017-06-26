@@ -86,6 +86,7 @@ class NeuralNetworkController:
 	
 	def optimize(self):
 		self.optimizeNumberOfNodes()
+		
 		small_net_sz = len(self.layerslist) - 1
 		large_net_sz = len(self.layerslist) + 1
 		
@@ -113,53 +114,55 @@ class NeuralNetworkController:
 	
 	def optimizeNumberOfNodes(self):
 		#pick random percentages for each layer, this varies shape
-		random.seed()
-		percents = random.sample(xrange(1,100), len(self.layerslist))
-		print "Percents: " + str(percents)
-		print "Current architecture: " + str(self.layerslist)
+		done = False
 		
-		#increase hidden layers by those percentages
-		new_layers_inc = []
-		for i in range(0, len(self.layerslist)):
-			curr = 1 + (percents[i]/100.0);
-			new_layers_inc.append(int(1 + (curr * self.layerslist[i])))
-				
-		print "Increased architecture: " + str(new_layers_inc)
-		#decrease hidden layers by those percentages
-		new_layers_dec = []
-		for i in range(0, len(self.layerslist)):
-			curr = 1 - (percents[i]/100.0);
-			new_l = int(curr * self.layerslist[i]);
-			if new_l < 1: new_l = 1;
-			new_layers_dec.append(new_l)
-		
-		print "Decreased architecture: " + str(new_layers_dec)
-		
-		#create new models, and compare
-		increase_nn = NeuralNetworkController()
-		increase_nn.createModel(self.x, self.y, new_layers_inc)
-		increase_nn.runModel()
-		
-		decrease_nn = NeuralNetworkController()
-		decrease_nn.createModel(self.x, self.y, new_layers_dec)
-		decrease_nn.runModel()
-		
-		print "Accuracy of current model: " + str(self.accuracy)
-		print "Accuracy of increased model: " + str(increase_nn.accuracy)
-		print "Accuracy of decreased model: " + str(decrease_nn.accuracy)
-		
-		if(increase_nn.accuracy >= self.accuracy and increase_nn.accuracy >= decrease_nn.accuracy):
-			print "Increased Model wins"
-			print increase_nn
-			return increase_nn
-		if(decrease_nn.accuracy >= self.accuracy and decrease_nn.accuracy >= increase_nn.accuracy):
-			print "Decreased Model wins"
-			print decrease_nn
-			return decrease_nn
-		else:
-			print "Same model wins"
-			print self
-			return self
+		while True:
+			random.seed()
+			percents = random.sample(xrange(1,100), len(self.layerslist))
+			print "Percents: " + str(percents)
+			print "Current architecture: " + str(self.layerslist)
+			
+			#increase hidden layers by those percentages
+			new_layers_inc = []
+			for i in range(0, len(self.layerslist)):
+				curr = 1 + (percents[i]/100.0);
+				new_layers_inc.append(int(1 + (curr * self.layerslist[i])))
+					
+			print "Increased architecture: " + str(new_layers_inc)
+			#decrease hidden layers by those percentages
+			new_layers_dec = []
+			for i in range(0, len(self.layerslist)):
+				curr = 1 - (percents[i]/100.0);
+				new_l = int(curr * self.layerslist[i]);
+				if new_l < 1: new_l = 1;
+				new_layers_dec.append(new_l)
+			
+			print "Decreased architecture: " + str(new_layers_dec)
+			
+			#create new models, and compare
+			increase_nn = NeuralNetworkController()
+			increase_nn.createModel(self.x, self.y, new_layers_inc)
+			increase_nn.runModel()
+			
+			decrease_nn = NeuralNetworkController()
+			decrease_nn.createModel(self.x, self.y, new_layers_dec)
+			decrease_nn.runModel()
+			
+			print "Accuracy of current model: " + str(self.accuracy)
+			print "Accuracy of increased model: " + str(increase_nn.accuracy)
+			print "Accuracy of decreased model: " + str(decrease_nn.accuracy)
+			
+			if(increase_nn.accuracy >= self.accuracy and increase_nn.accuracy >= decrease_nn.accuracy):
+				print "Increased Model wins"
+				self = increase_nn
+			if(decrease_nn.accuracy >= self.accuracy and decrease_nn.accuracy >= increase_nn.accuracy):
+				print "Decreased Model wins"
+				print decrease_nn
+				self = decrease_nn
+			else:
+				print "Same model wins"
+				print self
+				return self
 			
 	def testForConvergence(self, other): 
 		return other == self.layerslist
