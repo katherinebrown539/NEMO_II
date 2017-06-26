@@ -53,5 +53,6 @@ class ML_Controller:
 		self.kb.db.commit()
 	
 	def optimizeAlgorithm(self):
-		self.algorithm.optimize()
+		self.algorithm = self.algorithm.optimize()
+		updateDatabase(self.algorithms.results)
 		

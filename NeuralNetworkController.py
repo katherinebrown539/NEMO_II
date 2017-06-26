@@ -92,7 +92,7 @@ class NeuralNetworkController:
 			else:
 				bestModel = next
 				
-		
+		print "Done optimizing this model"
 		small_net_sz = len(self.layerslist) - 1
 		large_net_sz = len(self.layerslist) + 1
 		
