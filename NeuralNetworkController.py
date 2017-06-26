@@ -52,7 +52,7 @@ class NeuralNetworkController:
 		
 		if self.layerslist is None:
 			random.seed()
-			num_layers = random.randint(1,25)
+			num_layers = random.randint(1,10)
 			self.layerslist = []
 			for i in range(0,num_layers):
 				self.layerslist.append(random.randint(1,100))
