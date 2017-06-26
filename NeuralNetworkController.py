@@ -22,8 +22,8 @@ class NeuralNetworkController:
 		self.algorithm_id = "ANN"
 		random.seed()
 		for i in range(1,10):
-			self.id = str(random.randint(1,9))
-		self.id = "( " + str(layers).strip('[]') + ")"	
+			self.algorithm_id = self.algorithm_id + str(random.randint(1,9))
+		self.algorithm_id = self.algorithm_id + "( " + str(layers).strip('[]') + ")"	
 		
 		#initialize remaining instance variables
 		self.X_train = []
