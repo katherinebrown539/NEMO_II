@@ -79,7 +79,7 @@ class NeuralNetworkController:
 		f1 = f1_score(self.y_test,predictions)
 		cm = confusion_matrix(self.y_test,predictions)
 		
-		self.results = {'ID': self.algorithm_id, 'Name': self.algorithm_name, 'Accuracy': accuracy, 'Precision': precision, 'F1': f1, 'Confusion_Matrix': cm}
+		self.results = {'ID': self.algorithm_id, 'Name': self.algorithm_name, 'Accuracy': accuracy, 'Precision': precision, 'Recall': recall, 'F1': f1, 'Confusion_Matrix': cm}
 		
 		to_return =  (self.algorithm_id, self.algorithm_name, accuracy, precision, recall, f1, cm)
 		return to_return
