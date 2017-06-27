@@ -1,6 +1,6 @@
 from KnowledgeBase import KnowledgeBase
 from ML_Controller import ML_Controller
-
+import sys
 		
 def main():
 	kb = KnowledgeBase("config/login_file.txt")
@@ -14,7 +14,7 @@ def main():
 			ml.optimizeAlgorithm()
 	except KeyboardInterrupt:
 			print "NEMO ending. . ."
-			break
+			sys.exit()
 	
 	
 if __name__ == "__main__":
