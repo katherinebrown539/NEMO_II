@@ -68,6 +68,7 @@ class NeuralNetworkController:
 	
 	
 	def runModel(self):
+		print "Architecture of model: " + str(self.layerslist)
 		predictions = self.mlp.predict(self.X_test)	
 		
 		print(confusion_matrix(self.y_test,predictions))
