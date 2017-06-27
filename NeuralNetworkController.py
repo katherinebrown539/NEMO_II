@@ -73,19 +73,26 @@ class NeuralNetworkController:
 		print(confusion_matrix(self.y_test,predictions))
 		print(classification_report(self.y_test,predictions))
 		
-		self.accuracy = accuracy_score(self.y_test,predictions)
-		self.precision = precision_score(self.y_test,predictions)
-		self.recall = recall_score(self.y_test, predictions)
-		self.f1 = f1_score(self.y_test,predictions)
-		self.cm = confusion_matrix(self.y_test,predictions)
+		accuracy = accuracy_score(self.y_test,predictions)
+		precision = precision_score(self.y_test,predictions)
+		recall = recall_score(self.y_test, predictions)
+		f1 = f1_score(self.y_test,predictions)
+		cm = confusion_matrix(self.y_test,predictions)
 		
-		self.results =  (self.algorithm_id, self.algorithm_name, self.accuracy, self.precision, self.recall, self.f1, self.cm)
-		return self.results
+		self.results = {'ID': self.algorithm_id, 'Name': self.algorithm_name, 'Accuracy': accuracy, 'Precision': precision, 'F1': f1, 'Confusion_Matrix': cm}
+		
+		to_return =  (self.algorithm_id, self.algorithm_name, accuracy, precision, recall, f1, cm)
+		return to_return
 	
-	def optimize(self):
+	
+	def optimize(self, metric, method):
+		if(method=='Coordinate Ascent'):
+			return self.coordinateAscent(metric)
+	
+	def coordinateAscent(self, metric):
 		bestModel = self
 		while True:
-			next = bestModel.optimizeNumberOfNodes()
+			next = bestModel.optimizeNumberOfNodes(metric)
 			if bestModel.testForConvergence(next.layerslist): 
 				bestModel = self
 				break
@@ -93,6 +100,10 @@ class NeuralNetworkController:
 				bestModel = next
 				
 		print "Done optimizing this model"
+		#bestModel.optimizeNumberOfLayers(metric)
+		
+		
+	def optimizeNumberOfLayers(self, metric):
 		small_net_sz = len(self.layerslist) - 1
 		large_net_sz = len(self.layerslist) + 1
 		
@@ -105,20 +116,23 @@ class NeuralNetworkController:
 		small_net.optimizeNumberOfNodes()
 		large_net.optimizeNumberOfNodes()
 		
-		if(large_net.accuracy >= self.accuracy and large_net.accuracy >= small_net.accuracy):
-			print "Larger Model wins"
+		#change metrics stuff
+		#net.results.get(metric)
+		#may want to change how comparisons get done here...
+		if(large_net.results.get(metric) >= self.results.get(metric) and large_net.results.get(metric) >= small_net.results.get(metric)):
+			print "Larger Layers Model wins"
 			print large_net
 			return large_net
-		if(small_net.accuracy >= self.accuracy and small_net.accuracy >= large_net.accuracy):
-			print "Smaller Model wins"
+		if(small_net.results.get(metric) >= self.results.get(metric) and small_net.results.get(metric) >= large_net.results.get(metric)):
+			print "Smaller Layers Model wins"
 			print small_net
 			return small_net
 		else:
-			print "Same model wins"
+			print "Same Layers Model wins"
 			print self
 			return self
-	
-	def optimizeNumberOfNodes(self):
+			
+	def optimizeNumberOfNodes(self, metric):
 	
 		random.seed()
 		percents = random.sample(xrange(1,100), len(self.layerslist))
@@ -131,7 +145,7 @@ class NeuralNetworkController:
 			curr = 1 + (percents[i]/100.0);
 			new_layers_inc.append(int(1 + (curr * self.layerslist[i])))
 				
-		print "Increased architecture: " + str(new_layers_inc)
+		print "Increased nodes architecture: " + str(new_layers_inc)
 		#decrease hidden layers by those percentages
 		new_layers_dec = []
 		for i in range(0, len(self.layerslist)):
@@ -140,7 +154,7 @@ class NeuralNetworkController:
 			if new_l < 1: new_l = 1;
 			new_layers_dec.append(new_l)
 		
-		print "Decreased architecture: " + str(new_layers_dec)
+		print "Decreased nodes architecture: " + str(new_layers_dec)
 		
 		#create new models, and compare
 		increase_nn = NeuralNetworkController()
@@ -151,18 +165,21 @@ class NeuralNetworkController:
 		decrease_nn.createModel(self.x, self.y, new_layers_dec)
 		decrease_nn.runModel()
 		
-		print "Accuracy of current model: " + str(self.accuracy)
-		print "Accuracy of increased model: " + str(increase_nn.accuracy)
-		print "Accuracy of decreased model: " + str(decrease_nn.accuracy)
+		#change metrics stuffs
+		#.results.get(metric)
+		print "Accuracy of current model: " + str(self.results.get(metric))
+		print "Accuracy of increased nodes model: " + str(increase_nn.results.get(metric))
+		print "Accuracy of decreased nodes model: " + str(decrease_nn.results.get(metric))
 		
-		if(increase_nn.accuracy >= self.accuracy and increase_nn.accuracy >= decrease_nn.accuracy):
-			print "Increased Model wins"
+		#may want to change how comparisons get done here...
+		if(increase_nn.results.get(metric) >= self.results.get(metric) and increase_nn.results.get(metric) >= decrease_nn.results.get(metric)):
+			print "Increased nodes Model wins"
 			return increase_nn
-		elif(decrease_nn.accuracy >= self.accuracy and decrease_nn.accuracy >= increase_nn.accuracy):
-			print "Decreased Model wins"
+		elif(decrease_nn.results.get(metric) >= self.results.get(metric) and decrease_nn.results.get(metric) >= increase_nn.results.get(metric)):
+			print "Decreased nodes Model wins"
 			return decrease_nn
 		else:
-			print "Same model wins"
+			print "Same nodes model wins"
 			return self
 			
 	def testForConvergence(self, other): 
