@@ -116,8 +116,8 @@ class NeuralNetworkController:
 		large_net.createModel(self.x, self.y, None, large_net_sz)
 		small_net.runModel()
 		large_net.runModel()
-		small_net.optimizeNumberOfNodes()
-		large_net.optimizeNumberOfNodes()
+		small_net.optimizeNumberOfNodes(metric)
+		large_net.optimizeNumberOfNodes(metric)
 		
 		#change metrics stuff
 		#net.results.get(metric)
