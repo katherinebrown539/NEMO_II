@@ -103,6 +103,8 @@ class NeuralNetworkController:
 		#bestModel.optimizeNumberOfLayers(metric)
 		
 		
+		return bestModel
+		
 	def optimizeNumberOfLayers(self, metric):
 		small_net_sz = len(self.layerslist) - 1
 		large_net_sz = len(self.layerslist) + 1
