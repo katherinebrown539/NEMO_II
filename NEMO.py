@@ -10,11 +10,11 @@ def main():
 	ml.runAlgorithm()
 	
 	try:
-    while True:
-        ml.optimizeAlgorithm()
-	except KeyboardInterrupt:
-		print "NEMO ending. . ."
-		break
+		while True:
+			ml.optimizeAlgorithm()
+		except KeyboardInterrupt:
+			print "NEMO ending. . ."
+			break
 	
 	
 if __name__ == "__main__":
