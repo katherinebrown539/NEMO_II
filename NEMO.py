@@ -7,14 +7,15 @@ def main():
 	kb.importData("data/SPECT.data", "data/SPECT.schema")
 	#importData("config/login_file.txt", "data/SPECTF.data", "data/SPECTF.schema")
 	ml = ML_Controller(kb)
-	
-	# try:
-    # while True:
-        # do_something()
-	# except KeyboardInterrupt:
-    # pass
-	
 	ml.runAlgorithm()
-	ml.optimizeAlgorithm()
+	
+	try:
+    while True:
+        ml.optimizeAlgorithm()
+	except KeyboardInterrupt:
+		print "NEMO ending. . ."
+		break
+	
+	
 if __name__ == "__main__":
 	main()
