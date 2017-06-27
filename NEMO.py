@@ -12,7 +12,7 @@ def main():
 	try:
 		while True:
 			ml.optimizeAlgorithm()
-	except KeyboardInterrupt:
+	except:
 			print "NEMO ending. . ."
 			sys.exit()
 	
