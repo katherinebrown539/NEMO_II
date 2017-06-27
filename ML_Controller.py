@@ -43,9 +43,11 @@ class ML_Controller:
 		self.algorithm.createModel(self.data, self.target)
 		results = self.algorithm.runModel()
 		
-		stmt = "insert into AlgorithmResults(algorithm_id, algorithm_name, accuracy, prec, recall, f1, confusion_matrix) values (%s,%s,%s,%s,%s,%s,%s)"
-		self.kb.cursor.execute(stmt)
-		self.kb.db.commit()
+		self.updateDatabase()
+		
+		# stmt = "insert into AlgorithmResults(algorithm_id, algorithm_name, accuracy, prec, recall, f1, confusion_matrix) values (%s,%s,%s,%s,%s,%s,%s)"
+		# self.kb.cursor.execute(stmt, results)
+		# self.kb.db.commit()
 	
 	def updateDatabase(self):
 		results = (self.algorithm.results['ID'], self.algorithm.results['Name'], self.algorithm.results['Accuracy'], self.algorithm.results['Precision'], self.algorithm.results['F1'], self.algorithm.results['Confusion_Matrix'])
