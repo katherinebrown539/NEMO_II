@@ -25,8 +25,8 @@ class KnowledgeBase:
 	# * KnowledgeBase object is created with connection to db established
 	# * data_file - a text file containing the data to be added to the databases
 	#	Assumptions: The file is one comma-delimited record per line.
-	#				 The first value for the line is the value to classify
-	#				 The remaining lines are the attributes
+	#				 The first value for each line is the value to classify
+	#				 The remaining values on each line are the attributes
 	# * schema_file - a text file containing the MySQL schema for the table
 	#	Assumptions: column_name data_type
 	#	Assumptions: On separate lines, the file contains the MySQL schema for creation of the DATA table
