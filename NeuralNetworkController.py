@@ -42,8 +42,8 @@ class NeuralNetworkController:
 		self.y = []
 		
 	def createModel(self, x, y, layers=None, size = None,):
-		print "X length " + str(len(x))
-		print "Y length " + str(len(y))
+		# print "X length " + str(len(x))
+		# print "Y length " + str(len(y))
 		self.x = x
 		self.y = y
 		self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(x,y)
@@ -60,7 +60,7 @@ class NeuralNetworkController:
 			self.layerslist = layers
 		else: self.layerslist = self.generateRandomArchitecture(size)
 		
-		print str(self.layerslist)
+		#print str(self.layerslist)
 		
 		self.algorithm_id = self.algorithm_id_abbr + self.id +  "( " + str(self.layerslist).strip('[]') + ")"	
 		self.mlp = MLPClassifier(hidden_layer_sizes=self.layerslist)
@@ -68,11 +68,11 @@ class NeuralNetworkController:
 	
 	
 	def runModel(self):
-		print "Architecture of model: " + str(self.layerslist)
+		#print "Architecture of model: " + str(self.layerslist)
 		predictions = self.mlp.predict(self.X_test)	
 		
-		print(confusion_matrix(self.y_test,predictions))
-		print(classification_report(self.y_test,predictions))
+		#print(confusion_matrix(self.y_test,predictions))
+		#print(classification_report(self.y_test,predictions))
 		
 		accuracy = accuracy_score(self.y_test,predictions)
 		precision = precision_score(self.y_test,predictions)

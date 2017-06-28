@@ -29,12 +29,12 @@ class ML_Controller:
 		#print stmt
 		self.data = pandas.read_sql_query(stmt, kb.db)
 		#print self.data
-		print "data length = " + str(len(self.data))
+		#print "data length = " + str(len(self.data))
 		stmt = "select " + kb.Y + " from DATA"
 		#print stmt
 		self.target = pandas.read_sql_query(stmt, kb.db)
 		#print self.target
-		print "target length = " + str(len(self.target))
+		#print "target length = " + str(len(self.target))
 		self.kb = kb
 		self.algorithm = NeuralNetworkController.NeuralNetworkController()
 		
@@ -51,8 +51,9 @@ class ML_Controller:
 	
 	def updateDatabase(self):
 		results = (self.algorithm.results['ID'], self.algorithm.results['Name'], self.algorithm.results['Accuracy'],  self.algorithm.results['Precision'], self.algorithm.results['Recall'], self.algorithm.results['F1'], str(self.algorithm.results['Confusion_Matrix']).replace('\n', ""))
-		print str(results)
+		#print str(results)
 		stmt = "insert into AlgorithmResults(algorithm_id, algorithm_name, accuracy, prec, recall, f1, confusion_matrix) values (%s,%s,%s,%s,%s,%s,%s)"
+		print stmt
 		self.kb.cursor.execute(stmt, results)
 		self.kb.db.commit()
 	
