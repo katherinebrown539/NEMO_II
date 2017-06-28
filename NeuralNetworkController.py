@@ -101,7 +101,7 @@ class NeuralNetworkController:
 				bestModel = next
 				
 		print "Done optimizing this model"
-		bestModel.optimizeNumberOfLayers(metric)
+		bestModel = bestModel.optimizeNumberOfLayers(metric)
 		
 		
 		return bestModel
