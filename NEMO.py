@@ -11,7 +11,10 @@ def main():
 	
 	try:
 		while True:
-			ml.optimizeAlgorithm()
+			try:
+				ml.optimizeAlgorithm()
+			except:
+				sys.exit()
 	except:
 			print "NEMO ending. . ."
 			sys.exit()
