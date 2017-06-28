@@ -95,7 +95,7 @@ class NeuralNetworkController:
 		while True:
 			next = bestModel.optimizeNumberOfNodes(metric)
 			if bestModel.testForConvergence(next.layerslist): 
-				bestModel = self
+				#bestModel = self
 				break
 			else:
 				bestModel = next
