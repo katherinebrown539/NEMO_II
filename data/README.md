@@ -16,11 +16,3 @@ Schema File Requirements
 =========================
 1) Each line of the file must specify the name of the class/attribute followed by the MySQL data-type of the class/attribute
 2) The attributes must appear in the same order as they do in the data file
-Example:
-CLASS TYPE
-A1 TYPE
-A2 TYPE
-.
-.
-.
-AN TYPE
