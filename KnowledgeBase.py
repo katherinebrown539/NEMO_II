@@ -98,19 +98,23 @@ class KnowledgeBase:
 		self.X.reverse()
 		tokens = self.schema[len(self.schema)-1].split(' ')
 		self.Y = tokens[0]
+		
 	#Constructor
 	#Preconditions:
 	# * login_file - a text file containing the login and database information
 	#	Assumptions: On separate lines, the file must contain HOST, PORT, MySQL USER NAME, PASSWORD, DATABASE	
 	#Postconditions: Connects to database
 	def __init__(self, login_file):
-		fileio = open(login_file, 'r')
-		self.HOST = fileio.readline().strip('\n')
-		self.PORT = int(fileio.readline().strip('\n'))
-		self.USER = fileio.readline().strip('\n')
-		self.PASSWD = fileio.readline().strip('\n')
-		self.DATABASE = fileio.readline().strip('\n')
-		fileio.close()
+		with open('json_list.json') as fd:
+			json_data = json.load(fd)
+			
+		
+		self.HOST = json_data['HOST']
+		self.PORT = int(json_data['PORT'])
+		self.USER = json_data['USER']
+		self.PASSWD = json_data['PASS']
+		self.DATABASE = json_data['DB']
+		
 
 		self.db = MySQLdb.connect(host = self.HOST, port = self.PORT, user = self.USER, passwd = self.PASSWD, db = self.DATABASE)
 		self.cursor = self.db.cursor()
@@ -118,6 +122,8 @@ class KnowledgeBase:
 		self.schema = None
 		self.X = None
 		self.Y = None
+		
+		self.importData(json_data['DATA'], json_data['SCHEMA'])
 	
 	#DESTRUCTOR
 	#commits all changes to database and closes the connection
