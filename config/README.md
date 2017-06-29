@@ -6,7 +6,7 @@ This directory is designed to hold the configuration files for your instance of 
 
 # Readable configuration files
 1) Name your file login_file.txt
-2) The file needs to have the following information, on separate lines, in the order given:
+2) The file needs to have the following information, on separate lines, in the order given: <br/>
   PORT - port number for the database server, for MySQL, this is typically 3306 <br/>
   MySQL USER NAME - user name to access the database <br/>
   PASSWORD - password to access the database <br/>
