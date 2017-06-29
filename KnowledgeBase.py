@@ -104,8 +104,8 @@ class KnowledgeBase:
 	# * login_file - a text file containing the login and database information
 	#	Assumptions: On separate lines, the file must contain HOST, PORT, MySQL USER NAME, PASSWORD, DATABASE	
 	#Postconditions: Connects to database
-	def __init__(self, login_file):
-		with open('json_list.json') as fd:
+	def __init__(self, config_file):
+		with open(config_file) as fd:
 			json_data = json.load(fd)
 			
 		
