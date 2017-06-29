@@ -124,6 +124,8 @@ class KnowledgeBase:
 		self.X = None
 		self.Y = None
 		file_info = json_data['DATA']
+		print file_info['DATA']
+		print file_info['SCHEMA']
 		self.importData(file_info['DATA'], file_info['SCHEMA'])
 	
 	#DESTRUCTOR
