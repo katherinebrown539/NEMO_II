@@ -1,6 +1,7 @@
 import MySQLdb
 import MySQLdb.cursors
 import sys
+import json
 ##############################################################################################################
 # KnowledgeBase class																						 #
 # Prototype KnowledgeBase for NEMO																			 #
