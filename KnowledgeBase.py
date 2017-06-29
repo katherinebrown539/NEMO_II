@@ -109,12 +109,12 @@ class KnowledgeBase:
 		with open(config_file) as fd:
 			json_data = json.load(fd)
 			
-		
-		self.HOST = json_data['HOST']
-		self.PORT = int(json_data['PORT'])
-		self.USER = json_data['USER']
-		self.PASSWD = json_data['PASS']
-		self.DATABASE = json_data['DB']
+		info = json_data['DATABASE']
+		self.HOST = info['HOST']
+		self.PORT = int(info['PORT'])
+		self.USER = info['USER']
+		self.PASSWD = info['PASS']
+		self.DATABASE = info['DB']
 		
 
 		self.db = MySQLdb.connect(host = self.HOST, port = self.PORT, user = self.USER, passwd = self.PASSWD, db = self.DATABASE)
@@ -123,8 +123,8 @@ class KnowledgeBase:
 		self.schema = None
 		self.X = None
 		self.Y = None
-		
-		self.importData(json_data['DATA'], json_data['SCHEMA'])
+		file_info = json_data['DATA']
+		self.importData(file_info['DATA'], file_info['SCHEMA'])
 	
 	#DESTRUCTOR
 	#commits all changes to database and closes the connection
