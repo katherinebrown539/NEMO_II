@@ -93,11 +93,12 @@ class KnowledgeBase:
 	#Postconditions: self.X has names of the attributes, self.Y has the names of the target
 	def getXYTokens(self):
 		self.X = []
-		for i in range(0,len(self.schema)-1):
+		for i in range(0,len(self.schema)):
 			tokens = self.schema[i].split(' ')
-			self.X.append(tokens[0])
+			if(tokens[0] != self.Y):
+				self.X.append(tokens[0])
 		self.X.reverse()
-		tokens = self.schema[len(self.schema)-1].split(' ')
+		#tokens = self.schema[len(self.schema)-1].split(' ')
 		#self.Y = tokens[0]
 		
 	#Constructor
@@ -139,7 +140,7 @@ class KnowledgeBase:
 # 	END OF KNOWLEDGE BASE CLASS 																										   #
 ############################################################################################################################################
 
-######## Executable For Testing ########
+######## Executable For Testing #########
 def main():
 	kb = KnowledgeBase("config/config.json")
 	
