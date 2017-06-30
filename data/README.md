@@ -8,7 +8,7 @@ To do this, NEMO must be provided two text files. These are best stored here.
 
 # Data File Requirements
 1) There can be no missing data. All the attributes must have some value
-2) The class must be the first element on the line. The following elements are the attributes. An example dataset with this is the SPECT/SPECTF datasets provided by UCI Machine Learning Repository.
+2) The class must be specified in config/config.json. If the class specified does not exist or spelled incorrectly, the program will not execute. 
 3) The file must be comma-delimited. 
 
 # Schema File Requirements
