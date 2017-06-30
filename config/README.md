@@ -13,7 +13,7 @@ This directory is designed to hold the configuration files for your instance of 
   DATABASE - name of the database to access <br/>
   DATA - name of the data file (see the data readme for more details) <br/>
   SCHEMA - name of the schema file (see the data readme for more details) <br/>
-  CLASS - the name of the class <br/>
+  CLASS - the name of the class to be classified <br/>
   
 # Recent Updates
 1) The config file will also need to include the local path to the data and data schema files in the data directory <br/>
