@@ -25,6 +25,7 @@ Pull the dev branch for the development version of NEMO. Use at your own risk!
 To quit: Press Ctrl+C or equivalent. Currently, it takes  few tries to shut off the system.
 
 # TO-DO
-1) Investigate the coordinate ascent algorithm and fix any bugs.
-2) Implement better exit behavior.
-3) Complete any TO-DOs in the data and/or config sections
+1) Implement better exit, kill, and restart behavior.
+2) Implement a menu 
+3) Investigate the coordinate ascent algorithm and fix any bugs.
+4) Complete any TO-DOs in the data and/or config sections
