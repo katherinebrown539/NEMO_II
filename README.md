@@ -25,8 +25,9 @@ Pull the dev branch for the development version of NEMO. Use at your own risk!
 To quit: Press Ctrl+C or equivalent. Currently, it takes  few tries to shut off the system.
 
 # TO-DO
-1) Investigate the coordinate ascent algorithm and fix any bugs.
-2) Implement better exit behavior.
-3) Add a new algorithm
-4) Debug any multi-class classification issues
-5) Complete any TO-DOs in the data and/or config sections
+1) Debug any multi-class classification issues
+2) Investigate the coordinate ascent algorithm and fix any bugs.
+3) Extend the documentation
+4) Add a new algorithm
+5) Implement better exit behavior.
+6) Complete any TO-DOs in the data and/or config sections
