@@ -75,7 +75,7 @@ class NeuralNetworkController:
 		#print(classification_report(self.y_test,predictions))
 		
 		accuracy = accuracy_score(self.y_test,predictions)
-		precision = precision_score(self.y_test,predictions)
+		precision = precision_score(self.y_test,predictions, average='micro')
 		recall = recall_score(self.y_test, predictions)
 		f1 = f1_score(self.y_test,predictions)
 		cm = confusion_matrix(self.y_test,predictions)
