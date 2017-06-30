@@ -98,7 +98,7 @@ class KnowledgeBase:
 			self.X.append(tokens[0])
 		self.X.reverse()
 		tokens = self.schema[len(self.schema)-1].split(' ')
-		self.Y = tokens[0]
+		#self.Y = tokens[0]
 		
 	#Constructor
 	#Preconditions:
@@ -120,12 +120,13 @@ class KnowledgeBase:
 		self.db = MySQLdb.connect(host = self.HOST, port = self.PORT, user = self.USER, passwd = self.PASSWD, db = self.DATABASE)
 		self.cursor = self.db.cursor()
 		
+		file_info = json_data['DATA']		
 		self.schema = None
 		self.X = None
-		self.Y = None
-		file_info = json_data['DATA']
+		self.Y = file_info['CLASS']
 		print file_info['DATA']
 		print file_info['SCHEMA']
+		print self.Y
 		self.importData(file_info['DATA'], file_info['SCHEMA'])
 	
 	#DESTRUCTOR
