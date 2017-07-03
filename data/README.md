@@ -8,7 +8,7 @@ To do this, NEMO must be provided two text files. These are best stored here.
 
 # Data File Requirements
 1) There can be no missing data. All the attributes must have some value
-2) The class must be specified in config.json and must match with the desired value in the schema file.
+2) The class must be specified in  config/config.json and must match with the desired value in the schema file.
 3) The file must be comma-delimited. 
 
 # Schema File Requirements

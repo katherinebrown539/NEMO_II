@@ -28,4 +28,6 @@ To quit: Press Ctrl+C or equivalent. Currently, it takes  few tries to shut off 
 1) Implement better exit, kill, and restart behavior.
 2) Implement a menu 
 3) Investigate the coordinate ascent algorithm and fix any bugs.
-4) Complete any TO-DOs in the data and/or config sections
+4) Extend the documentation
+5) Add a new algorithm
+6) Complete any TO-DOs in the data and/or config sections

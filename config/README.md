@@ -5,8 +5,8 @@ NEMO_II Repository
 This directory is designed to hold the configuration files for your instance of NEMO. 
 
 # Readable configuration files
-1) Name your file login_file.txt
-2) The file needs to have the following information, on separate lines, in the order given: <br/>
+1) Name your file config.json
+2) The file needs to have the following information: <br/>
   PORT - port number for the database server, for MySQL, this is typically 3306 <br/>
   MySQL USER NAME - user name to access the database <br/>
   PASSWORD - password to access the database <br/>
@@ -16,10 +16,8 @@ This directory is designed to hold the configuration files for your instance of 
   CLASS - String with the class to classify.
   
 # Recent Updates
-1) The config file will also need to include the local path to the data and data schema files in the data directory
-2) Using JSON technology instead of flat text files.
-
+1) The config file now includes the local path to the data and data schema files in the data directory <br/>
+2) Uses JSON technology instead of flat text files. <br/>
 
 # To-Do
 Several updates to the nature of config files are planned/under consideration. As updates are completed, this README will be updated accordingly.
-
