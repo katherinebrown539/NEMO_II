@@ -18,7 +18,17 @@ class NEMO:
 		
 	def optimizeAlgorithm(self):
 		self.ml.optimizeAlgorithm()
-
+	
+	def printAlgorithmResults(self):
+		stmt = "select * from AlgorithmResults"
+		self.kb.cursor.execute(stmt)
+		print "Algorithm ID\tAlgorithm Name\tAccuracy\tPrecision\tRecall\tF1 Score\tConfusion Matrix"
+		row = self.kb.cursor.fetchone()
+		while row != None:
+			print "%s\t%s\t%s\t%s\t%s\t%s\t%s" % (row[0], row[1], row[2], row[3], row[4], row[5], row[6])
+			row = self.kb.cursor.fetchone()
+		
+	
 	def menu(self):
 		menu = "Main Menu:\n1. Create New Model\n2. Run New Model\n3. Optimize the model\n4. Output Model Results (Any current optimization task will be halted)\n5. Cancel All Optimization Tasks\n6. Quit NEMO\n--> "
 		choices = ["1","2","3","4","5","6"]
@@ -37,7 +47,8 @@ class NEMO:
 			self.optimizeAlgorithm()
 		elif choice == "4":
 			#Choose models to print results of
-			print "Print out algorithm results here"
+			#print "Print out algorithm results here"
+			self.pringAlgorithmResults()
 		elif choice == "5":
 			print "When multi-threading background optimization is setup, this will stop any optimization tasks"
 		else:
