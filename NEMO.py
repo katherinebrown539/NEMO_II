@@ -20,7 +20,7 @@ class NEMO:
 		self.ml.optimizeAlgorithm()
 
 	def menu(self):
-		menu = "Main Menu:\n1. Create New Model\n2. Run New Model\n3. Optimize the model\n4. Output Model Results (Any current optimization task will be halted)\n5. Cancel All Optimization Tasks\n6. Quit NEMO"
+		menu = "Main Menu:\n1. Create New Model\n2. Run New Model\n3. Optimize the model\n4. Output Model Results (Any current optimization task will be halted)\n5. Cancel All Optimization Tasks\n6. Quit NEMO\n--> "
 		choices = ["1","2","3","4","5","6"]
 		choice = ""
 		while choice not in choices:
