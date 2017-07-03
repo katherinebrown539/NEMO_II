@@ -27,7 +27,7 @@ class NEMO:
 			choice = raw_input(menu)
 		if choice == "1":
 			#choose algorithm and starting config
-			self.setUpNewML()
+			self.setupNewML()
 		elif choice == "2":
 			#Choose algorithm(s) to optimize
 			self.runAlgorithm()
