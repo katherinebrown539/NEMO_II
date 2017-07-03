@@ -19,20 +19,24 @@ class NEMO:
 	def optimizeAlgorithm(self):
 		self.ml.optimizeAlgorithm()
 
-	def menu():
+	def menu(self):
 		menu = "Main Menu:\n1. Create New Model\n2. Run New Model\n3. Optimize the model\n4. Output Model Results (Any current optimization task will be halted)\n5. Cancel All Optimization Tasks\n6. Quit NEMO"
 		choices = ["1","2","3","4","5","6"]
 		choice = ""
 		while choice not in choices:
 			choice = raw_input(menu)
 		if choice == "1":
+			#choose algorithm and starting config
 			self.setUpNewML()
 		elif choice == "2":
+			#Choose algorithm(s) to optimize
 			self.runAlgorithm()
 		elif choice == "3":
+			#Choose algorithm(s) to optimize
 			print "Need to set up multi-threading for background optimization"
 			self.optimizeAlgorithm()
 		elif choice == "4":
+			#Choose models to print results of
 			print "Print out algorithm results here"
 		elif choice == "5":
 			print "When multi-threading background optimization is setup, this will stop any optimization tasks"
