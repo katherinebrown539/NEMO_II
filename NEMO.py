@@ -1,7 +1,16 @@
 from KnowledgeBase import KnowledgeBase
 from ML_Controller import ML_Controller
+import threading
 import sys
-	
+import os
+
+def optimizeAlgorithmWorker(ml, stp):
+	print "Optimizing"
+	old_out = sys.stdout
+	sys.stdout = open(os.devnull, 'w')
+	while not stp.is_set():
+		ml.optimizeAlgorithm()
+	sys.stdout = old_out
 class NEMO:
 	def __init__(self, filename):
 		self.kb = KnowledgeBase(filename)
@@ -15,43 +24,49 @@ class NEMO:
 		
 	def runAlgorithm(self):
 		self.ml.runAlgorithm()
-		
-	def optimizeAlgorithm(self):
-		self.ml.optimizeAlgorithm()
+			
 	
+	def optimizeAlgorithm(self):
+		self.event = threading.Event()
+		self.thread = threading.Thread(target=optimizeAlgorithmWorker, args=(self.ml, self.event))
+		self.thread.start()
+		
 	def printAlgorithmResults(self):
 		stmt = "select * from AlgorithmResults"
 		self.kb.cursor.execute(stmt)
-		print "Algorithm ID\tAlgorithm Name\tAccuracy\tPrecision\tRecall\tF1 Score\tConfusion Matrix"
+		print "Algorithm ID\t\tAlgorithm Name\t\tAccuracy\t\tPrecision\t\tRecall\t\t\tF1 Score\t\tConfusion Matrix"
 		row = self.kb.cursor.fetchone()
 		while row != None:
-			print "%s\t%s\t%s\t%s\t%s\t%s\t%s" % (row[0], row[1], row[2], row[3], row[4], row[5], row[6])
+			print "%s\t\t%s\t\t%s\t\t%s\t\t%s\t\t%s\t\t%s" % (row[0], row[1], row[2], row[3], row[4], row[5], row[6])
 			row = self.kb.cursor.fetchone()
-		
+	
 	
 	def menu(self):
-		menu = "Main Menu:\n1. Create New Model\n2. Run New Model\n3. Optimize the model\n4. Output Model Results (Any current optimization task will be halted)\n5. Cancel All Optimization Tasks\n6. Quit NEMO\n--> "
-		choices = ["1","2","3","4","5","6"]
+		menu = "Main Menu:\n1. Create New Model\n2. Run New Model\n3. Optimize the model\n4. Output Model Results (Any current optimization task will be halted)\n5. View Model Information\n6. Cancel All Optimization Tasks\n7. Quit NEMO\n--> "
+		choices = ["1","2","3","4","5","6","7"]
 		choice = ""
 		while choice not in choices:
 			choice = raw_input(menu)
 		if choice == "1":
-			#choose algorithm and starting config
 			self.setupNewML()
 		elif choice == "2":
-			#Choose algorithm(s) to optimize
 			self.runAlgorithm()
 		elif choice == "3":
-			#Choose algorithm(s) to optimize
-			print "Need to set up multi-threading for background optimization"
 			self.optimizeAlgorithm()
 		elif choice == "4":
-			#Choose models to print results of
-			#print "Print out algorithm results here"
-			self.pringAlgorithmResults()
+			if self.event is not None and self.thread is not None:
+				self.event.set()
+				self.thread.join()
+			self.printAlgorithmResults()
+			if self.thread is not None and self.event is not None:
+				self.optimizeAlgorithm()
 		elif choice == "5":
-			print "When multi-threading background optimization is setup, this will stop any optimization tasks"
+			self.event.set()
+			self.thread.join()
+		elif choice == "6":
+			print "When the model repository is set up, this will display specific information about a given model"
 		else:
+			#set up forking
 			sys.exit()
 		
 def main():
@@ -59,22 +74,5 @@ def main():
 	while True:
 		nemo.menu()
 
-def old_main():
-	nemo = NEMO("config/config.json")
-	ml = nemo.setupNewML()
-	
-	nemo.runAlgorithm()
-	
-	try:
-		while True:
-			try:
-				nemo.optimizeAlgorithm()
-			except:
-				sys.exit()
-	except:
-			print "NEMO ending. . ."
-			sys.exit()
-	
-	
 if __name__ == "__main__":
 	main()
