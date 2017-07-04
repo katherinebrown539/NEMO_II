@@ -35,28 +35,17 @@ class ML_Controller:
 		#print self.target
 		#print "target length = " + str(len(self.target))
 		self.kb = kb
-		self.algorithm = NeuralNetworkController.NeuralNetworkController()
+		self.algorithm = NeuralNetworkController.NeuralNetworkController(self.kb)
 		
 	def runAlgorithm(self):
 		
 		self.algorithm.createModel(self.data, self.target)
+		
 		results = self.algorithm.runModel()
+		self.kb.updateDatabaseWithResults(self.algorithm)
 		
-		self.updateDatabase()
 		
-		# stmt = "insert into AlgorithmResults(algorithm_id, algorithm_name, accuracy, prec, recall, f1, confusion_matrix) values (%s,%s,%s,%s,%s,%s,%s)"
-		# self.kb.cursor.execute(stmt, results)
-		# self.kb.db.commit()
-	
-	def updateDatabase(self):
-		results = (self.algorithm.results['ID'], self.algorithm.results['Name'], self.algorithm.results['Accuracy'],  self.algorithm.results['Precision'], self.algorithm.results['Recall'], self.algorithm.results['F1'], str(self.algorithm.results['Confusion_Matrix']).replace('\n', ""))
-		#print str(results)
-		stmt = "insert into AlgorithmResults(algorithm_id, algorithm_name, accuracy, prec, recall, f1, confusion_matrix) values (%s,%s,%s,%s,%s,%s,%s)"
-		print stmt
-		self.kb.cursor.execute(stmt, results)
-		self.kb.db.commit()
-	
 	def optimizeAlgorithm(self):
 		self.algorithm = self.algorithm.optimize('Accuracy', 'Coordinate Ascent')
-		self.updateDatabase()
+		self.kb.updateDatabaseWithResults(self.algorithm)
 		

@@ -100,6 +100,16 @@ class KnowledgeBase:
 		self.X.reverse()
 		#tokens = self.schema[len(self.schema)-1].split(' ')
 		#self.Y = tokens[0]
+	
+
+	def updateDatabaseWithResults(self, algorithm):
+		results = (algorithm.results['ID'], algorithm.results['Name'], algorithm.results['Accuracy'],  algorithm.results['Precision'], algorithm.results['Recall'], algorithm.results['F1'], str(algorithm.results['Confusion_Matrix']).replace('\n', ""))
+		#print str(results)
+		stmt = "insert into AlgorithmResults(algorithm_id, algorithm_name, accuracy, prec, recall, f1, confusion_matrix) values (%s,%s,%s,%s,%s,%s,%s)"
+		print stmt
+		self.cursor.execute(stmt, results)
+		self.db.commit()
+		
 		
 	#Constructor
 	#Preconditions:

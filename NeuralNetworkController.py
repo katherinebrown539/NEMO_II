@@ -17,7 +17,7 @@ class NeuralNetworkController:
 	# * layers - architecture, may be none
 	#Postconditions: returns performance from the neural network
 	#NOTE: Code from kdnuggets
-	def __init__(self):
+	def __init__(self, kb):
 		self.algorithm_name = "Neural Network"
 		self.algorithm_id_abbr = "ANN"
 		self.id = ""
@@ -25,7 +25,7 @@ class NeuralNetworkController:
 		for i in range(1,10):
 			self.id = self.id + str(random.randint(1,9))
 		
-		
+		self.kb = kb
 		#initialize remaining instance variables
 		self.X_train = []
 		self.X_test = []
@@ -64,12 +64,15 @@ class NeuralNetworkController:
 		
 		#self.algorithm_id = self.algorithm_id_abbr + self.id +  "( " + str(self.layerslist).strip('[]') + ")"	
 		self.algorithm_id = self.id
+		self.updateDatabaseWithModel()
+		self.addCurrentModel()
 		self.mlp = MLPClassifier(hidden_layer_sizes=self.layerslist)
 		self.mlp.fit(self.X_train, self.y_train)
-	
+		
 	
 	def runModel(self):
 		#print "Architecture of model: " + str(self.layerslist)
+		
 		predictions = self.mlp.predict(self.X_test)	
 		
 		#print(confusion_matrix(self.y_test,predictions))
@@ -84,6 +87,7 @@ class NeuralNetworkController:
 		self.results = {'ID': self.algorithm_id, 'Name': self.algorithm_name, 'Accuracy': accuracy, 'Precision': precision, 'Recall': recall, 'F1': f1, 'Confusion_Matrix': cm}
 		
 		to_return =  (self.algorithm_id, self.algorithm_name, accuracy, precision, recall, f1, cm)
+		self.removeCurrentModel()
 		return to_return
 	
 	
@@ -111,8 +115,8 @@ class NeuralNetworkController:
 		small_net_sz = len(self.layerslist) - 1
 		large_net_sz = len(self.layerslist) + 1
 		
-		small_net = NeuralNetworkController()
-		large_net = NeuralNetworkController()
+		small_net = NeuralNetworkController(self.kb)
+		large_net = NeuralNetworkController(self.kb)
 		small_net.createModel(self.x, self.y, None, small_net_sz)
 		large_net.createModel(self.x, self.y, None, large_net_sz)
 		small_net.runModel()
@@ -161,11 +165,11 @@ class NeuralNetworkController:
 		print "Decreased nodes architecture: " + str(new_layers_dec)
 		
 		#create new models, and compare
-		increase_nn = NeuralNetworkController()
+		increase_nn = NeuralNetworkController(self.kb)
 		increase_nn.createModel(self.x, self.y, new_layers_inc)
 		increase_nn.runModel()
 		
-		decrease_nn = NeuralNetworkController()
+		decrease_nn = NeuralNetworkController(self.kb)
 		decrease_nn.createModel(self.x, self.y, new_layers_dec)
 		decrease_nn.runModel()
 		
@@ -197,4 +201,20 @@ class NeuralNetworkController:
 			
 		return to_return
 	
-	
+	def updateDatabaseWithModel(self):
+		stmt = "insert into ModelRepository (algorithm_id, algorithm_name, arg_type, arg_val) values ( %s, %s, %s, %s)"
+		args = (self.algorithm_id, self.algorithm_name, "hidden_layer_sizes", str(tuple(self.layerslist)))
+		print stmt % args
+		self.kb.cursor.execute(stmt, args)
+		self.kb.db.commit()
+		
+	def addCurrentModel(self):
+		stmt = "insert into CurrentModel(algorithm_id) values (%s)"
+		args = (self.algorithm_id,)
+		self.kb.cursor.execute(stmt, args)
+		self.kb.db.commit()
+			
+	def removeCurrentModel(self):
+		stmt = "delete from CurrentModel where algorithm_id = " + self.algorithm_id
+		self.kb.cursor.execute(stmt)
+		self.kb.db.commit()

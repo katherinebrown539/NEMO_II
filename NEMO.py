@@ -11,6 +11,7 @@ def optimizeAlgorithmWorker(ml, stp):
 	while not stp.is_set():
 		ml.optimizeAlgorithm()
 	sys.stdout = old_out
+	
 class NEMO:
 	def __init__(self, filename):
 		self.kb = KnowledgeBase(filename)
@@ -29,6 +30,7 @@ class NEMO:
 	def optimizeAlgorithm(self):
 		self.event = threading.Event()
 		self.thread = threading.Thread(target=optimizeAlgorithmWorker, args=(self.ml, self.event))
+		#self.thread.daemon = False
 		self.thread.start()
 		
 	def printAlgorithmResults(self):
@@ -42,7 +44,7 @@ class NEMO:
 	
 	
 	def menu(self):
-		menu = "Main Menu:\n1. Create New Model\n2. Run New Model\n3. Optimize the model\n4. Output Model Results (Any current optimization task will be halted)\n5. View Model Information\n6. Cancel All Optimization Tasks\n7. Quit NEMO\n--> "
+		menu = "Main Menu:\n1. Create New Model\n2. Run New Model\n3. Optimize the model\n4. Output Model Results (Any current optimization task will be halted and restarted)\n5. View Model Information\n6. Cancel All Optimization Tasks\n7. Quit NEMO\n--> "
 		choices = ["1","2","3","4","5","6","7"]
 		choice = ""
 		while choice not in choices:
@@ -58,13 +60,13 @@ class NEMO:
 				self.event.set()
 				self.thread.join()
 			self.printAlgorithmResults()
-			if self.thread is not None and self.event is not None:
+			if self.thread is not None and self.event is not None: #there was a thread that was stopped...
 				self.optimizeAlgorithm()
 		elif choice == "5":
+			print "When the model repository is set up, this will display specific information about a given model"
+		elif choice == "6":
 			self.event.set()
 			self.thread.join()
-		elif choice == "6":
-			print "When the model repository is set up, this will display specific information about a given model"
 		else:
 			#set up forking
 			sys.exit()
