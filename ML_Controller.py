@@ -36,16 +36,20 @@ class ML_Controller:
 		#print "target length = " + str(len(self.target))
 		self.kb = kb
 		self.algorithm = NeuralNetworkController.NeuralNetworkController(self.kb)
-		
-	def runAlgorithm(self):
-		
+	
+	def createModel(self):
 		self.algorithm.createModel(self.data, self.target)
+	
+	def runAlgorithm(self):
 		
 		results = self.algorithm.runModel()
 		self.kb.updateDatabaseWithResults(self.algorithm)
 		
 		
 	def optimizeAlgorithm(self):
+		curr_id = self.algorithm.algorithm_id
 		self.algorithm = self.algorithm.optimize('Accuracy', 'Coordinate Ascent')
+		self.algorithm.algorithm_id = curr_id
+		self.algorithm.results['ID'] = curr_id
 		self.kb.updateDatabaseWithResults(self.algorithm)
 		

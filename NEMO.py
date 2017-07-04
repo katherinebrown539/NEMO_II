@@ -21,6 +21,7 @@ class NEMO:
 		
 	def setupNewML(self):
 		self.ml = ML_Controller(self.kb)
+		self.ml.createModel()
 		#return ml
 		
 	def runAlgorithm(self):
@@ -42,7 +43,19 @@ class NEMO:
 			print "%s\t\t%s\t\t%s\t\t%s\t\t%s\t\t%s\t\t%s" % (row[0], row[1], row[2], row[3], row[4], row[5], row[6])
 			row = self.kb.cursor.fetchone()
 	
-	
+	def printAlgorithmInformation(self):
+		stmt = "select * from ModelRepository"
+		self.kb.cursor.execute(stmt)
+		row = self.kb.cursor.fetchone()
+		current_id = ""
+		while row != None:		
+			if current_id != row[0]:
+				print "Current Algorithm ID: " + row[0] + "\nAlgorithm Type: " + row[1]
+				current_id = row[0]
+			print row[2] + " = " + row[3] + "\n"
+			row = self.kb.cursor.fetchone()
+			
+		print "No Model Information to Show"
 	def menu(self):
 		menu = "Main Menu:\n1. Create New Model\n2. Run New Model\n3. Optimize the model\n4. Output Model Results (Any current optimization task will be halted and restarted)\n5. View Model Information\n6. Cancel All Optimization Tasks\n7. Quit NEMO\n--> "
 		choices = ["1","2","3","4","5","6","7"]
@@ -63,7 +76,8 @@ class NEMO:
 			if self.thread is not None and self.event is not None: #there was a thread that was stopped...
 				self.optimizeAlgorithm()
 		elif choice == "5":
-			print "When the model repository is set up, this will display specific information about a given model"
+			#id = raw_input("Algorithm ID --> ")
+			self.printAlgorithmInformation()
 		elif choice == "6":
 			self.event.set()
 			self.thread.join()

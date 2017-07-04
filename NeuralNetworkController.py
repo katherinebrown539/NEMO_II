@@ -103,7 +103,8 @@ class NeuralNetworkController:
 				#bestModel = self
 				break
 			else:
-				bestModel = next
+				bestModel = next 
+				#update Model information...
 				
 		print "Done optimizing this model"
 		bestModel = bestModel.optimizeNumberOfLayers(metric)
@@ -121,6 +122,9 @@ class NeuralNetworkController:
 		large_net.createModel(self.x, self.y, None, large_net_sz)
 		small_net.runModel()
 		large_net.runModel()
+		small_net.removeModelFromRepository()
+		large_net.removeModelFromRepository()
+		
 		small_net.optimizeNumberOfNodes(metric)
 		large_net.optimizeNumberOfNodes(metric)
 		
@@ -168,10 +172,12 @@ class NeuralNetworkController:
 		increase_nn = NeuralNetworkController(self.kb)
 		increase_nn.createModel(self.x, self.y, new_layers_inc)
 		increase_nn.runModel()
-		
+		increase_nn.removeModelFromRepository()
 		decrease_nn = NeuralNetworkController(self.kb)
 		decrease_nn.createModel(self.x, self.y, new_layers_dec)
 		decrease_nn.runModel()
+		decrease_nn.removeModelFromRepository()
+		
 		
 		#change metrics stuffs
 		#.results.get(metric)
@@ -200,6 +206,11 @@ class NeuralNetworkController:
 			to_return.append(random.randint(1,20))
 			
 		return to_return
+	
+	def removeModelFromRepository(self):
+		stmt = "delete from ModelRepository where algorithm_id = " + self.algorithm_id
+		self.kb.cursor.execute(stmt)
+		self.kb.db.commit()
 	
 	def updateDatabaseWithModel(self):
 		stmt = "insert into ModelRepository (algorithm_id, algorithm_name, arg_type, arg_val) values ( %s, %s, %s, %s)"
