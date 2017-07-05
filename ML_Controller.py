@@ -35,10 +35,15 @@ class ML_Controller:
 		#print self.target
 		#print "target length = " + str(len(self.target))
 		self.kb = kb
+				
 		self.algorithm = NeuralNetworkController.NeuralNetworkController(self.kb)
+		
 	
-	def createModel(self):
-		self.algorithm.createModel(self.data, self.target)
+	def createModel(self, id=None):
+		if id is None:
+			self.algorithm.createModel(self.data, self.target)
+		else:
+			self.algorithm.createModelFromID(self.data, self.target, id)
 	
 	def runAlgorithm(self):
 		

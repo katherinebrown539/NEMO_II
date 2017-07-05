@@ -18,11 +18,12 @@ class NEMO:
 		self.ml = None #will be a list
 		self.thread = None #will be a list
 		self.event = None #will be a list
+		self.checkForCurrentModels()
 		
-	def setupNewML(self):
+		
+	def setupNewML(self, id=None):
 		self.ml = ML_Controller(self.kb)
-		self.ml.createModel()
-		#return ml
+		self.ml.createModel(id)
 		
 	def runAlgorithm(self):
 		self.ml.runAlgorithm()
@@ -56,6 +57,19 @@ class NEMO:
 			row = self.kb.cursor.fetchone()
 			
 		print "No Model Information to Show"
+		
+	def checkForCurrentModels(self):
+		stmt = "select * from CurrentModel"
+		self.kb.cursor.execute(stmt)
+		rows = self.kb.cursor.fetchall()
+		i = 0
+		if len(rows) > 0:
+			current_row = rows[i]
+			current_id = current_row[0]
+			self.setupNewML(current_id)
+			
+			
+			
 	def menu(self):
 		menu = "Main Menu:\n1. Create New Model\n2. Run New Model\n3. Optimize the model\n4. Output Model Results (Any current optimization task will be halted and restarted)\n5. View Model Information\n6. Cancel All Optimization Tasks\n7. Quit NEMO\n--> "
 		choices = ["1","2","3","4","5","6","7"]
@@ -90,5 +104,10 @@ def main():
 	while True:
 		nemo.menu()
 
+def test():
+	nemo = NEMO("config/config.json")
+	nemo.setupNewML(id="175921957")
+	print "Created..."
+	
 if __name__ == "__main__":
 	main()

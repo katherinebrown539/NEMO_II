@@ -19,11 +19,10 @@ class NeuralNetworkController:
 	#NOTE: Code from kdnuggets
 	def __init__(self, kb):
 		self.algorithm_name = "Neural Network"
-		self.algorithm_id_abbr = "ANN"
-		self.id = ""
+		self.algorithm_id = ""
 		random.seed()
 		for i in range(1,10):
-			self.id = self.id + str(random.randint(1,9))
+			self.algorithm_id = self.algorithm_id + str(random.randint(1,9))
 		
 		self.kb = kb
 		#initialize remaining instance variables
@@ -40,7 +39,28 @@ class NeuralNetworkController:
 		
 		self.x = []
 		self.y = []
-		
+	
+	def createModelFromID(self, x, y, id):
+		self.algorithm_id = id
+		stmt = "select * from ModelRepository where algorithm_id = " + self.algorithm_id
+		print stmt
+		self.kb.cursor.execute(stmt)
+		row = self.kb.cursor.fetchone()
+		attributes = {}
+		while row != None:
+			print row
+			if row[2] == "hidden_layer_sizes":
+				attributes[row[2]] = tuple(map(int, row[3].strip('()').split(',')))
+				
+			row = self.kb.cursor.fetchone()
+			#add other attributes
+			
+		print attributes
+		stmt = "delete from ModelRepository where algorithm_id = " + self.algorithm_id
+		self.kb.cursor.execute(stmt)
+		self.kb.db.commit()
+		self.createModel(x,y, attributes['hidden_layer_sizes'])
+	
 	def createModel(self, x, y, layers=None, size = None,):
 		# print "X length " + str(len(x))
 		# print "Y length " + str(len(y))
@@ -60,10 +80,7 @@ class NeuralNetworkController:
 			self.layerslist = layers
 		else: self.layerslist = self.generateRandomArchitecture(size)
 		
-		#print str(self.layerslist)
-		
-		#self.algorithm_id = self.algorithm_id_abbr + self.id +  "( " + str(self.layerslist).strip('[]') + ")"	
-		self.algorithm_id = self.id
+
 		self.updateDatabaseWithModel()
 		self.addCurrentModel()
 		self.mlp = MLPClassifier(hidden_layer_sizes=self.layerslist)
