@@ -31,3 +31,4 @@ To quit: Press Ctrl+C or equivalent. Currently, it takes  few tries to shut off 
 4) Extend the documentation
 5) Add a new algorithm
 6) Complete any TO-DOs in the data and/or config sections
+
