@@ -71,6 +71,18 @@ class NEMO:
 			
 			
 	def menu(self):
+		#"Main Menu:\n
+		#1. Create New Model\n
+		#2. Create Model Based on ID \n
+		#3. Run Model\n => provide ID
+		#4. Add model to optimization queue\n => list all current models in queue with current optimization status => have user pick which to add to queue
+		#5. Optimize all models => init optimization threads 
+		#6. Output Model Results (Any current optimization task will be halted and restarted)\n
+		#7. View Information on All Model(s)\n => pause all models optimization, print information in modelrepository table
+		#8. View Information on Current Model(s)\n => pause all models optimization, print information in current model table where id = current
+		#9. Cancel All Optimization Tasks\n => totally cancel all optimization tasks
+		#10. Quit NEMO\n--> "
+
 		menu = "Main Menu:\n1. Create New Model\n2. Run New Model\n3. Optimize the model\n4. Output Model Results (Any current optimization task will be halted and restarted)\n5. View Model Information\n6. Cancel All Optimization Tasks\n7. Quit NEMO\n--> "
 		choices = ["1","2","3","4","5","6","7"]
 		choice = ""
