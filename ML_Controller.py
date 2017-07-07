@@ -45,11 +45,15 @@ class ML_Controller:
 		else:
 			self.algorithm.createModelFromID(self.data, self.target, id)
 	
-	def runAlgorithm(self):
+	def copyModel(self, id):
+		self.algorithm.copyModel(self.data, self.target, id)
 		
+	def runAlgorithm(self):
 		results = self.algorithm.runModel()
 		self.kb.updateDatabaseWithResults(self.algorithm)
 		
+	def getID(self):
+		return self.algorithm.algorithm_id
 		
 	def optimizeAlgorithm(self):
 		curr_id = self.algorithm.algorithm_id
@@ -58,4 +62,5 @@ class ML_Controller:
 		self.algorithm.algorithm_id = curr_id
 		self.algorithm.results['ID'] = curr_id
 		self.kb.updateDatabaseWithResults(self.algorithm)
-		
+		self.algorithm.removeModelFromRepository()
+		self.algorithm.updateDatabaseWithModel()
