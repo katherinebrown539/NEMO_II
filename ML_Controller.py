@@ -35,7 +35,7 @@ class ML_Controller:
 		#print self.target
 		#print "target length = " + str(len(self.target))
 		self.kb = kb
-				
+		self.isCurrentlyOptimizing = False	#True when model is in optimization queue, false otherwise
 		self.algorithm = NeuralNetworkController.NeuralNetworkController(self.kb)
 		
 	
@@ -53,6 +53,7 @@ class ML_Controller:
 		
 	def optimizeAlgorithm(self):
 		curr_id = self.algorithm.algorithm_id
+		self.isCurrentlyOptimizing = True
 		self.algorithm = self.algorithm.optimize('Accuracy', 'Coordinate Ascent')
 		self.algorithm.algorithm_id = curr_id
 		self.algorithm.results['ID'] = curr_id
