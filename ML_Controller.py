@@ -50,6 +50,9 @@ class ML_Controller:
 		
 	def runAlgorithm(self):
 		results = self.algorithm.runModel()
+		#self.kb.updateDatabaseWithResults(self.algorithm)
+		
+	def updateDatabaseWithResults(self):
 		self.kb.updateDatabaseWithResults(self.algorithm)
 		
 	def getID(self):
@@ -62,5 +65,4 @@ class ML_Controller:
 		self.algorithm.algorithm_id = curr_id
 		self.algorithm.results['ID'] = curr_id
 		self.kb.updateDatabaseWithResults(self.algorithm)
-		self.algorithm.removeModelFromRepository()
-		self.algorithm.updateDatabaseWithModel()
+		

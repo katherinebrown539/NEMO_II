@@ -1,9 +1,12 @@
 from KnowledgeBase import KnowledgeBase
 from ML_Controller import ML_Controller
+import MySQLdb
 import threading
 import sys
 import os
 
+
+#one stop event, pass in the queue and number of seconds to spend optimizing
 def optimizeAlgorithmWorker(ml, stp):
 	print "Optimizing"
 	old_out = sys.stdout
@@ -12,6 +15,10 @@ def optimizeAlgorithmWorker(ml, stp):
 		ml.optimizeAlgorithm()
 	sys.stdout = old_out
 	ml.isCurrentlyOptimizing = False #no thread exists for this model, threads are released when they end
+	ml.algorithm.removeModelFromRepository()
+	ml.algorithm.updateDatabaseWithModel()
+	ml.runAlgorithm()
+	ml.updateDatabaseWithResults()
 	
 class NEMO:
 	def __init__(self, filename):
@@ -28,8 +35,9 @@ class NEMO:
 	
 	def verifyID(self, id):
 		stmt = "select algorithm_id from ModelRepository"
-		self.kb.cursor.execute(stmt)
-		ids = self.kb.cursor.fetchall()
+		self.kb.executeQuery(stmt)
+		#self.kb.cursor.execute(stmt)
+		ids = self.kb.fetchAll()
 		
 		return (id,) in ids
 		
@@ -49,6 +57,8 @@ class NEMO:
 	def setupNewML(self, id=None):
 		new_ml = ML_Controller(self.kb)
 		new_ml.createModel(id)
+		new_ml.runAlgorithm()
+		new_ml.updateDatabaseWithResults()
 		self.ml.append(new_ml)
 	
 	def copyML(self):
@@ -58,6 +68,8 @@ class NEMO:
 		if self.verifyID(this_id):
 			new_ml = ML_Controller(self.kb)
 			new_ml.copyModel(this_id)
+			new_ml.runAlgorithm()
+			new_ml.updateDatabaseWithResults()
 			self.ml.append(new_ml)
 		else:
 			print "ID does not exist in Model Repository"
@@ -70,6 +82,7 @@ class NEMO:
 		model = self.findAlgorithmBasedOnID(id)
 		if model is not None:
 			model.runAlgorithm()
+			model.updateDatabaseWithResults()
 		else:	
 			print "Model with ID " + id + " does not exist"
 	
@@ -84,7 +97,7 @@ class NEMO:
 		if not self.verifyID(id):
 			print "ID does not exist in repository"
 			return None
-			
+		self.kb.db.commit()	
 		model = self.findAlgorithmBasedOnID(id)
 		status = model.isCurrentlyOptimizing
 		if status == False:
@@ -118,9 +131,7 @@ class NEMO:
 			if thrd["id"] == id:
 				thrd["event"].set()
 				thrd["thread"].join()
-				stmt = "delete from CurrentlyOptimizingModels where algorithm_id = " + id
-				self.kb.cursor.execute(stmt)
-				self.kb.db.commit()
+				#self.kb.executeQuery(stmt)
 				to_remove = thrd
 		if to_remove is not None:
 			self.threads.remove(to_remove)
@@ -132,58 +143,58 @@ class NEMO:
 
 	def stopAllOptimizationTasks(self):
 		while len(self.threads) > 0:
-			curr = self.threads.pop()
+			thrd = self.threads.pop()
 			thrd["event"].set()
 			thrd["thread"].join()
-			stmt = "delete from CurrentlyOptimizingModels where algorithm_id = " + id
-			self.kb.cursor.execute(stmt)
+			#self.kb.executeQuery(stmt)
 			#self.kb.db.commit()
 			
 	def addToCurrentlyOptimizingTable(self, id):
-		stmt = "select algorithm_id from CurrentlyOptimizingModels"
-		self.kb.cursor.execute(stmt)
-		ids = self.kb.cursor.fetchall()
-		if id not in ids:
+		try:
 			stmt = "insert into CurrentlyOptimizingModels(algorithm_id) values (%s)"
-			self.kb.cursor.execute(stmt, (id,))
-			#self.kb.db.commit()
-			
+			self.kb.executeQuery(stmt,(id,))
+		except (MySQLdb.IntegrityError):
+			print "Algorithm is already in queue for optimization"
+						
 	def printInformationOnCurrentlyOptimizingModels(self):
 		for model in self.threads:
 			self.printModelInformation(model["id"])
 
 	def removeFromCurrentlyOptimizingTable(self,id):
 		stmt = "select algorithm_id from CurrentlyOptimizingModels"
-		self.kb.cursor.execute(stmt)
-		ids = self.kb.cursor.fetchall()
-		if id in ids:
+		self.kb.executeQuery(stmt)
+		#self.kb.cursor.execute(stmt)
+		ids = self.kb.fetchAll()
+		if (id,) in ids:
 			stmt = "delete from CurrentlyOptimizingModels where algorithm_id = " + id
-			self.kb.cursor.execute(stmt)
-			#self.kb.db.commit()
+			self.kb.executeQuery(stmt)
+			
 
 	def printAlgorithmResults(self):
 		stmt = "select * from AlgorithmResults"
-		self.kb.cursor.execute(stmt)
+		self.kb.executeQuery(stmt)
+		#self.kb.cursor.execute(stmt)
 		print "Algorithm ID\t\tAlgorithm Name\t\tAccuracy\t\tPrecision\t\tRecall\t\t\tF1 Score\t\tConfusion Matrix"
-		row = self.kb.cursor.fetchone()
+		row = self.kb.fetchOne()
 		while row != None:
 			print "%s\t\t%s\t\t%s\t\t%s\t\t%s\t\t%s\t\t%s" % (row[0], row[1], row[2], row[3], row[4], row[5], row[6])
-			row = self.kb.cursor.fetchone()
+			row = self.kb.fetchOne()
 	
 	def printModelInformation(self, id=None):
 		if id is None:
 			stmt = "select * from ModelRepository"
 		else:
 			stmt = "select * from ModelRepository where algorithm_id = " + id
-		self.kb.cursor.execute(stmt)
-		row = self.kb.cursor.fetchone()
+		self.kb.executeQuery(stmt)
+		#self.kb.cursor.execute(stmt)
+		row = self.kb.fetchOne()
 		current_id = ""
 		while row != None:		
 			if current_id != row[0]:
 				print "Current Algorithm ID: " + row[0] + "\nAlgorithm Type: " + row[1]
 				current_id = row[0]
 			print row[2] + " = " + row[3] + "\n"
-			row = self.kb.cursor.fetchone()
+			row = self.kb.fetchOne()
 			
 		print "No Model Information to Show"
 		
@@ -194,8 +205,9 @@ class NEMO:
 	
 	def checkForCurrentModels(self):
 		stmt = "select * from CurrentModel"
-		self.kb.cursor.execute(stmt)
-		rows = self.kb.cursor.fetchall()
+		self.kb.executeQuery(stmt)
+		#self.kb.cursor.execute(stmt)
+		rows = self.kb.fetchAll()
 		i = 0
 		if len(rows) > 0:
 			current_row = rows[i]
@@ -267,6 +279,7 @@ class NEMO:
 			id = raw_input("Enter ID --> ")
 			self.stopOptimizationTask(id)
 		else:
+			self.stopAllOptimizationTasks()
 			sys.exit()
 def main():
 	nemo = NEMO("config/config.json")

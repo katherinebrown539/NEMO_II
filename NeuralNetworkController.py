@@ -243,23 +243,27 @@ class NeuralNetworkController:
 	
 	def removeModelFromRepository(self):
 		stmt = "delete from ModelRepository where algorithm_id = " + self.algorithm_id
-		self.kb.cursor.execute(stmt)
+		self.kb.executeQuery(stmt)
+		#self.kb.cursor.execute(stmt)
 		#self.kb.db.commit()
 	
 	def updateDatabaseWithModel(self):
 		stmt = "insert into ModelRepository (algorithm_id, algorithm_name, arg_type, arg_val) values ( %s, %s, %s, %s)"
 		args = (self.algorithm_id, self.algorithm_name, "hidden_layer_sizes", str(tuple(self.layerslist)))
-		print stmt % args
-		self.kb.cursor.execute(stmt, args)
+		self.kb.executeQuery(stmt, args)
+		#print stmt % args
+		#self.kb.cursor.execute(stmt, args)
 		#self.kb.db.commit()
 		
 	def addCurrentModel(self):
 		stmt = "insert into CurrentModel(algorithm_id) values (%s)"
 		args = (self.algorithm_id,)
-		self.kb.cursor.execute(stmt, args)
+		self.kb.executeQuery(stmt, args)
+		#self.kb.cursor.execute(stmt, args)
 		#self.kb.db.commit()
 			
 	def removeCurrentModel(self):
 		stmt = "delete from CurrentModel where algorithm_id = " + self.algorithm_id
-		self.kb.cursor.execute(stmt)
+		self.kb.executeQuery(stmt)
+		#self.kb.cursor.execute(stmt)
 		#self.kb.db.commit()

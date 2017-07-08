@@ -107,8 +107,7 @@ class KnowledgeBase:
 		#print str(results)
 		stmt = "insert into AlgorithmResults(algorithm_id, algorithm_name, accuracy, prec, recall, f1, confusion_matrix) values (%s,%s,%s,%s,%s,%s,%s)"
 		print stmt
-		self.cursor.execute(stmt, results)
-		self.db.commit()
+		self.executeQuery(stmt, results)
 		
 		
 	#Constructor
@@ -140,6 +139,39 @@ class KnowledgeBase:
 		print self.Y
 		self.importData(file_info['DATA'], file_info['SCHEMA'])
 	
+	def executeQuery(self, query, args=None):
+		complete = False
+		while not complete:
+			try:
+				if args is None:
+					self.cursor.execute(query)
+					self.db.commit()
+				else:
+					self.cursor.execute(query, args)
+			except (AttributeError, MySQLdb.OperationalError):
+				self.db = MySQLdb.connect(host = self.HOST, port = self.PORT, user = self.USER, passwd = self.PASSWD, db = self.DATABASE)
+				self.cursor = self.db.cursor()
+			complete = True
+	
+	def fetchOne(self):
+		complete = False
+		while not complete:
+			try:
+				return self.cursor.fetchone()
+			except (AttributeError, MySQLdb.OperationalError):
+				self.db = MySQLdb.connect(host = self.HOST, port = self.PORT, user = self.USER, passwd = self.PASSWD, db = self.DATABASE)
+				self.cursor = self.db.cursor()
+			complete=True
+	
+	def fetchAll(self):
+		complete = False
+		while not complete:
+			try:
+				return self.cursor.fetchall()
+			except (AttributeError, MySQLdb.OperationalError):
+				self.db = MySQLdb.connect(host = self.HOST, port = self.PORT, user = self.USER, passwd = self.PASSWD, db = self.DATABASE)
+				self.cursor = self.db.cursor()
+			complete=True
 	#DESTRUCTOR
 	#commits all changes to database and closes the connection
 	def __del__(self):
