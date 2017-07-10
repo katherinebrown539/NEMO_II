@@ -43,19 +43,19 @@ class NeuralNetworkController:
 	def createModelFromID(self, x, y, id):
 		self.algorithm_id = id
 		stmt = "select * from ModelRepository where algorithm_id = " + self.algorithm_id
-		print stmt
+		# print stmt
 		self.kb.cursor.execute(stmt)
 		row = self.kb.cursor.fetchone()
 		attributes = {}
 		while row != None:
-			print row
+			# print row
 			if row[2] == "hidden_layer_sizes":
 				attributes[row[2]] = tuple(map(int, row[3].strip('()').split(',')))
 				
 			row = self.kb.cursor.fetchone()
 			#add other attributes
 			
-		print attributes
+		# print attributes
 		stmt = "delete from ModelRepository where algorithm_id = " + self.algorithm_id
 		self.kb.cursor.execute(stmt)
 		self.kb.db.commit()
@@ -63,24 +63,24 @@ class NeuralNetworkController:
 	
 	def copyModel(self,x,y,id):
 		stmt = "select * from ModelRepository where algorithm_id = " + id
-		print stmt
+		# print stmt
 		self.kb.cursor.execute(stmt)
 		row = self.kb.cursor.fetchone()
 		attributes = {}
 		while row != None:
-			print row
+			# print row
 			if row[2] == "hidden_layer_sizes":
 				attributes[row[2]] = tuple(map(int, row[3].strip('()').split(',')))
 				
 			row = self.kb.cursor.fetchone()
 			#add other attributes
 			
-		print attributes
+		# print attributes
 		self.createModel(x,y, attributes['hidden_layer_sizes'])
 		
 	def createModel(self, x, y, layers=None, size = None,):
-		# print "X length " + str(len(x))
-		# print "Y length " + str(len(y))
+		# # print "X length " + str(len(x))
+		# # print "Y length " + str(len(y))
 		self.x = x
 		self.y = y
 		self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(x,y)
@@ -98,19 +98,19 @@ class NeuralNetworkController:
 		else: self.layerslist = self.generateRandomArchitecture(size)
 		
 
-		self.updateDatabaseWithModel()
-		self.addCurrentModel()
+		# self.updateDatabaseWithModel()
+		# self.addCurrentModel()
 		self.mlp = MLPClassifier(hidden_layer_sizes=self.layerslist)
 		self.mlp.fit(self.X_train, self.y_train)
 		
 	
 	def runModel(self):
-		#print "Architecture of model: " + str(self.layerslist)
+		## print "Architecture of model: " + str(self.layerslist)
 		
 		predictions = self.mlp.predict(self.X_test)	
 		
-		#print(confusion_matrix(self.y_test,predictions))
-		#print(classification_report(self.y_test,predictions))
+		## print(confusion_matrix(self.y_test,predictions))
+		## print(classification_report(self.y_test,predictions))
 		
 		accuracy = accuracy_score(self.y_test,predictions)
 		precision = precision_score(self.y_test,predictions, average='micro')
@@ -140,7 +140,7 @@ class NeuralNetworkController:
 				bestModel = next 
 				#update Model information...
 				
-		print "Done optimizing this model"
+		# print "Done optimizing this model"
 		bestModel = bestModel.optimizeNumberOfLayers(metric)
 		
 		
@@ -156,8 +156,8 @@ class NeuralNetworkController:
 		large_net.createModel(self.x, self.y, None, large_net_sz)
 		small_net.runModel()
 		large_net.runModel()
-		small_net.removeModelFromRepository()
-		large_net.removeModelFromRepository()
+		# small_net.removeModelFromRepository()
+		# large_net.removeModelFromRepository()
 		
 		small_net.optimizeNumberOfNodes(metric)
 		large_net.optimizeNumberOfNodes(metric)
@@ -166,24 +166,24 @@ class NeuralNetworkController:
 		#net.results.get(metric)
 		#may want to change how comparisons get done here...
 		if(large_net.results.get(metric) >= self.results.get(metric) and large_net.results.get(metric) >= small_net.results.get(metric)):
-			print "Larger Layers Model wins"
-			print large_net
+			# print "Larger Layers Model wins"
+			# print large_net
 			return large_net
 		if(small_net.results.get(metric) >= self.results.get(metric) and small_net.results.get(metric) >= large_net.results.get(metric)):
-			print "Smaller Layers Model wins"
-			print small_net
+			# print "Smaller Layers Model wins"
+			# print small_net
 			return small_net
 		else:
-			print "Same Layers Model wins"
-			print self
+			# print "Same Layers Model wins"
+			# print self
 			return self
 			
 	def optimizeNumberOfNodes(self, metric):
 	
 		random.seed()
 		percents = random.sample(xrange(1,100), len(self.layerslist))
-		print "Percents: " + str(percents)
-		print "Current architecture: " + str(self.layerslist)
+		# print "Percents: " + str(percents)
+		# print "Current architecture: " + str(self.layerslist)
 		
 		#increase hidden layers by those percentages
 		new_layers_inc = []
@@ -191,7 +191,7 @@ class NeuralNetworkController:
 			curr = 1 + (percents[i]/100.0);
 			new_layers_inc.append(int(1 + (curr * self.layerslist[i])))
 				
-		print "Increased nodes architecture: " + str(new_layers_inc)
+		# print "Increased nodes architecture: " + str(new_layers_inc)
 		#decrease hidden layers by those percentages
 		new_layers_dec = []
 		for i in range(0, len(self.layerslist)):
@@ -200,34 +200,34 @@ class NeuralNetworkController:
 			if new_l < 1: new_l = 1;
 			new_layers_dec.append(new_l)
 		
-		print "Decreased nodes architecture: " + str(new_layers_dec)
+		# print "Decreased nodes architecture: " + str(new_layers_dec)
 		
 		#create new models, and compare
 		increase_nn = NeuralNetworkController(self.kb)
 		increase_nn.createModel(self.x, self.y, new_layers_inc)
 		increase_nn.runModel()
-		increase_nn.removeModelFromRepository()
+		#increase_nn.removeModelFromRepository()
 		decrease_nn = NeuralNetworkController(self.kb)
 		decrease_nn.createModel(self.x, self.y, new_layers_dec)
 		decrease_nn.runModel()
-		decrease_nn.removeModelFromRepository()
+		#decrease_nn.removeModelFromRepository()
 		
 		
 		#change metrics stuffs
 		#.results.get(metric)
-		print "Accuracy of current model: " + str(self.results.get(metric))
-		print "Accuracy of increased nodes model: " + str(increase_nn.results.get(metric))
-		print "Accuracy of decreased nodes model: " + str(decrease_nn.results.get(metric))
+		# print "Accuracy of current model: " + str(self.results.get(metric))
+		# print "Accuracy of increased nodes model: " + str(increase_nn.results.get(metric))
+		# print "Accuracy of decreased nodes model: " + str(decrease_nn.results.get(metric))
 		
 		#may want to change how comparisons get done here...
 		if(increase_nn.results.get(metric) >= self.results.get(metric) and increase_nn.results.get(metric) >= decrease_nn.results.get(metric)):
-			print "Increased nodes Model wins"
+			# print "Increased nodes Model wins"
 			return increase_nn
 		elif(decrease_nn.results.get(metric) >= self.results.get(metric) and decrease_nn.results.get(metric) >= increase_nn.results.get(metric)):
-			print "Decreased nodes Model wins"
+			# print "Decreased nodes Model wins"
 			return decrease_nn
 		else:
-			print "Same nodes model wins"
+			# print "Same nodes model wins"
 			return self
 			
 	def testForConvergence(self, other): 
@@ -251,7 +251,7 @@ class NeuralNetworkController:
 		stmt = "insert into ModelRepository (algorithm_id, algorithm_name, arg_type, arg_val) values ( %s, %s, %s, %s)"
 		args = (self.algorithm_id, self.algorithm_name, "hidden_layer_sizes", str(tuple(self.layerslist)))
 		self.kb.executeQuery(stmt, args)
-		#print stmt % args
+		## print stmt % args
 		#self.kb.cursor.execute(stmt, args)
 		#self.kb.db.commit()
 		

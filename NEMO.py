@@ -1,32 +1,42 @@
 from KnowledgeBase import KnowledgeBase
 from ML_Controller import ML_Controller
+from collections import deque
 import MySQLdb
 import threading
 import sys
 import os
-
+import time
 
 #one stop event, pass in the queue and number of seconds to spend optimizing
 def optimizeAlgorithmWorker(ml, stp):
-	print "Optimizing"
-	old_out = sys.stdout
-	sys.stdout = open(os.devnull, 'w')
+	print "Optimizing " + ml.getID()
 	while not stp.is_set():
 		ml.optimizeAlgorithm()
-	sys.stdout = old_out
-	ml.isCurrentlyOptimizing = False #no thread exists for this model, threads are released when they end
-	ml.algorithm.removeModelFromRepository()
-	ml.algorithm.updateDatabaseWithModel()
 	ml.runAlgorithm()
 	ml.updateDatabaseWithResults()
+
+def optimizeWorker(queue, stp, secs):
+	while not stp.is_set():
+		#print len(queue)
+		task = queue.popleft()
+		opt_stp = threading.Event()
+		thrd = threading.Thread(target=optimizeAlgorithmWorker, args=(task, opt_stp))
+		thrd.start()
+		time.sleep(secs)
+		opt_stp.set()
+		thrd.join()
+		queue.append(task)
+		
 	
 class NEMO:
 	def __init__(self, filename):
 		self.kb = KnowledgeBase(filename)
 		self.ml = [] #list of machine learners
-		self.threads = [] #list of threads
-		#self.event = [] #list of events
+		self.queue = deque()
+		self.optimization_thread = None
+		self.stop_event = None
 		self.checkForCurrentModels()
+		self.secs = 60
 		
 	def findAlgorithmBasedOnID(self, id):
 		for model in self.ml:
@@ -57,10 +67,12 @@ class NEMO:
 	def setupNewML(self, id=None):
 		new_ml = ML_Controller(self.kb)
 		new_ml.createModel(id)
+		new_ml.algorithm.updateDatabaseWithModel()
+		new_ml.algorithm.addCurrentModel()
 		new_ml.runAlgorithm()
 		new_ml.updateDatabaseWithResults()
 		self.ml.append(new_ml)
-	
+		
 	def copyML(self):
 		#self.printModelInformation()
 		this_id = raw_input("Enter ID Here --> ")
@@ -68,6 +80,8 @@ class NEMO:
 		if self.verifyID(this_id):
 			new_ml = ML_Controller(self.kb)
 			new_ml.copyModel(this_id)
+			new_ml.algorithm.updateDatabaseWithModel()
+			new_ml.algorithm.addCurrentModel()
 			new_ml.runAlgorithm()
 			new_ml.updateDatabaseWithResults()
 			self.ml.append(new_ml)
@@ -86,80 +100,69 @@ class NEMO:
 		else:	
 			print "Model with ID " + id + " does not exist"
 	
+############################################################################################################
 	def optimizeAllModels(self):
 		for model in self.ml:
-			self.createOptimizingWorker(model.getID())
-	
-	def createOptimizingWorker(self, id):
-		#cycle through list of current algorithms to check that id given is legit
-		#if so, fetch algorithm
-		#else print unsuccessful
-		if not self.verifyID(id):
-			print "ID does not exist in repository"
-			return None
-		self.kb.db.commit()	
-		model = self.findAlgorithmBasedOnID(id)
-		status = model.isCurrentlyOptimizing
-		if status == False:
-			event = threading.Event()
-			thread = threading.Thread(target=optimizeAlgorithmWorker, args=(model, event))
-			thread.start()
-			self.threads.append({"thread":thread, "event": event, "id": model.getID()})
-			self.addToCurrentlyOptimizingTable(model.getID())
-		else:
-			print "Model is currently being optimized"
-	
-	def restartOptimizationTasks(self):
-		old_threads = self.threads
-		self.threads = []
-		while len(old_threads) > 0:
-			model = old_threads.pop()
-			id = model["id"]
-			self.createOptimizingWorker(id)
-			
-	def haltOptimizationTask(self, id):
-		for thrd in self.threads:
-			if thrd["id"] == id:
-				thrd["event"].set()
-				thrd["thread"].join()
-				return True
-		return False
+			self.optimizeTask(model.getID())
 		
-	def stopOptimizationTask(self, id):
-		to_remove = None
-		for thrd in self.threads:
-			if thrd["id"] == id:
-				thrd["event"].set()
-				thrd["thread"].join()
-				#self.kb.executeQuery(stmt)
-				to_remove = thrd
-		if to_remove is not None:
-			self.threads.remove(to_remove)
-	
-	def haltAllOptimizationTasks(self):
-		for thrd in self.threads:
-			thrd["event"].set()
-			thrd["thread"].join()
-
-	def stopAllOptimizationTasks(self):
-		while len(self.threads) > 0:
-			thrd = self.threads.pop()
-			thrd["event"].set()
-			thrd["thread"].join()
-			#self.kb.executeQuery(stmt)
-			#self.kb.db.commit()
+	def optimizeTask(self, id):
+		# retrieve model from id
+		model = self.findAlgorithmBasedOnID(id)
+		if model is not None and not model.isCurrentlyOptimizing: # check to see if optimization flag is true
+			print "Adding Model"
+			# add to currently optimizing table
+			self.addToCurrentlyOptimizingTable(id)
+			# set optimization flag to true
+			model.isCurrentlyOptimizing = True
+			# enqueue to optimization queue
+			self.queue.append(model)	
+		
+	def startOptimization(self):
+		# init thread with optimize worker
+		if self.queue is not None:
+			if len(self.queue) > 0:
+				self.stop_event = threading.Event()
+				self.optimization_thread = threading.Thread(target=optimizeWorker, args=(self.queue, self.stop_event, self.secs))
+				self.optimization_thread.start()
+		
+	def pauseOptimzation(self):
+		# issue stop event and stop thread
+		if self.stop_event is not None and self.optimization_thread is not None:
+			self.stop_event.set()
+			self.optimization_thread.join()
 			
-	def addToCurrentlyOptimizingTable(self, id):
-		try:
-			stmt = "insert into CurrentlyOptimizingModels(algorithm_id) values (%s)"
-			self.kb.executeQuery(stmt,(id,))
-		except (MySQLdb.IntegrityError):
-			print "Algorithm is already in queue for optimization"
-						
+	def cancelOptimization(self):
+		# issue stop event and stop thread
+		self.pauseOptimzation()
+		# dequeue through queue setting flags to false
+		self.queue.clear()
+		for m in self.ml:
+			m.isCurrentlyOptimizing = False
+			self.removeFromCurrentlyOptimizingTable(m.getID())
+			
+	def cancelSingleOptimizationTask(self, id):
+		self.pauseOptimzation()
+		to_remove = None
+		for m in self.queue:
+			if m.getID() == id:
+				to_remove = m
+		if to_remove is not None:
+			self.queue.remove(to_remove)
+			self.removeFromCurrentlyOptimizingTable(id)
+		self.startOptimization()
+		
 	def printInformationOnCurrentlyOptimizingModels(self):
-		for model in self.threads:
-			self.printModelInformation(model["id"])
-
+		stmt = "select * from CurrentlyOptimizingModels natural join ModelRepository"
+		self.kb.executeQuery(stmt)
+		row = self.kb.fetchOne()
+		current_id = ""
+		while row != None:		
+			if current_id != row[0]:
+				print "Current Algorithm ID: " + row[0] + "\nAlgorithm Type: " + row[1]
+				current_id = row[0]
+			print row[2] + " = " + row[3] + "\n"
+			row = self.kb.fetchOne()
+					
 	def removeFromCurrentlyOptimizingTable(self,id):
 		stmt = "select algorithm_id from CurrentlyOptimizingModels"
 		self.kb.executeQuery(stmt)
@@ -169,8 +172,17 @@ class NEMO:
 			stmt = "delete from CurrentlyOptimizingModels where algorithm_id = " + id
 			self.kb.executeQuery(stmt)
 			
+	def addToCurrentlyOptimizingTable(self, id):
+		try:
+			stmt = "insert into CurrentlyOptimizingModels(algorithm_id) values (%s)"
+			self.kb.executeQuery(stmt,(id,))
+		except (MySQLdb.IntegrityError):
+			print "Algorithm is already in queue for optimization"
+	
+############################################################################################################
 
 	def printAlgorithmResults(self):
+		#self.pauseOptimzation()
 		stmt = "select * from AlgorithmResults"
 		self.kb.executeQuery(stmt)
 		#self.kb.cursor.execute(stmt)
@@ -179,8 +191,10 @@ class NEMO:
 		while row != None:
 			print "%s\t\t%s\t\t%s\t\t%s\t\t%s\t\t%s\t\t%s" % (row[0], row[1], row[2], row[3], row[4], row[5], row[6])
 			row = self.kb.fetchOne()
-	
+		#self.startOptimization()
+		
 	def printModelInformation(self, id=None):
+		#self.pauseOptimzation()
 		if id is None:
 			stmt = "select * from ModelRepository"
 		else:
@@ -197,7 +211,7 @@ class NEMO:
 			row = self.kb.fetchOne()
 			
 		print "No Model Information to Show"
-		
+		#self.startOptimization()
 		
 	def printCurrentModelInformation(self):
 		for model in self.ml:
@@ -234,7 +248,8 @@ class NEMO:
 		
 		options = ['Create New Model', 'Create New Model Based on ID', 'Create a Copy of a Model Based on ID', 'Run Model', 'Add Model to Optimization Queue', 'Optimize All Models', 
 		'Output Model Results (Any current optimization task will be halted and restarted)', 'View Information on All Models (Any current optimization task will be halted and restarted)',
-		'View Information on Current Models (Any current optimization task will be halted and restarted)', 'Cancel Selected Optimization Task', 'Cancel All Optimization Tasks', 'Quit NEMO']
+		'View Information on Current Models (Any current optimization task will be halted and restarted)', 'View Models in Optimization Queue (Any current optimization task will be halted and restarted)',
+		'Cancel Selected Optimization Task', 'Cancel All Optimization Tasks', 'Quit NEMO']
 		possible_choices = range(1, len(options)+1)
 		ch_strs = map(str, possible_choices)
 		input = ""
@@ -258,38 +273,31 @@ class NEMO:
 			self.runAlgorithm()
 		elif choice == 'Add Model to Optimization Queue':
 			id = raw_input("Enter ID --> ")
-			self.createOptimizingWorker(id)
-		elif choice == 'Optimize All Models':
+			self.optimizeTask(id)
+			self.startOptimization()
+ 		elif choice == 'Optimize All Models':
 			self.optimizeAllModels()
+			self.startOptimization()
 		elif choice == 'Output Model Results (Any current optimization task will be halted and restarted)':
-			self.haltAllOptimizationTasks()
 			self.printAlgorithmResults()
-			self.restartOptimizationTasks()
-		elif choice == 'View Information on All Models (Any current optimization task will be halted and restarted)': 
-			self.haltAllOptimizationTasks()
+		elif choice == 'View Information on All Models (Any current optimization task will be halted and restarted)': 		
 			self.printModelInformation()
-			self.restartOptimizationTasks()
 		elif choice == 'View Information on Current Models (Any current optimization task will be halted and restarted)':
-			self.haltAllOptimizationTasks()
 			self.printCurrentModelInformation()
-			self.restartOptimizationTasks()
 		elif choice == 'Cancel All Optimization Tasks':
-			self.stopAllOptimizationTasks()
+			self.cancelOptimization()
 		elif choice == 'Cancel Selected Optimization Task':
 			id = raw_input("Enter ID --> ")
-			self.stopOptimizationTask(id)
+			self.cancelSingleOptimizationTask(id)
+		elif choice == 'View Models in Optimization Queue (Any current optimization task will be halted and restarted)':
+			self.printInformationOnCurrentlyOptimizingModels()
 		else:
-			self.stopAllOptimizationTasks()
+			self.cancelOptimization()
 			sys.exit()
 def main():
 	nemo = NEMO("config/config.json")
 	while True:
 		nemo.menu()
-
-def test():
-	nemo = NEMO("config/config.json")
-	nemo.setupNewML(id="175921957")
-	print "Created..."
 	
 if __name__ == "__main__":
 	main()

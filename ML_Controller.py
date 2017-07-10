@@ -60,9 +60,9 @@ class ML_Controller:
 		
 	def optimizeAlgorithm(self):
 		curr_id = self.algorithm.algorithm_id
-		self.isCurrentlyOptimizing = True
 		self.algorithm = self.algorithm.optimize('Accuracy', 'Coordinate Ascent')
 		self.algorithm.algorithm_id = curr_id
 		self.algorithm.results['ID'] = curr_id
 		self.kb.updateDatabaseWithResults(self.algorithm)
-		
+		self.algorithm.removeModelFromRepository()
+		self.algorithm.updateDatabaseWithModel()
