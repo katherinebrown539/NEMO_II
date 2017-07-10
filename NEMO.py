@@ -9,16 +9,13 @@ import time
 
 #one stop event, pass in the queue and number of seconds to spend optimizing
 def optimizeAlgorithmWorker(ml, stp):
-	print "Optimizing " + ml.getID()
 	while not stp.is_set():
 		ml.optimizeAlgorithm()
-	ml.runAlgorithm()
-	ml.updateDatabaseWithResults()
-
+	
 def optimizeWorker(queue, stp, secs):
 	while not stp.is_set():
-		#print len(queue)
 		task = queue.popleft()
+		#print "Optimizing " + task.getID()
 		opt_stp = threading.Event()
 		thrd = threading.Thread(target=optimizeAlgorithmWorker, args=(task, opt_stp))
 		thrd.start()
@@ -36,7 +33,7 @@ class NEMO:
 		self.optimization_thread = None
 		self.stop_event = None
 		self.checkForCurrentModels()
-		self.secs = 60
+		self.secs = 45
 		
 	def findAlgorithmBasedOnID(self, id):
 		for model in self.ml:
