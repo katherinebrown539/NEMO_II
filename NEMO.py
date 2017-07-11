@@ -244,7 +244,7 @@ class NEMO:
 
 		
 		options = ['Create New Model', 'Create New Model Based on ID', 'Create a Copy of a Model Based on ID', 'Run Model', 'Add Model to Optimization Queue', 'Optimize All Models', 
-		'Output Model Results (Any current optimization task will be halted and restarted)', 'View Information on All Models (Any current optimization task will be halted and restarted)',
+		'Output All Model Results (Any current optimization task will be halted and restarted)', 'View Information on All Models (Any current optimization task will be halted and restarted)',
 		'View Information on Current Models (Any current optimization task will be halted and restarted)', 'View Models in Optimization Queue (Any current optimization task will be halted and restarted)',
 		'Cancel Selected Optimization Task', 'Cancel All Optimization Tasks', 'Quit NEMO']
 		possible_choices = range(1, len(options)+1)
@@ -275,7 +275,7 @@ class NEMO:
  		elif choice == 'Optimize All Models':
 			self.optimizeAllModels()
 			self.startOptimization()
-		elif choice == 'Output Model Results (Any current optimization task will be halted and restarted)':
+		elif choice == 'Output All Model Results (Any current optimization task will be halted and restarted)':
 			self.printAlgorithmResults()
 		elif choice == 'View Information on All Models (Any current optimization task will be halted and restarted)': 		
 			self.printModelInformation()
