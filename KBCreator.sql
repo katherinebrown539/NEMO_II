@@ -16,7 +16,7 @@ create table AlgorithmResults(
 
 
 create table ModelRepository(
-	algorithm_id varchar(16) primary key,
+	algorithm_id varchar(16),
 	algorithm_name varchar(255),
 	arg_type varchar(255),
 	arg_val varchar(255)

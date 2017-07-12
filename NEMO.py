@@ -62,7 +62,18 @@ class NEMO:
 			print "ID does not exist in Model Repository"
 		
 	def setupNewML(self, id=None):
-		new_ml = ML_Controller(self.kb)
+		models = ['Neural Network', 'Decision Tree']
+		possible_choices = range(1, len(models)+1)
+		ch_strs = map(str, possible_choices)
+		input = ""
+		while input not in ch_strs:
+			print "Pick A Model Type"
+			for i in range(0, len(models)):
+				print ch_strs[i] + ". " + models[i]
+			input = raw_input("--> ")
+		input = models[int(input)-1]
+			
+		new_ml = ML_Controller(self.kb, input)
 		new_ml.createModel(id)
 		new_ml.algorithm.updateDatabaseWithModel()
 		new_ml.algorithm.addCurrentModel()
@@ -86,9 +97,6 @@ class NEMO:
 			print "ID does not exist in Model Repository"
 
 	def runAlgorithm(self):
-		#cycle through list of current algorithms to check that id given is legit
-		#if so, fetch algorithms, run algorithm
-		#else print unsuccessful
 		id = raw_input("Enter ID of Model --> ")
 		model = self.findAlgorithmBasedOnID(id)
 		if model is not None:
@@ -157,7 +165,8 @@ class NEMO:
 			if current_id != row[0]:
 				print "Current Algorithm ID: " + row[0] + "\nAlgorithm Type: " + row[1]
 				current_id = row[0]
-			print row[2] + " = " + row[3] + "\n"
+				val = row[3] if row[3] is not None else "None"
+			print row[2] + " = " + val + "\n"
 			row = self.kb.fetchOne()
 					
 	def removeFromCurrentlyOptimizingTable(self,id):
@@ -200,14 +209,16 @@ class NEMO:
 		#self.kb.cursor.execute(stmt)
 		row = self.kb.fetchOne()
 		current_id = ""
-		while row != None:		
+		while row != None:	
+			#print row
 			if current_id != row[0]:
-				print "Current Algorithm ID: " + row[0] + "\nAlgorithm Type: " + row[1]
+				print "\nCurrent Algorithm ID: " + row[0] + "\nAlgorithm Type: " + row[1]
 				current_id = row[0]
-			print row[2] + " = " + row[3] + "\n"
+			val = row[3] if row[3] is not None else "None"
+			print row[2] + " = " + val
 			row = self.kb.fetchOne()
 			
-		print "No Model Information to Show"
+		print "\nNo Model Information to Show"
 		#self.startOptimization()
 		
 	def printCurrentModelInformation(self):

@@ -5,6 +5,7 @@ from pandas import DataFrame
 import pandas.io.sql as psql
 import KnowledgeBase
 import NeuralNetworkController
+import DecisionTreeController
 import random
 ##############################################################################################################
 # ML-Controller class																					     #
@@ -22,7 +23,7 @@ class ML_Controller:
 	# * A knowledge base has been set up and read data
 	#Postconditions: 
 	# * Data will be imported from the 
-	def __init__(self, kb):
+	def __init__(self, kb, algorithm_type):
 		cols = ",".join(kb.X)
 		stmt = "select " + cols + " from DATA;"
 		#print stmt
@@ -36,7 +37,12 @@ class ML_Controller:
 		#print "target length = " + str(len(self.target))
 		self.kb = kb
 		self.isCurrentlyOptimizing = False	#True when model is in optimization queue, false otherwise
-		self.algorithm = NeuralNetworkController.NeuralNetworkController(self.kb)
+		self.algorithm = None
+		print algorithm_type
+		if algorithm_type == "Neural Network":
+			self.algorithm = NeuralNetworkController.NeuralNetworkController(self.kb)
+		if algorithm_type == "Decision Tree":
+			self.algorithm = DecisionTreeController.DecisionTreeController(self.kb)
 		
 	
 	def createModel(self, id=None):
