@@ -26,7 +26,7 @@ class DecisionTreeController:
 		
 		if attributes is not None:
 			self.tree = DecisionTreeClassifier(random_state=None)
-			self.tree.set_params(**attributes)
+			self.set_params(**attributes)
 		else:
 			self.tree = DecisionTreeClassifier(random_state=0)
 			
@@ -35,8 +35,8 @@ class DecisionTreeController:
 	def createModelFromID(self, x, y, id):
 		#run query
 		stmt = "select * from ModelRepository where algorithm_id = " + id
-		self.kb.cursor.execute(stmt)
-		row = self.kb.cursor.fetchone()
+		self.kb.executeQuery(stmt)
+		row = self.kb.fetchOne()
 		attributes = {}
 		while row != None:
 			#print row
@@ -47,7 +47,7 @@ class DecisionTreeController:
 				elif row[2] == 'min_impurity_split':
 					val = float(row[3])
  			attributes[row[2]] = val
-			row = self.kb.cursor.fetchone()
+			row = self.kb.fetchOne()
 		self.createModel(x,y,attributes)
 		
 	def copyModel(self,x,y,id):
@@ -72,6 +72,9 @@ class DecisionTreeController:
 	def set_params(self, attr):
 		self.tree.set_parms(**attr)
 		
+	def get_params(self):
+		return self.tree.get_params()
+		
 	def optimize(self, metric, method):
 		if method == 'Coordinate Ascent':
 			return self.coordinateAscent(metric)
@@ -86,7 +89,7 @@ class DecisionTreeController:
 		return best_model
 	
 	def optimizeMaxFeatures(self, metric, best_model):
-		best_model_attributes = best_model.tree.get_params()
+		best_model_attributes = best_model.get_params()
 		#sqrt
 		sqrt_tree = DecisionTreeController(self.kb)
 		sqrt_attr = best_model_attributes
@@ -127,7 +130,7 @@ class DecisionTreeController:
 			return best_model
 			
 	def optimizeCriterion(self, metric, best_model):
-		attributes = best_model.tree.get_params()
+		attributes = best_model.get_params()
 		attributes['criterion'] = "entropy" if attributes['criterion'] == 'gini' else 'gini'
 		
 		criterion_tree = DecisionTreeController(self.kb)
@@ -143,7 +146,7 @@ class DecisionTreeController:
 		self.kb.executeQuery(stmt)
 
 	def updateDatabaseWithModel(self):
-		arguments = self.tree.get_params()
+		arguments = self.get_params()
 		for key, value in arguments.iteritems():
 			stmt = "insert into ModelRepository (algorithm_id, algorithm_name, arg_type, arg_val) values ( %s, %s, %s, %s)"
 			args = (self.algorithm_id, self.algorithm_name, key, value)

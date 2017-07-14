@@ -35,8 +35,7 @@ class NeuralNetworkController:
 		self.recall = None
 		self.f1 = None
 		self.cm = None
-		self.layerslist = []
-		
+
 		self.x = []
 		self.y = []
 	
@@ -48,36 +47,33 @@ class NeuralNetworkController:
 		row = self.kb.fetchOne()
 		attributes = {}
 		while row != None:
-			# print row
-			if row[2] == "hidden_layer_sizes":
-				attributes[row[2]] = tuple(map(int, row[3].strip('()').split(',')))
-				
-			row = self.kb.cursor.fetchone()
-			#add other attributes
+			key = row[2]
+			val = row[3]
+			print key + ": " + val
+			if val == 'None' or val == 'NULL' or val is None:
+				val = None
+			else:
+				if key in ['alpha', 'tol', 'momentum', 'validation_fraction', 'beta_1', 'beta_2', 'epsilon', 'learning_rate_init', 'power_t']:
+					val = float(val)
+				elif key in ['batch_size', 'max_iter', 'random_state']:
+					if val != 'auto':
+						val = int(val)
+				elif key in ['shuffle', 'verbose', 'warm_start', 'nesterovs_momentum', 'early_stopping']:
+					val = bool(val)
+				elif key == 'hidden_layer_sizes':
+					val = self.convertStringToTuple(val)
+			attributes[key] = val
+			row = self.kb.fetchOne()	
+
 			
-		# print attributes
-		stmt = "delete from ModelRepository where algorithm_id = " + self.algorithm_id
-		self.kb.cursor.execute(stmt)
-		self.kb.db.commit()
-		self.createModel(x,y, attributes['hidden_layer_sizes'])
+		self.createModel(x,y, attributes)
 	
 	def copyModel(self,x,y,id):
-		stmt = "select * from ModelRepository where algorithm_id = " + id
-		self.kb.cursor.execute(stmt)
-		row = self.kb.cursor.fetchone()
-		attributes = {}
-		while row != None:
-			# print row
-			if row[2] == "hidden_layer_sizes":
-				attributes[row[2]] = tuple(map(int, row[3].strip('()').split(',')))
-				
-			row = self.kb.cursor.fetchone()
-			#add other attributes
-			
-		# print attributes
-		self.createModel(x,y, attributes['hidden_layer_sizes'])
+		temp = self.algorithm_id
+		self.createModelFromID(x,y,id)
+		self.algorithm_id = temp
 		
-	def createModel(self, x, y, layers=None, size = None):
+	def createModel(self, x, y, attributes=None):
 		# # print "X length " + str(len(x))
 		# # print "Y length " + str(len(y))
 		self.x = x
@@ -89,27 +85,21 @@ class NeuralNetworkController:
 		self.X_train = scaler.transform(self.X_train)
 		self.X_test = scaler.transform(self.X_test)
 		
-		if size is None:
+		self.mlp = MLPClassifier()
+		if attributes is None:
+			attr = self.get_params()
 			size = random.randint(1,10)
-			
-		if layers is not None: #predefined architecture
-			self.layerslist = layers
-		else: self.layerslist = self.generateRandomArchitecture(size)
+			layerslist = self.generateRandomArchitecture(size)
+			attr['hidden_layer_sizes'] = tuple(layerslist)
+			self.set_params(**attr)
+		else:
+			self.set_params(**attributes)	
 		
-
-		# self.updateDatabaseWithModel()
-		# self.addCurrentModel()
-		self.mlp = MLPClassifier(hidden_layer_sizes=self.layerslist)
 		self.mlp.fit(self.X_train, self.y_train)
 		
 	
 	def runModel(self):
-		## print "Architecture of model: " + str(self.layerslist)
-		
 		predictions = self.mlp.predict(self.X_test)	
-		
-		## print(confusion_matrix(self.y_test,predictions))
-		## print(classification_report(self.y_test,predictions))
 		
 		accuracy = accuracy_score(self.y_test,predictions)
 		precision = precision_score(self.y_test,predictions, average='micro')
@@ -131,8 +121,10 @@ class NeuralNetworkController:
 	def coordinateAscent(self, metric):
 		bestModel = self
 		while True:
-			next = bestModel.optimizeNumberOfNodes(metric)
-			if bestModel.testForConvergence(next.layerslist): 
+			next = bestModel.optimizeNumberOfNodes(metric, bestModel)
+			current_params = next.get_params()
+			layers = current_params['hidden_layer_sizes']
+			if bestModel.testForConvergence(layers): 
 				#bestModel = self
 				break
 			else:
@@ -140,24 +132,34 @@ class NeuralNetworkController:
 				#update Model information...
 				
 		# print "Done optimizing this model"
-		bestModel = bestModel.optimizeNumberOfLayers(metric)
+		bestModel = bestModel.optimizeNumberOfLayers(metric, bestModel)
 		
 		
 		return bestModel
 		
-	def optimizeNumberOfLayers(self, metric):
-		small_net_sz = len(self.layerslist) - 1
-		large_net_sz = len(self.layerslist) + 1
+	def optimizeNumberOfLayers(self, metric, best_model):
+		best_attr = best_model.get_params()
+		small_net_sz = len(best_attr['hidden_layer_sizes']) - 1
+		large_net_sz = len(best_attr['hidden_layer_sizes']) + 1
+		# attr = self.mlp.get_params()
+		# size = random.randint(1,10)
+		# layerslist = self.generateRandomArchitecture(size)
+		# attr['hidden_layer_sizes'] = tuple(layerslist)
 		
 		small_net = NeuralNetworkController(self.kb)
 		large_net = NeuralNetworkController(self.kb)
-		small_net.createModel(self.x, self.y, None, small_net_sz)
-		large_net.createModel(self.x, self.y, None, large_net_sz)
+		small_arch = best_attr
+		small_arch['hidden_layer_sizes'] = tuple(self.generateRandomArchitecture(small_net_sz))
+		large_arch = best_attr
+		large_arch['hidden_layer_sizes'] = tuple(self.generateRandomArchitecture(large_net_sz))
+		
+		small_net.createModel(self.x, self.y, small_arch)
+		large_net.createModel(self.x, self.y, large_arch)
 		small_net.runModel()
 		large_net.runModel()
 		
-		small_net.optimizeNumberOfNodes(metric)
-		large_net.optimizeNumberOfNodes(metric)
+		small_net.optimizeNumberOfNodes(metric, small_net)
+		large_net.optimizeNumberOfNodes(metric, large_net)
 		
 		#change metrics stuff
 		#net.results.get(metric)
@@ -169,30 +171,36 @@ class NeuralNetworkController:
 		else:
 			return self
 			
-	def optimizeNumberOfNodes(self, metric):
-	
+	def optimizeNumberOfNodes(self, metric, best_model):
+		best_attr = best_model.get_params()
+		current = best_attr['hidden_layer_sizes']
+		curr_len = len(current)
 		random.seed()
-		percents = random.sample(xrange(1,100), len(self.layerslist))
+		percents = random.sample(xrange(1,100), curr_len)
 		
 		new_layers_inc = []
-		for i in range(0, len(self.layerslist)):
+		for i in range(0, curr_len):
 			curr = 1 + (percents[i]/100.0);
-			new_layers_inc.append(int(1 + (curr * self.layerslist[i])))
+			new_layers_inc.append(int(1 + (curr * current[i])))
 				
 		new_layers_dec = []
-		for i in range(0, len(self.layerslist)):
+		for i in range(0, curr_len):
 			curr = 1 - (percents[i]/100.0);
-			new_l = int(curr * self.layerslist[i]);
+			new_l = int(curr * current[i]);
 			if new_l < 1: new_l = 1;
 			new_layers_dec.append(new_l)
 		
 		
 		increase_nn = NeuralNetworkController(self.kb)
-		increase_nn.createModel(self.x, self.y, new_layers_inc)
+		increase_arch = best_attr
+		increase_arch['hidden_layer_sizes'] = tuple(new_layers_inc)
+		increase_nn.createModel(self.x, self.y, increase_arch)
 		increase_nn.runModel()
 		
 		decrease_nn = NeuralNetworkController(self.kb)
-		decrease_nn.createModel(self.x, self.y, new_layers_dec)
+		decrease_arch = best_attr
+		decrease_arch['hidden_layer_sizes'] = tuple(new_layers_dec)
+		decrease_nn.createModel(self.x, self.y, decrease_arch)
 		decrease_nn.runModel()
 		
 		
@@ -205,7 +213,8 @@ class NeuralNetworkController:
 			return self
 			
 	def testForConvergence(self, other): 
-		return other == self.layerslist
+		me = self.get_params()
+		return other == me['hidden_layer_sizes']
 		
 	def generateRandomArchitecture(self, num):
 		to_return = []
@@ -215,16 +224,34 @@ class NeuralNetworkController:
 			
 		return to_return
 	
+	def set_params(self, attr):
+		self.mlp.set_parms(**attr)
+		
+	def get_params(self):
+		return self.mlp.get_params()
+	
+	def convertStringToTuple(self, val):
+		val = val.strip('( )')
+		val = val.split(",")
+		while val.count(''):
+			val.remove('')
+		val = map(int, val)
+		val = tuple(val)
+		return val 
+		
+		
 	def removeModelFromRepository(self):
 		stmt = "delete from ModelRepository where algorithm_id = " + self.algorithm_id
 		self.kb.executeQuery(stmt)
-		#self.kb.cursor.execute(stmt)
-		#self.kb.db.commit()
-	
+
 	def updateDatabaseWithModel(self):
-		stmt = "insert into ModelRepository (algorithm_id, algorithm_name, arg_type, arg_val) values ( %s, %s, %s, %s)"
-		args = (self.algorithm_id, self.algorithm_name, "hidden_layer_sizes", str(tuple(self.layerslist)))
-		self.kb.executeQuery(stmt, args)
+		arguments = self.get_params()
+		#print arguments
+		for key, value in arguments.iteritems():
+			#print key + ": " + str(value)
+			stmt = "insert into ModelRepository (algorithm_id, algorithm_name, arg_type, arg_val) values ( %s, %s, %s, %s)"
+			args = (self.algorithm_id, self.algorithm_name, key, str(value))
+			self.kb.executeQuery(stmt, args)
 		
 	def addCurrentModel(self):
 		stmt = "insert into CurrentModel(algorithm_id) values (%s)"
@@ -234,4 +261,3 @@ class NeuralNetworkController:
 	def removeCurrentModel(self):
 		stmt = "delete from CurrentModel where algorithm_id = " + self.algorithm_id
 		self.kb.executeQuery(stmt)
-		

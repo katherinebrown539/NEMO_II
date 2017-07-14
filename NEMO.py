@@ -47,6 +47,13 @@ class NEMO:
 		ids = self.kb.fetchAll()
 		
 		return (id,) in ids
+	
+	def getAlgorithmType(self, id):
+		#assumes id has already been verified
+		stmt = "select algorithm_name from ModelRepository where algorithm_id = " + id
+		self.kb.executeQuery(stmt)
+		types = self.kb.fetchOne()
+		return types[0]
 		
 	#recreates model based on ID
 	#NEED method to copy model but create a different ID
@@ -62,20 +69,24 @@ class NEMO:
 			print "ID does not exist in Model Repository"
 		
 	def setupNewML(self, id=None):
-		models = ['Neural Network', 'Decision Tree']
-		possible_choices = range(1, len(models)+1)
-		ch_strs = map(str, possible_choices)
-		input = ""
-		while input not in ch_strs:
-			print "Pick A Model Type"
-			for i in range(0, len(models)):
-				print ch_strs[i] + ". " + models[i]
-			input = raw_input("--> ")
-		input = models[int(input)-1]
-			
+		
+		if id is None:
+			models = ['Neural Network', 'Decision Tree']
+			possible_choices = range(1, len(models)+1)
+			ch_strs = map(str, possible_choices)
+			input = ""
+			while input not in ch_strs:
+				print "Pick A Model Type"
+				for i in range(0, len(models)):
+					print ch_strs[i] + ". " + models[i]
+				input = raw_input("--> ")
+			input = models[int(input)-1]
+		if id is not None:
+			input = self.getAlgorithmType(id)
 		new_ml = ML_Controller(self.kb, input)
 		new_ml.createModel(id)
-		new_ml.algorithm.updateDatabaseWithModel()
+		if id is None: #brand new model
+			new_ml.algorithm.updateDatabaseWithModel()
 		new_ml.algorithm.addCurrentModel()
 		new_ml.runAlgorithm()
 		new_ml.updateDatabaseWithResults()
@@ -86,7 +97,7 @@ class NEMO:
 		this_id = raw_input("Enter ID Here --> ")
 		print this_id
 		if self.verifyID(this_id):
-			new_ml = ML_Controller(self.kb)
+			new_ml = ML_Controller(self.kb, self.getAlgorithmType(this_id))
 			new_ml.copyModel(this_id)
 			new_ml.algorithm.updateDatabaseWithModel()
 			new_ml.algorithm.addCurrentModel()
@@ -157,16 +168,13 @@ class NEMO:
 		self.startOptimization()
 		
 	def printInformationOnCurrentlyOptimizingModels(self):
-		stmt = "select * from CurrentlyOptimizingModels natural join ModelRepository"
+		stmt = "select algorithm_id from CurrentlyOptimizingModels"
 		self.kb.executeQuery(stmt)
 		row = self.kb.fetchOne()
 		current_id = ""
 		while row != None:		
-			if current_id != row[0]:
-				print "Current Algorithm ID: " + row[0] + "\nAlgorithm Type: " + row[1]
-				current_id = row[0]
-				val = row[3] if row[3] is not None else "None"
-			print row[2] + " = " + val + "\n"
+			id = row[0]
+			self.printModelInformation(id)			
 			row = self.kb.fetchOne()
 					
 	def removeFromCurrentlyOptimizingTable(self,id):
