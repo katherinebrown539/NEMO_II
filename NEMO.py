@@ -317,8 +317,8 @@ class NEMO:
 			sys.exit()
 			
 def main():
-
 	pid = str(os.getpid())
+	print os.getcwd()
 	pidfile = "/tmp/NEMO.pid"
 
 	if os.path.isfile(pidfile):
