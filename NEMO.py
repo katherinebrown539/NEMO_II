@@ -318,7 +318,7 @@ class NEMO:
 			
 def main():
 	pid = str(os.getpid())
-	print os.getcwd()
+	print os.path.dirname(os.path.realpath(__file__))
 	pidfile = "/tmp/NEMO.pid"
 
 	if os.path.isfile(pidfile):
@@ -326,12 +326,12 @@ def main():
 		sys.exit()
 	file(pidfile, 'w').write(pid)
 	try:
-		nemo()
+		run()
 	finally:
 		os.unlink(pidfile)
 
-def nemo():
-	nemo = NEMO("config/config.json")
+def run():
+	nemo = NEMO(os.getcwd() + "/config/config.json")
 	while True:
 		nemo.menu()
 		
