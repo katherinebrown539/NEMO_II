@@ -43,8 +43,8 @@ class NeuralNetworkController:
 		self.y = []
 	
 	def createModelFromID(self, x, y, id):
-		self.algorithm_id = id
-		stmt = "select * from ModelRepository where algorithm_id = " + self.algorithm_id
+		#self.algorithm_id = id
+		stmt = "select * from ModelRepository where algorithm_id = " + id
 		# print stmt
 		self.kb.executeQuery(stmt)
 		row = self.kb.fetchOne()

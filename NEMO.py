@@ -34,6 +34,7 @@ class NEMO:
 		self.optimization_thread = None
 		self.stop_event = None
 		self.checkForCurrentModels()
+		self.checkForOptimizingModels()
 		self.secs = 45
 		
 	def findAlgorithmBasedOnID(self, id):
@@ -56,56 +57,61 @@ class NEMO:
 		types = self.kb.fetchOne()
 		return types[0]
 		
-	#recreates model based on ID
-	#NEED method to copy model but create a different ID
+	#same model, different id
 	def createModelBasedONID(self):
 		#self.printModelInformation()
 		id = raw_input("Enter ID Here --> ")
 		if self.verifyID(id):
-			if self.findAlgorithmBasedOnID(id) is not None:
-				print "This model has already been created. . . "
-			else:
-				self.setupNewML(id)
-		else:
-			print "ID does not exist in Model Repository"
-		
-	def copyML(self):
-		#self.printModelInformation()
-		this_id = raw_input("Enter ID Here --> ")
-		print this_id
-		if self.verifyID(this_id):
-			new_ml = ML_Controller(self.kb, self.getAlgorithmType(this_id))
-			new_ml.copyModel(this_id)
-			self.kb.removeModelFromRepository(new_ml.algorithm)
-			self.kb.updateDatabaseWithModel(new_ml.algorithm)
+			type = self.getAlgorithmType(id)
+			new_ml = ML_Controller(self.kb, type)
+			new_ml.createModel(id)
+			self.kb.updateDatabaseWithModel(new_ml.algorithm)	
 			self.kb.addCurrentModel(new_ml.algorithm)
 			new_ml.runAlgorithm()
 			new_ml.updateDatabaseWithResults()
 			self.ml.append(new_ml)
 		else:
 			print "ID does not exist in Model Repository"
+	
+	#makes a copy w/ same id
+	def copyML(self):
+		#self.printModelInformation()
+		this_id = raw_input("Enter ID Here --> ")
+		print this_id
+		if self.verifyID(this_id):
+			if self.findAlgorithmBasedOnID(id) is not None:
+				print "This model has already been created. . . "
+			else:
+				self.copy(this_id)
+		else:
+			print "ID does not exist in Model Repository"
 
-	def setupNewML(self, id=None):
+	def copy(self, this_id):
+		new_ml = ML_Controller(self.kb, self.getAlgorithmType(this_id))
+		new_ml.copyModel(this_id)
+		self.kb.removeModelFromRepository(new_ml.algorithm)
+		self.kb.updateDatabaseWithModel(new_ml.algorithm)
+		self.kb.addCurrentModel(new_ml.algorithm)
+		new_ml.runAlgorithm()
+		new_ml.updateDatabaseWithResults()
+		self.ml.append(new_ml)
 		
-		if id is None:
-			models = ['Neural Network', 'Decision Tree', 'SVM']
-			possible_choices = range(1, len(models)+1)
-			ch_strs = map(str, possible_choices)
-			input = ""
-			while input not in ch_strs:
-				print "Pick A Model Type"
-				for i in range(0, len(models)):
-					print ch_strs[i] + ". " + models[i]
-				input = raw_input("--> ")
-			input = models[int(input)-1]
-		if id is not None:
-			input = self.getAlgorithmType(id)
+	def setupNewML(self):
+		models = ['Neural Network', 'Decision Tree', 'SVM']
+		possible_choices = range(1, len(models)+1)
+		ch_strs = map(str, possible_choices)
+		input = ""
+		
+		while input not in ch_strs:
+			print "Pick A Model Type"
+			for i in range(0, len(models)):
+				print ch_strs[i] + ". " + models[i]
+			input = raw_input("--> ")
+		input = models[int(input)-1]
+			
 		new_ml = ML_Controller(self.kb, input)
-		new_ml.createModel(id)
-		if id is None: #brand new model
-			self.kb.updateDatabaseWithModel(new_ml.algorithm)
-			#new_ml.algorithm.updateDatabaseWithModel()
-		#new_ml.algorithm.addCurrentModel()
+		new_ml.createModel()
+		self.kb.updateDatabaseWithModel(new_ml.algorithm)	
 		self.kb.addCurrentModel(new_ml.algorithm)
 		new_ml.runAlgorithm()
 		new_ml.updateDatabaseWithResults()
@@ -238,18 +244,29 @@ class NEMO:
 			self.printModelInformation(model.getID())
 	
 	def checkForCurrentModels(self):
-		stmt = "select * from CurrentModel"
+		stmt = "select algorithm_id from CurrentModel"
 		self.kb.executeQuery(stmt)
 		#self.kb.cursor.execute(stmt)
-		rows = self.kb.fetchAll()
+		rows = self.kb.fetchOne()
 		i = 0
-		if len(rows) > 0:
-			current_row = rows[i]
-			current_id = current_row[0]
-			self.setupNewML(current_id)
+		while row is not None:
+			copy(row[0])
 			
-			
-			
+	def checkForOptimizingModels(self):
+		stmt = "select * from CurrentlyOptimizingModels"
+		self.kb.executeQuery(stmt)
+		row = self.kb.fetchOne(stmt)
+		while row is not None:
+			id = row[0] #get id
+			mdl = self.findAlgorithmBasedOnID(id)
+			if mdl is None:
+				mdl = self.copy(id)
+			# set optimization flag to true
+			mdl.isCurrentlyOptimizing = True
+			# enqueue to optimization queue
+			self.queue.append(mdl)	
+		self.startOptimization()	
+		
 	def menu(self):
 		#TODO
 		#1. Create New Model\n
