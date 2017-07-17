@@ -172,6 +172,29 @@ class KnowledgeBase:
 				self.db = MySQLdb.connect(host = self.HOST, port = self.PORT, user = self.USER, passwd = self.PASSWD, db = self.DATABASE)
 				self.cursor = self.db.cursor()
 			complete=True
+			
+	def removeModelFromRepository(self, model):
+		stmt = "delete from ModelRepository where algorithm_id = " + model.algorithm_id
+		self.executeQuery(stmt)
+
+	def updateDatabaseWithModel(self, model):
+		arguments = model.get_params()
+		#print arguments
+		for key, value in arguments.iteritems():
+			#print key + ": " + str(value)
+			stmt = "insert into ModelRepository (algorithm_id, algorithm_name, arg_type, arg_val) values ( %s, %s, %s, %s)"
+			args = (model.algorithm_id, model.algorithm_name, key, str(value))
+			self.executeQuery(stmt, args)
+		
+	def addCurrentModel(self, model):
+		stmt = "insert into CurrentModel(algorithm_id) values (%s)"
+		args = (model.algorithm_id,)
+		self.executeQuery(stmt, args)
+		
+	def removeCurrentModel(self, model):
+		stmt = "delete from CurrentModel where algorithm_id = " + model.algorithm_id
+		self.executeQuery(stmt)
+		
 	#DESTRUCTOR
 	#commits all changes to database and closes the connection
 	def __del__(self):

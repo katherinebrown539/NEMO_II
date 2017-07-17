@@ -65,7 +65,7 @@ class DecisionTreeController:
 		self.results = {'ID': self.algorithm_id, 'Name': self.algorithm_name, 'Accuracy': accuracy, 'Precision': precision, 'Recall': recall, 'F1': f1, 'Confusion_Matrix': cm}
 		
 		to_return =  (self.algorithm_id, self.algorithm_name, accuracy, precision, recall, f1, cm)
-		self.removeCurrentModel()
+		self.kb.removeCurrentModel(self)
 		return to_return
 
 		
@@ -140,23 +140,3 @@ class DecisionTreeController:
 			return criterion_tree		
 		else:
 			return best_model
-			
-	def removeModelFromRepository(self):
-		stmt = "delete from ModelRepository where algorithm_id = " + self.algorithm_id
-		self.kb.executeQuery(stmt)
-
-	def updateDatabaseWithModel(self):
-		arguments = self.get_params()
-		for key, value in arguments.iteritems():
-			stmt = "insert into ModelRepository (algorithm_id, algorithm_name, arg_type, arg_val) values ( %s, %s, %s, %s)"
-			args = (self.algorithm_id, self.algorithm_name, key, value)
-			self.kb.executeQuery(stmt, args)
-		
-	def addCurrentModel(self):
-		stmt = "insert into CurrentModel(algorithm_id) values (%s)"
-		args = (self.algorithm_id,)
-		self.kb.executeQuery(stmt, args)
-		
-	def removeCurrentModel(self):
-		stmt = "delete from CurrentModel where algorithm_id = " + self.algorithm_id
-		self.kb.executeQuery(stmt)

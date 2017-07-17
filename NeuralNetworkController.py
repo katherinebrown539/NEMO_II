@@ -88,12 +88,14 @@ class NeuralNetworkController:
 		self.mlp = MLPClassifier()
 		if attributes is None:
 			attr = self.get_params()
+			print attr
 			size = random.randint(1,10)
 			layerslist = self.generateRandomArchitecture(size)
 			attr['hidden_layer_sizes'] = tuple(layerslist)
-			self.set_params(**attr)
+			print attr
+			self.set_params(attr)
 		else:
-			self.set_params(**attributes)	
+			self.set_params(attributes)	
 		
 		self.mlp.fit(self.X_train, self.y_train)
 		
@@ -110,7 +112,7 @@ class NeuralNetworkController:
 		self.results = {'ID': self.algorithm_id, 'Name': self.algorithm_name, 'Accuracy': accuracy, 'Precision': precision, 'Recall': recall, 'F1': f1, 'Confusion_Matrix': cm}
 		
 		to_return =  (self.algorithm_id, self.algorithm_name, accuracy, precision, recall, f1, cm)
-		self.removeCurrentModel()
+		self.kb.removeCurrentModel(self)
 		return to_return
 	
 	
@@ -224,8 +226,8 @@ class NeuralNetworkController:
 			
 		return to_return
 	
-	def set_params(self, attr):
-		self.mlp.set_parms(**attr)
+	def set_params(self, attributes):
+		self.mlp.set_params(**attributes)
 		
 	def get_params(self):
 		return self.mlp.get_params()
@@ -238,26 +240,3 @@ class NeuralNetworkController:
 		val = map(int, val)
 		val = tuple(val)
 		return val 
-		
-		
-	def removeModelFromRepository(self):
-		stmt = "delete from ModelRepository where algorithm_id = " + self.algorithm_id
-		self.kb.executeQuery(stmt)
-
-	def updateDatabaseWithModel(self):
-		arguments = self.get_params()
-		#print arguments
-		for key, value in arguments.iteritems():
-			#print key + ": " + str(value)
-			stmt = "insert into ModelRepository (algorithm_id, algorithm_name, arg_type, arg_val) values ( %s, %s, %s, %s)"
-			args = (self.algorithm_id, self.algorithm_name, key, str(value))
-			self.kb.executeQuery(stmt, args)
-		
-	def addCurrentModel(self):
-		stmt = "insert into CurrentModel(algorithm_id) values (%s)"
-		args = (self.algorithm_id,)
-		self.kb.executeQuery(stmt, args)
-		
-	def removeCurrentModel(self):
-		stmt = "delete from CurrentModel where algorithm_id = " + self.algorithm_id
-		self.kb.executeQuery(stmt)

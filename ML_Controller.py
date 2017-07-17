@@ -70,5 +70,5 @@ class ML_Controller:
 		self.algorithm.algorithm_id = curr_id
 		self.algorithm.results['ID'] = curr_id
 		self.kb.updateDatabaseWithResults(self.algorithm)
-		self.algorithm.removeModelFromRepository()
-		self.algorithm.updateDatabaseWithModel()
+		self.kb.removeModelFromRepository(self.algorithm)
+		self.kb.updateDatabaseWithModel(self.algorithm)
