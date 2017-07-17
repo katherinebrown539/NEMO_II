@@ -5,4 +5,5 @@ then
 	echo "RUNNING"
 else
 	python ~/NEMO_II/NEMO.py
+fi
 #if not execute python NEMO.py
