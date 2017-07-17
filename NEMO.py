@@ -1,3 +1,4 @@
+#!/usr/bin/env python 
 from KnowledgeBase import KnowledgeBase
 from ML_Controller import ML_Controller
 from collections import deque
