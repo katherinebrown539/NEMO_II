@@ -314,10 +314,25 @@ class NEMO:
 		else:
 			self.cancelOptimization()
 			sys.exit()
+			
 def main():
+
+	pid = str(os.getpid())
+	pidfile = "/tmp/NEMO.pid"
+
+	if os.path.isfile(pidfile):
+		print "%s already exists, exiting" % pidfile
+		sys.exit()
+	file(pidfile, 'w').write(pid)
+	try:
+		nemo()
+	finally:
+		os.unlink(pidfile)
+
+def nemo():
 	nemo = NEMO("config/config.json")
 	while True:
 		nemo.menu()
-	
+		
 if __name__ == "__main__":
 	main()
