@@ -55,7 +55,7 @@ class ML_Controller:
 		self.algorithm.copyModel(self.data, self.target, id)
 		
 	def runAlgorithm(self):
-		results = self.algorithm.runModel()
+		results = self.algorithm.runModel(self.kb.multi)
 		#self.kb.updateDatabaseWithResults(self.algorithm)
 		
 	def updateDatabaseWithResults(self):

@@ -26,7 +26,7 @@ class DecisionTreeController:
 		
 		if attributes is not None:
 			self.tree = DecisionTreeClassifier(random_state=None)
-			self.set_params(**attributes)
+			self.set_params(attributes)
 		else:
 			self.tree = DecisionTreeClassifier(random_state=0)
 			
@@ -40,13 +40,24 @@ class DecisionTreeController:
 		attributes = {}
 		while row != None:
 			#print row
+			key = row[2]
 			val = row[3]
+			#print key + ": " + val
+			if val == 'None' or val == 'NULL':
+				val = None
 			if val is not None:
-				if row[2] != 'splitter' and row[2] != 'criterion' and row[2] != 'min_impurity_split':
-					val = int(row[3])
-				elif row[2] == 'min_impurity_split':
-					val = float(row[3])
- 			attributes[row[2]] = val
+				if key in ['max_features', 'max_depth', 'max_leaf_nodes', 'random_state']:
+					val = int(val)
+				elif key in ['min_weight_fraction_leaf', 'min_impurity_split']:
+					val = float(val)
+				elif key in ['min_samples_split', 'min_samples_leaf']:
+					lst = list(val)
+					if lst.count('.') > 0:
+						val = float(val)
+					else:
+						val = int(val)	
+			#print type(val)
+ 			attributes[key] = val
 			row = self.kb.fetchOne()
 		self.createModel(x,y,attributes)
 		
@@ -54,12 +65,17 @@ class DecisionTreeController:
 		self.algorithm_id = id
 		self.createModelFromID(x,y,id)
 		
-	def runModel(self):
+	def runModel(self, multi=False):
 		predictions = self.tree.predict(self.X_test)	
+		av = ''
+		if not multi:
+			av = 'binary'
+		else:
+			av = 'micro'
 		accuracy = accuracy_score(self.y_test,predictions)
-		precision = precision_score(self.y_test,predictions, average='micro')
-		recall = recall_score(self.y_test, predictions, average='micro')
-		f1 = f1_score(self.y_test,predictions, average='micro')
+		precision = precision_score(self.y_test,predictions, average=av)
+		recall = recall_score(self.y_test, predictions, average=av)
+		f1 = f1_score(self.y_test,predictions, average=av)
 		cm = confusion_matrix(self.y_test,predictions)
 		
 		self.results = {'ID': self.algorithm_id, 'Name': self.algorithm_name, 'Accuracy': accuracy, 'Precision': precision, 'Recall': recall, 'F1': f1, 'Confusion_Matrix': cm}
@@ -70,7 +86,7 @@ class DecisionTreeController:
 
 		
 	def set_params(self, attr):
-		self.tree.set_parms(**attr)
+		self.tree.set_params(**attr)
 		
 	def get_params(self):
 		return self.tree.get_params()
@@ -95,14 +111,14 @@ class DecisionTreeController:
 		sqrt_attr = best_model_attributes
 		sqrt_attr['max_features'] = 'sqrt'
 		sqrt_tree.createModel(self.x, self.y, sqrt_attr)
-		sqrt_tree.runModel()
+		sqrt_tree.runModel(self.kb.multi)
 		
 		#log2
 		log_tree = DecisionTreeController(self.kb)
 		log_attr = best_model_attributes
 		log_attr['max_features'] = 'log2'
 		log_tree.createModel(self.x, self.y, log_attr)
-		log_tree.runModel()
+		log_tree.runModel(self.kb.multi)
 		
 		#test between sqrt and log2
 		if(sqrt_tree.results.get(metric) >= best_model.results.get(metric) and sqrt_tree.results.get(metric) >= log_tree.results.get(metric)):
@@ -120,7 +136,7 @@ class DecisionTreeController:
 			percent_attr['max_features'] = curr
 			percent_tree = DecisionTreeController(self.kb)
 			percent_tree.createModel(self.x, self.y, percent_attr)
-			percent_tree.runModel()
+			percent_tree.runModel(self.kb.multi)
 			if percent_tree.results.get(metric) >= best_metric:
 				best_percent_model = percent_tree
 		
@@ -135,7 +151,7 @@ class DecisionTreeController:
 		
 		criterion_tree = DecisionTreeController(self.kb)
 		criterion_tree.createModel(self.x, self.y, attributes)
-		criterion_tree.runModel()
+		criterion_tree.runModel(self.kb.multi)
 		if(criterion_tree.results.get(metric) >= best_model.results.get(metric)):
 			return criterion_tree		
 		else:

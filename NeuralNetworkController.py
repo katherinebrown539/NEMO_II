@@ -100,13 +100,17 @@ class NeuralNetworkController:
 		self.mlp.fit(self.X_train, self.y_train)
 		
 	
-	def runModel(self):
+	def runModel(self, multi=True):
 		predictions = self.mlp.predict(self.X_test)	
-		
+		av = ''
+		if not multi:
+			av = 'binary'
+		else:
+			av = 'micro'
 		accuracy = accuracy_score(self.y_test,predictions)
-		precision = precision_score(self.y_test,predictions, average='micro')
-		recall = recall_score(self.y_test, predictions, average='micro')
-		f1 = f1_score(self.y_test,predictions, average='micro')
+		precision = precision_score(self.y_test,predictions, average=av)
+		recall = recall_score(self.y_test, predictions, average=av)
+		f1 = f1_score(self.y_test,predictions, average=av)
 		cm = confusion_matrix(self.y_test,predictions)
 		
 		self.results = {'ID': self.algorithm_id, 'Name': self.algorithm_name, 'Accuracy': accuracy, 'Precision': precision, 'Recall': recall, 'F1': f1, 'Confusion_Matrix': cm}
@@ -157,8 +161,8 @@ class NeuralNetworkController:
 		
 		small_net.createModel(self.x, self.y, small_arch)
 		large_net.createModel(self.x, self.y, large_arch)
-		small_net.runModel()
-		large_net.runModel()
+		small_net.runModel(self.kb.muti)
+		large_net.runModel(self.kb.muti)
 		
 		small_net.optimizeNumberOfNodes(metric, small_net)
 		large_net.optimizeNumberOfNodes(metric, large_net)
@@ -197,13 +201,13 @@ class NeuralNetworkController:
 		increase_arch = best_attr
 		increase_arch['hidden_layer_sizes'] = tuple(new_layers_inc)
 		increase_nn.createModel(self.x, self.y, increase_arch)
-		increase_nn.runModel()
+		increase_nn.runModel(self.kb.muti)
 		
 		decrease_nn = NeuralNetworkController(self.kb)
 		decrease_arch = best_attr
 		decrease_arch['hidden_layer_sizes'] = tuple(new_layers_dec)
 		decrease_nn.createModel(self.x, self.y, decrease_arch)
-		decrease_nn.runModel()
+		decrease_nn.runModel(self.kb.muti)
 		
 		
 		#may want to change how comparisons get done here...

@@ -137,6 +137,7 @@ class KnowledgeBase:
 		print file_info['DATA']
 		print file_info['SCHEMA']
 		print self.Y
+		self.multi = bool(file_info['MULTI-CLASS'])
 		self.importData(file_info['DATA'], file_info['SCHEMA'])
 	
 	def executeQuery(self, query, args=None):
