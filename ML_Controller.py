@@ -6,6 +6,7 @@ import pandas.io.sql as psql
 import KnowledgeBase
 import NeuralNetworkController
 import DecisionTreeController
+import SVMController
 import random
 ##############################################################################################################
 # ML-Controller class																					     #
@@ -43,7 +44,8 @@ class ML_Controller:
 			self.algorithm = NeuralNetworkController.NeuralNetworkController(self.kb)
 		if algorithm_type == "Decision Tree":
 			self.algorithm = DecisionTreeController.DecisionTreeController(self.kb)
-		
+		if algorithm_type == 'SVM':
+			self.algorithm = SVMController.SVMController(self.kb)
 	
 	def createModel(self, id=None):
 		if id is None:

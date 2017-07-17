@@ -69,10 +69,26 @@ class NEMO:
 		else:
 			print "ID does not exist in Model Repository"
 		
+	def copyML(self):
+		#self.printModelInformation()
+		this_id = raw_input("Enter ID Here --> ")
+		print this_id
+		if self.verifyID(this_id):
+			new_ml = ML_Controller(self.kb, self.getAlgorithmType(this_id))
+			new_ml.copyModel(this_id)
+			self.kb.removeModelFromRepository(new_ml.algorithm)
+			self.kb.updateDatabaseWithModel(new_ml.algorithm)
+			self.kb.addCurrentModel(new_ml.algorithm)
+			new_ml.runAlgorithm()
+			new_ml.updateDatabaseWithResults()
+			self.ml.append(new_ml)
+		else:
+			print "ID does not exist in Model Repository"
+
 	def setupNewML(self, id=None):
 		
 		if id is None:
-			models = ['Neural Network', 'Decision Tree']
+			models = ['Neural Network', 'Decision Tree', 'SVM']
 			possible_choices = range(1, len(models)+1)
 			ch_strs = map(str, possible_choices)
 			input = ""
@@ -95,23 +111,6 @@ class NEMO:
 		new_ml.updateDatabaseWithResults()
 		self.ml.append(new_ml)
 		
-	def copyML(self):
-		#self.printModelInformation()
-		this_id = raw_input("Enter ID Here --> ")
-		print this_id
-		if self.verifyID(this_id):
-			new_ml = ML_Controller(self.kb, self.getAlgorithmType(this_id))
-			new_ml.copyModel(this_id)
-			#new_ml.algorithm.updateDatabaseWithModel()
-			self.kb.updateDatabaseWithModel(new_ml.algorithm)
-			#new_ml.algorithm.addCurrentModel()
-			self.kb.addCurrentModel(new_ml.algorithm)
-			new_ml.runAlgorithm()
-			new_ml.updateDatabaseWithResults()
-			self.ml.append(new_ml)
-		else:
-			print "ID does not exist in Model Repository"
-
 	def runAlgorithm(self):
 		id = raw_input("Enter ID of Model --> ")
 		model = self.findAlgorithmBasedOnID(id)
@@ -331,8 +330,11 @@ def main():
 	finally:
 		os.unlink(pidfile)
 
-def run(dir):
-	nemo = NEMO(dir + "/config/config.json")
+def run(dir=None):
+	if dir is not None:
+		nemo = NEMO(dir + "/config/config.json")
+	else:
+		nemo = NEMO("config/config.json")
 	while True:
 		nemo.menu()
 		

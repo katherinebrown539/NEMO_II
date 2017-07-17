@@ -1,12 +1,14 @@
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
+from sklearn.model_selection import cross_val_predict
+from sklearn.model_selection import cross_val_score
 from sklearn.metrics import classification_report,confusion_matrix, accuracy_score, precision_score, f1_score, recall_score
 import pandas
 from pandas import DataFrame
 import pandas.io.sql as psql
 import KnowledgeBase
 import random
-
+import numpy
 class DecisionTreeController:
 
 	def __init__(self, kb):
@@ -66,13 +68,18 @@ class DecisionTreeController:
 		self.createModelFromID(x,y,id)
 		
 	def runModel(self, multi=False):
-		predictions = self.tree.predict(self.X_test)	
+		
 		av = ''
 		if not multi:
 			av = 'binary'
 		else:
 			av = 'micro'
-		accuracy = accuracy_score(self.y_test,predictions)
+		c, r = self.y.shape
+		labels = self.y.values.reshape(c,)
+		predictions = cross_val_predict(self.tree, self.x, labels)
+		accuracy_all = cross_val_score(self.tree, self.x, labels, cv=10)
+		accuracy = numpy.mean(accuracy_all)
+		predictions = self.tree.predict(self.X_test)	
 		precision = precision_score(self.y_test,predictions, average=av)
 		recall = recall_score(self.y_test, predictions, average=av)
 		f1 = f1_score(self.y_test,predictions, average=av)
@@ -97,11 +104,14 @@ class DecisionTreeController:
 
 	def coordinateAscent(self, metric):
 		best_model = self
-		#test other criterion
-		#print "in coordinate ascent"
-		best_model = self.optimizeCriterion(metric, self)
-		#test other max_features
-			
+		bst = 0.0
+		curr = best_model.results.get(metric)
+		current_model = best_model
+		while curr > bst:
+			bst = curr
+			best_model = curr
+			current_model = self.optimizeCriterion(metric, self)
+			curr = current_model.results.get(metric)
 		return best_model
 	
 	def optimizeMaxFeatures(self, metric, best_model):

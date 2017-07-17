@@ -142,6 +142,8 @@ class KnowledgeBase:
 	
 	def executeQuery(self, query, args=None):
 		complete = False
+		#print query
+		#if args is not None: print args
 		while not complete:
 			try:
 				if args is None:
