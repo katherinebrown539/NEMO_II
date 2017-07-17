@@ -1,12 +1,15 @@
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
+from sklearn.model_selection import cross_val_predict
+from sklearn.model_selection import cross_val_score
 from sklearn.metrics import classification_report,confusion_matrix, accuracy_score, precision_score, f1_score, recall_score
 import pandas
 from pandas import DataFrame
 import pandas.io.sql as psql
 import KnowledgeBase
 import random
+import numpy
 
 class NeuralNetworkController:
 
@@ -49,7 +52,7 @@ class NeuralNetworkController:
 		while row != None:
 			key = row[2]
 			val = row[3]
-			print key + ": " + val
+			#print key + ": " + val
 			if val == 'None' or val == 'NULL' or val is None:
 				val = None
 			else:
@@ -69,9 +72,9 @@ class NeuralNetworkController:
 		self.createModel(x,y, attributes)
 	
 	def copyModel(self,x,y,id):
-		temp = self.algorithm_id
+		self.algorithm_id = id
 		self.createModelFromID(x,y,id)
-		self.algorithm_id = temp
+		
 		
 	def createModel(self, x, y, attributes=None):
 		# # print "X length " + str(len(x))
@@ -101,13 +104,18 @@ class NeuralNetworkController:
 		
 	
 	def runModel(self, multi=True):
-		predictions = self.mlp.predict(self.X_test)	
+		
 		av = ''
 		if not multi:
 			av = 'binary'
 		else:
 			av = 'micro'
-		accuracy = accuracy_score(self.y_test,predictions)
+		c, r = self.y.shape
+		labels = self.y.values.reshape(c,)
+		predictions = cross_val_predict(self.mlp, self.x, labels)
+		accuracy_all = cross_val_score(self.mlp, self.x, labels, cv=10)
+		accuracy = numpy.mean(accuracy_all)
+		predictions = self.mlp.predict(self.X_test)	
 		precision = precision_score(self.y_test,predictions, average=av)
 		recall = recall_score(self.y_test, predictions, average=av)
 		f1 = f1_score(self.y_test,predictions, average=av)
