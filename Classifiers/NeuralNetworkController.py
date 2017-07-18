@@ -91,11 +91,11 @@ class NeuralNetworkController:
 		self.mlp = MLPClassifier()
 		if attributes is None:
 			attr = self.get_params()
-			print attr
+			#print attr
 			size = random.randint(1,10)
 			layerslist = self.generateRandomArchitecture(size)
 			attr['hidden_layer_sizes'] = tuple(layerslist)
-			print attr
+			#print attr
 			self.set_params(attr)
 		else:
 			self.set_params(attributes)	
@@ -169,8 +169,8 @@ class NeuralNetworkController:
 		
 		small_net.createModel(self.x, self.y, small_arch)
 		large_net.createModel(self.x, self.y, large_arch)
-		small_net.runModel(self.kb.muti)
-		large_net.runModel(self.kb.muti)
+		small_net.runModel(self.kb.multi)
+		large_net.runModel(self.kb.multi)
 		
 		small_net.optimizeNumberOfNodes(metric, small_net)
 		large_net.optimizeNumberOfNodes(metric, large_net)
@@ -209,13 +209,13 @@ class NeuralNetworkController:
 		increase_arch = best_attr
 		increase_arch['hidden_layer_sizes'] = tuple(new_layers_inc)
 		increase_nn.createModel(self.x, self.y, increase_arch)
-		increase_nn.runModel(self.kb.muti)
+		increase_nn.runModel(self.kb.multi)
 		
 		decrease_nn = NeuralNetworkController(self.kb)
 		decrease_arch = best_attr
 		decrease_arch['hidden_layer_sizes'] = tuple(new_layers_dec)
 		decrease_nn.createModel(self.x, self.y, decrease_arch)
-		decrease_nn.runModel(self.kb.muti)
+		decrease_nn.runModel(self.kb.multi)
 		
 		
 		#may want to change how comparisons get done here...

@@ -112,6 +112,14 @@ class DecisionTreeController:
 			best_model = curr
 			current_model = self.optimizeCriterion(metric, self)
 			curr = current_model.results.get(metric)
+		curr = best_model.results.get(metric)
+		current_model = best_model
+		while curr > bst:
+			bst = curr
+			best_model = curr
+			current_model = self.optimizeMaxFeatures(metric, self)
+			curr = current_model.results.get(metric)
+		
 		return best_model
 	
 	def optimizeMaxFeatures(self, metric, best_model):

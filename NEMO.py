@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 from KnowledgeBase import KnowledgeBase
-from ML_Controller import ML_Controller
+from Classifiers import ML_Controller
 from collections import deque
 import MySQLdb
 import threading
@@ -28,7 +28,7 @@ def optimizeWorker(queue, stp, secs):
 	
 class NEMO:
 	def __init__(self, filename):
-		self.kb = KnowledgeBase(filename)
+		self.kb = KnowledgeBase.KnowledgeBase(filename)
 		self.ml = [] #list of machine learners
 		self.queue = deque()
 		self.optimization_thread = None
@@ -63,7 +63,7 @@ class NEMO:
 		id = raw_input("Enter ID Here --> ")
 		if self.verifyID(id):
 			type = self.getAlgorithmType(id)
-			new_ml = ML_Controller(self.kb, type)
+			new_ml = ML_Controller.ML_Controller(self.kb, type)
 			new_ml.createModel(id)
 			self.kb.updateDatabaseWithModel(new_ml.algorithm)	
 			self.kb.addCurrentModel(new_ml.algorithm)
@@ -87,7 +87,7 @@ class NEMO:
 			print "ID does not exist in Model Repository"
 
 	def copy(self, this_id):
-		new_ml = ML_Controller(self.kb, self.getAlgorithmType(this_id))
+		new_ml = ML_Controller.ML_Controller(self.kb, self.getAlgorithmType(this_id))
 		new_ml.copyModel(this_id)
 		self.kb.removeModelFromRepository(new_ml.algorithm)
 		self.kb.updateDatabaseWithModel(new_ml.algorithm)
@@ -109,7 +109,7 @@ class NEMO:
 			input = raw_input("--> ")
 		input = models[int(input)-1]
 			
-		new_ml = ML_Controller(self.kb, input)
+		new_ml = ML_Controller.ML_Controller(self.kb, input)
 		new_ml.createModel()
 		self.kb.updateDatabaseWithModel(new_ml.algorithm)	
 		self.kb.addCurrentModel(new_ml.algorithm)
@@ -247,7 +247,7 @@ class NEMO:
 		stmt = "select algorithm_id from CurrentModel"
 		self.kb.executeQuery(stmt)
 		#self.kb.cursor.execute(stmt)
-		rows = self.kb.fetchOne()
+		row = self.kb.fetchOne()
 		i = 0
 		while row is not None:
 			copy(row[0])
@@ -255,7 +255,7 @@ class NEMO:
 	def checkForOptimizingModels(self):
 		stmt = "select * from CurrentlyOptimizingModels"
 		self.kb.executeQuery(stmt)
-		row = self.kb.fetchOne(stmt)
+		row = self.kb.fetchOne()
 		while row is not None:
 			id = row[0] #get id
 			mdl = self.findAlgorithmBasedOnID(id)
@@ -336,7 +336,7 @@ def main():
 	pid = str(os.getpid())
 	dir =  os.path.dirname(os.path.realpath(__file__))
 	print dir
-	pidfile = "/tmp/NEMO.pid"
+	pidfile = "tmp/NEMO.pid"
 
 	if os.path.isfile(pidfile):
 		print "%s already exists, exiting" % pidfile
