@@ -12,7 +12,7 @@ create table AlgorithmResults(
 	prec double, 
 	recall double, 
 	f1 double, 
-	confusion_matrix varchar(255));
+	confusion_matrix varchar(512));
 
 
 create table ModelRepository(

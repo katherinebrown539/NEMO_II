@@ -34,6 +34,21 @@ class SVMController:
 			
 		self.svm.fit(self.X_train, self.y_train)
 
+		
+	def createModelPreSplit(self, xtrain, xtest, ytrain, ytest, attributes=None):	
+		self.X_train = xtrain
+		self.X_test = xtest
+		self.y_train = ytrain
+		self.y_test = ytest
+		
+		if attributes is not None:
+			self.svm = SVC()
+			self.set_params(attributes)
+		else:
+			self.svm = SVC(probability=True)
+			
+		self.svm.fit(self.X_train, self.y_train)
+		
 	def createModelFromID(self, x, y, id):
 		#run query
 		stmt = "select * from ModelRepository where algorithm_id = " + id
@@ -73,13 +88,13 @@ class SVMController:
 			av = 'binary'
 		else:
 			av = 'micro'
-		c, r = self.y.shape
-		labels = self.y.values.reshape(c,)
-		predictions = cross_val_predict(self.svm, self.x, labels)
-		accuracy_all = cross_val_score(self.svm, self.x, labels, cv=10)
-		accuracy = numpy.mean(accuracy_all)
-		#accuracy = accuracy_score(self.y_test,predictions)
+		# c, r = self.y.shape
+		# labels = self.y.values.reshape(c,)
+		# predictions = cross_val_predict(self.svm, self.x, labels)
+		# accuracy_all = cross_val_score(self.svm, self.x, labels, cv=10)
+		# accuracy = numpy.mean(accuracy_all)
 		predictions = self.svm.predict(self.X_test)	
+		accuracy = accuracy_score(self.y_test,predictions)
 		precision = precision_score(self.y_test,predictions, average=av)
 		recall = recall_score(self.y_test, predictions, average=av)
 		f1 = f1_score(self.y_test,predictions, average=av)

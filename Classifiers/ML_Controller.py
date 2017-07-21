@@ -39,7 +39,7 @@ class ML_Controller:
 		self.kb = kb
 		self.isCurrentlyOptimizing = False	#True when model is in optimization queue, false otherwise
 		self.algorithm = None
-		print algorithm_type
+		#print algorithm_type
 		if algorithm_type == "Neural Network":
 			self.algorithm = NeuralNetworkController.NeuralNetworkController(self.kb)
 		if algorithm_type == "Decision Tree":
@@ -47,11 +47,17 @@ class ML_Controller:
 		if algorithm_type == 'SVM':
 			self.algorithm = SVMController.SVMController(self.kb)
 	
+	def get_params(self):
+		return self.algorithm.get_params()
+	
 	def createModel(self, id=None):
 		if id is None:
 			self.algorithm.createModel(self.data, self.target)
 		else:
 			self.algorithm.createModelFromID(self.data, self.target, id)
+	
+	def createModelPreSplit(self, xtrain, xtest, ytrain, ytest, attributes=None):
+		self.algorithm.createModelPreSplit(xtrain, xtest, ytrain, ytest, attributes)
 	
 	def copyModel(self, id):
 		self.algorithm.copyModel(self.data, self.target, id)
@@ -59,6 +65,7 @@ class ML_Controller:
 	def runAlgorithm(self):
 		results = self.algorithm.runModel(self.kb.multi)
 		#self.kb.updateDatabaseWithResults(self.algorithm)
+		return results
 		
 	def updateDatabaseWithResults(self):
 		self.kb.updateDatabaseWithResults(self.algorithm)

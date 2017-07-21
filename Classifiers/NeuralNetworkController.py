@@ -103,6 +103,31 @@ class NeuralNetworkController:
 		self.mlp.fit(self.X_train, self.y_train)
 		
 	
+	def createModelPreSplit(self, xtrain, xtest, ytrain, ytest, attributes=None):
+		self.X_train = xtrain
+		self.X_test = xtest
+		self.y_train = ytrain
+		self.y_test = ytest
+	
+		scaler = StandardScaler()
+		scaler.fit(self.X_train)
+		self.X_train = scaler.transform(self.X_train)
+		self.X_test = scaler.transform(self.X_test)
+		
+		self.mlp = MLPClassifier()
+		if attributes is None:
+			attr = self.get_params()
+			#print attr
+			size = random.randint(1,10)
+			layerslist = self.generateRandomArchitecture(size)
+			attr['hidden_layer_sizes'] = tuple(layerslist)
+			#print attr
+			self.set_params(attr)
+		else:
+			self.set_params(attributes)	
+		
+		self.mlp.fit(self.X_train, self.y_train)
+		
 	def runModel(self, multi=True):
 		
 		av = ''
@@ -110,12 +135,14 @@ class NeuralNetworkController:
 			av = 'binary'
 		else:
 			av = 'micro'
-		c, r = self.y.shape
-		labels = self.y.values.reshape(c,)
-		predictions = cross_val_predict(self.mlp, self.x, labels)
-		accuracy_all = cross_val_score(self.mlp, self.x, labels, cv=10)
-		accuracy = numpy.mean(accuracy_all)
+			
+		# c, r = self.y.shape
+		# labels = self.y.values.reshape(c,)
+		# predictions = cross_val_predict(self.mlp, self.x, labels)
+		# accuracy_all = cross_val_score(self.mlp, self.x, labels, cv=10)
+		# accuracy = numpy.mean(accuracy_all)
 		predictions = self.mlp.predict(self.X_test)	
+		accuracy = accuracy_score(self.y_test,predictions)
 		precision = precision_score(self.y_test,predictions, average=av)
 		recall = recall_score(self.y_test, predictions, average=av)
 		f1 = f1_score(self.y_test,predictions, average=av)

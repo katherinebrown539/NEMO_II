@@ -108,7 +108,9 @@ class NEMO:
 				print ch_strs[i] + ". " + models[i]
 			input = raw_input("--> ")
 		input = models[int(input)-1]
-			
+		self.createML(input)
+		
+	def createML(self, input):
 		new_ml = ML_Controller.ML_Controller(self.kb, input)
 		new_ml.createModel()
 		self.kb.updateDatabaseWithModel(new_ml.algorithm)	
@@ -116,16 +118,19 @@ class NEMO:
 		new_ml.runAlgorithm()
 		new_ml.updateDatabaseWithResults()
 		self.ml.append(new_ml)
+		return new_ml.getID()
 		
-	def runAlgorithm(self):
-		id = raw_input("Enter ID of Model --> ")
+	def runAlgorithm(self, id=None):
+		if id is None:
+			id = raw_input("Enter ID of Model --> ")
 		model = self.findAlgorithmBasedOnID(id)
 		if model is not None:
-			model.runAlgorithm()
+			res = model.runAlgorithm()
 			model.updateDatabaseWithResults()
+			return res
 		else:	
 			print "Model with ID " + id + " does not exist"
-	
+		
 ############################################################################################################
 	def optimizeAllModels(self):
 		for model in self.ml:
@@ -210,10 +215,10 @@ class NEMO:
 		stmt = "select * from AlgorithmResults"
 		self.kb.executeQuery(stmt)
 		#self.kb.cursor.execute(stmt)
-		print "Algorithm ID\t\tAlgorithm Name\t\tAccuracy\t\tPrecision\t\tRecall\t\t\tF1 Score\t\tConfusion Matrix"
+		print "Algorithm ID\t\t\tAlgorithm Name\t\t\tAccuracy\t\t\tPrecision\t\t\tRecall\t\t\tF1 Score\t\t\t"
 		row = self.kb.fetchOne()
 		while row != None:
-			print "%s\t\t%s\t\t%s\t\t%s\t\t%s\t\t%s\t\t%s" % (row[0], row[1], row[2], row[3], row[4], row[5], row[6])
+			print "%s\t\t\t%s\t\t\t%s\t\t\t%s\t\t\t%s\t\t\t%s\t\t\t" % (row[0], row[1], row[2], row[3], row[4], row[5])
 			row = self.kb.fetchOne()
 		#self.startOptimization()
 		
