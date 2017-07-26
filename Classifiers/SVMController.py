@@ -106,6 +106,8 @@ class SVMController:
 		self.kb.removeCurrentModel(self)
 		return to_return
 
+	def predict(self, x):
+		return self.svm.predict(x)
 		
 	def set_params(self, attr):
 		self.svm.set_params(**attr)

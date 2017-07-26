@@ -38,7 +38,7 @@ class NeuralNetworkController:
 		self.recall = None
 		self.f1 = None
 		self.cm = None
-
+		self.mlp = None
 		self.x = []
 		self.y = []
 	
@@ -112,7 +112,11 @@ class NeuralNetworkController:
 		scaler = StandardScaler()
 		scaler.fit(self.X_train)
 		self.X_train = scaler.transform(self.X_train)
-		self.X_test = scaler.transform(self.X_test)
+		if self.X_test is not None:
+			self.X_test = scaler.transform(self.X_test)
+		
+		if self.mlp is not None:
+			attributes = self.get_params()
 		
 		self.mlp = MLPClassifier()
 		if attributes is None:
@@ -154,6 +158,8 @@ class NeuralNetworkController:
 		self.kb.removeCurrentModel(self)
 		return to_return
 	
+	def predict(self, x):
+		return self.mlp.predict(x)
 	
 	def optimize(self, metric, method):
 		if(method=='Coordinate Ascent'):

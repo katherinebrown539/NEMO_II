@@ -61,7 +61,10 @@ class ML_Controller:
 	
 	def copyModel(self, id):
 		self.algorithm.copyModel(self.data, self.target, id)
-		
+	
+	def predict(self, x):
+		return self.algorithm.predict(x)
+	
 	def runAlgorithm(self):
 		results = self.algorithm.runModel(self.kb.multi)
 		#self.kb.updateDatabaseWithResults(self.algorithm)
@@ -69,7 +72,9 @@ class ML_Controller:
 		
 	def updateDatabaseWithResults(self):
 		self.kb.updateDatabaseWithResults(self.algorithm)
-		
+	
+	def getName(self):
+		return self.algorithm.algorithm_name
 	def getID(self):
 		return self.algorithm.algorithm_id
 		

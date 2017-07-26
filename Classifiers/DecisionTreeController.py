@@ -106,6 +106,8 @@ class DecisionTreeController:
 		self.kb.removeCurrentModel(self)
 		return to_return
 
+	def predict(self, x):
+		return self.tree.predict(x)
 		
 	def set_params(self, attr):
 		self.tree.set_params(**attr)
