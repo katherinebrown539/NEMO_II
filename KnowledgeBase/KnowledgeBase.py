@@ -2,6 +2,7 @@ import MySQLdb
 import MySQLdb.cursors
 import sys
 import json
+import pandas
 ##############################################################################################################
 # KnowledgeBase class																						 #
 # Prototype KnowledgeBase for NEMO																			 #
@@ -109,6 +110,9 @@ class KnowledgeBase:
 		# print str(results)
 		self.executeQuery(stmt, results)
 		
+	def getData(self):
+		stmt = "select * from DATA"
+		return pandas.read_sql_query(stmt, self.db)
 		
 	#Constructor
 	#Preconditions:

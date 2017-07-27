@@ -7,7 +7,7 @@ from Classifiers import ML_Controller
 from collections import deque
 from sklearn.metrics import classification_report,confusion_matrix, accuracy_score, precision_score, f1_score, recall_score
 import pandas
-import NEMO
+#import NEMO
 import MySQLdb
 import threading
 import sys
@@ -15,7 +15,7 @@ import os
 import time
 
 class KnowledgeIntegrator:
-	def __init__(self, kb, level1_classifiers, stacking_classifier=None):
+	def __init__(self, kb, level1_classifiers, stacking_classifier=None, other_predictions=None):
 		self.kb = kb
 		self.level1_classifiers = level1_classifiers
 		if stacking_classifier is None or stacking_classifier == "Logistic Regression":
@@ -28,11 +28,18 @@ class KnowledgeIntegrator:
 			self.stacking_classifier = SVC()
 			self.name = "KI_SVM"
 		self.meta_data_set = []
-		
+		self.other_predictions = other_predictions
 		#self.keys.append(self.kb.Y)
 			
 	def trainLevelOneModels(self, fold):
 		xtrain,	xtest, ytrain, ytest = fold
+		if self.other_predictions is not None:
+				split = self.splitIntoAttributesOther(xtrain)
+				xtrain = split[0]
+				other_train = split[1]
+				split = self.splitIntoAttributesOther(xtest)
+				xtest = split[0]
+				other_test = split[1]
 		for classifier in self.level1_classifiers:
 			classifier.createModelPreSplit(xtrain, xtest, ytrain, ytest)
 		
@@ -54,13 +61,31 @@ class KnowledgeIntegrator:
 		self.meta_data_set = []
 		for fold in folds:
 			xtrain,	xtest, ytrain, ytest = fold
+			other_train = None
+			other_test = None
+			#strip the other_predictions -> other_predictions_train, other_predictions_test
+			if self.other_predictions is not None:
+				split = self.splitIntoAttributesOther(xtrain)
+				xtrain = split[0]
+				other_train = split[1]
+				split = self.splitIntoAttributesOther(xtest)
+				xtest = split[0]
+				other_test = split[1]
 			self.trainLevelOneModels(fold)
 			predictions = self.evaluateLevelOneModels(xtest)
+			#append the other_predictions_test
+			if self.other_predictions is not None:
+				#print other_test
+				predictions.append(other_test.values)
+				#print pandas.DataFrame(predictions).T
 			predictions.append(ytest.values)
 			predictions = pandas.DataFrame(predictions).T
+			#print predictions
 			predictions.columns = names
 			self.meta_data_set.append(predictions)
 		self.meta_data_set = pandas.concat(self.meta_data_set)
+		# print "Self.meta_data_set"
+		# print self.meta_data_set
 		#print self.meta_data_set
 		
 	def createMetaDataSet(self, folds):
@@ -70,20 +95,33 @@ class KnowledgeIntegrator:
 		set = []
 		for fold in folds:
 			xtrain,	xtest, ytrain, ytest = fold
+			other_train = None
+			other_test = None
+			#strip other_predictions into other_predictions_train, other_predictions_test
+			if self.other_predictions is not None:
+				split = self.splitIntoAttributesOther(xtrain)
+				xtrain = split[0]
+				other_train = split[1]
+				split = self.splitIntoAttributesOther(xtest)
+				xtest = split[0]
+				other_test = split[1]
 			predictions = self.evaluateLevelOneModels(xtest)
+			if self.other_predictions is not None:
+				predictions.append(other_test.values)
 			predictions.append(ytest.values)
 			predictions = pandas.DataFrame(predictions).T
 			predictions.columns = names
 			self.meta_data_set.append(predictions)
 		self.meta_data_set = pandas.DataFrame(set)
-		#print self.meta_data_set
+		
 		
 	def trainMetaModel(self, data=None):
 		if data is None:
 			data = self.meta_data_set
-		#print data
+		# print "Data"
+		# print data
 		x,y = self.splitMetaIntoXY(data)
-		
+		#print x
 		x = self.transform(x)
 		self.stacking_classifier.fit(x, y)
 		
@@ -102,8 +140,16 @@ class KnowledgeIntegrator:
 		
 	def runModel(self, data):
 		x,y = self.splitIntoXY(data)
-	
+		#strip the other_predictions
+		other = None
+		if self.other_predictions is not None:
+			split = self.splitIntoAttributesOther(x)
+			x = split[0]
+			other = split[1]
 		predictions = self.evaluateLevelOneModels(x)
+		#append other_predictions
+		if self.other_predictions is not None:
+				predictions.append(other.values)
 		predictions.append(y.values)
 		
 		self.meta_data_set.append(predictions)	
@@ -132,16 +178,32 @@ class KnowledgeIntegrator:
 		return self.name
 		
 	def splitMetaIntoXY(self, data):
-		cols = deque(data.columns.tolist())
-		y_name = cols.pop()
-		x_names = list(cols)
-		y = data[y_name] #need to change to reflect varying data...
-		x = data[x_names]
+		self.resetKeys()
+		#print data
+		y = data[self.kb.Y]
+		x = data[self.keys]
+		# print "X"
+		# print x
+		# print "Y"
+		# print y
+		# cols = deque(data.columns.tolist())
+		# y_name = cols.pop()
+		# x_names = list(cols)
+		# y = data[y_name] #need to change to reflect varying data...
+		# x = data[x_names]
 
 		return(x,y)
 		
+	def splitIntoAttributesOther(self, data):
+		if data is not None:
+			atr = list(set(self.kb.X) - set(self.other_predictions))
+			x = data[atr]
+			other = data[self.other_predictions]
+			return(x,other)
+		else:
+			return (None, None)
 	def splitIntoXY(self, data):
-		#print data
+	#print data
 		#print(data.columns.tolist())
 		y = data[self.kb.Y] #need to change to reflect varying data...
 		#print y
@@ -154,3 +216,6 @@ class KnowledgeIntegrator:
 		for classifier in self.level1_classifiers:
 			key = classifier.getName() + "_" + classifier.getID()
 			self.keys.append(key)
+		if self.other_predictions is not None:
+			for name in self.other_predictions:
+				self.keys.append(name)
