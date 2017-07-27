@@ -1,13 +1,18 @@
 #!/usr/bin/env python 
 from KnowledgeBase import KnowledgeBase
-from Classifiers import ML_Controller
+from Classifiers import ML_Controller, KnowledgeIntegrator
 from collections import deque
+from sklearn.model_selection import train_test_split
+import pandas
+import numpy
+from sklearn.utils import shuffle
 import MySQLdb
 import threading
 import sys
 import os
 import time
-
+import json
+#test comment for git
 #one stop event, pass in the queue and number of seconds to spend optimizing
 def optimizeAlgorithmWorker(ml, stp):
 	while not stp.is_set():
@@ -36,6 +41,11 @@ class NEMO:
 		self.checkForCurrentModels()
 		self.checkForOptimizingModels()
 		self.secs = 45
+		with open(filename) as fd:
+			json_data = json.load(fd)
+		info = json_data['KNOWLEDGE_INTEGRATOR']
+		self.stacking_classifier = info["STACKER"]
+		self.other_predictions = info["OTHER_PREDICTIONS"] if info['OTHER_PREDICTIONS'] != "None" else None
 		
 	def findAlgorithmBasedOnID(self, id):
 		for model in self.ml:
@@ -271,7 +281,19 @@ class NEMO:
 			# enqueue to optimization queue
 			self.queue.append(mdl)	
 		self.startOptimization()	
+	
+	def runKnowledgeIntegrator(self):
+		ki = KnowledgeIntegrator.KnowledgeIntegrator(self.kb, self.ml, self.stacking_classifier, self.other_predictions)
+		data = self.kb.getData()
+		shuffled_data = shuffle(data)
+		train, test = train_test_split(shuffled_data, test_size = 0.2)
 		
+		ki.trainAndCreateMetaDataSet(ki.splitIntoFolds(train, 10, 0))
+		ki.trainMetaModel()
+		res = ki.runModel(test)
+		kb.updateDatabaseWithResults(ki)
+	
+	
 	def menu(self):
 		#TODO
 		#1. Create New Model\n
@@ -288,7 +310,7 @@ class NEMO:
 		#10. Quit NEMO\n--> "
 
 		
-		options = ['Create New Model', 'Create New Model Based on ID', 'Create a Copy of a Model Based on ID', 'Run Model', 'Add Model to Optimization Queue', 'Optimize All Models', 
+		options = ['Create New Model', 'Create New Model Based on ID', 'Create a Copy of a Model Based on ID', 'Run Model', 'Run Knowledge Integrator', 'Add Model to Optimization Queue', 'Optimize All Models', 
 		'Output All Model Results (Any current optimization task will be halted and restarted)', 'View Information on All Models (Any current optimization task will be halted and restarted)',
 		'View Information on Current Models (Any current optimization task will be halted and restarted)', 'View Models in Optimization Queue (Any current optimization task will be halted and restarted)',
 		'Cancel Selected Optimization Task', 'Cancel All Optimization Tasks', 'Quit NEMO']
@@ -333,6 +355,9 @@ class NEMO:
 			self.cancelSingleOptimizationTask(id)
 		elif choice == 'View Models in Optimization Queue (Any current optimization task will be halted and restarted)':
 			self.printInformationOnCurrentlyOptimizingModels()
+		elif choice == 'Run Knowledge Integrator':
+			#self.runKnowledgeIntegrator()
+			print "Run KnowledgeIntegrator"
 		else:
 			self.cancelOptimization()
 			sys.exit()

@@ -13,7 +13,7 @@ import os
 import time
 import random
 import json
-
+#test comment for git
 class NEMO_Experiment:
 	def __init__(self, filename):
 		self.NEMO_instance = NEMO(filename)
@@ -26,7 +26,6 @@ class NEMO_Experiment:
 		return pandas.read_sql_query(stmt, self.kb.db)
 		
 	def splitIntoFolds(self, data, k, seed):
-		
 		shuffled_data = shuffle(data, random_state=seed)
 		#print shuffled_data
 		folds = []
@@ -62,9 +61,10 @@ class NEMO_Experiment:
 		self.output_file = info['OUTPUT_FILE']
 		self.num_partitions = info['NUM_PARTITIONS']
 		self.metric = info['METRIC']
-		self.stacking_classifier = info["STACKER"]
 		self.experiment = "self.experiment"+str(info['EXPERIMENT'])+"()"
-	
+		info = json_data['KNOWLEDGE_INTEGRATOR']
+		self.stacking_classifier = info["STACKER"]
+		self.other_predictions = info["OTHER_PREDICTIONS"] if info['OTHER_PREDICTIONS'] != "None" else None
 		
 	def getTestTraining(self, curr, others):
 		xtest = curr[0]
@@ -88,6 +88,15 @@ class NEMO_Experiment:
 		for i in range(0,k):
 			curr = folded_data.popleft()
 			xtrain, xtest, ytrain, ytest = self.getTestTraining(curr, folded_data)
+			other_train = None
+			other_test = None
+			if self.other_predictions is not None:
+				split = self.splitIntoAttributesOther(xtrain)
+				xtrain = split[0]
+				other_train = split[1]
+				split = self.splitIntoAttributesOther(xtest)
+				xtest = split[0]
+				other_test = split[1]
 			model.createModelPreSplit(xtrain,xtest,ytrain,ytest)
 			model.runAlgorithm()
 			scores.append(model.algorithm.results[metric])
@@ -102,7 +111,7 @@ class NEMO_Experiment:
 		self.models = []
 		for mdl in self.algorithms:
 			self.models.append(ML_Controller.ML_Controller(self.kb, mdl))
-		self.ki = KnowledgeIntegrator.KnowledgeIntegrator( self.kb, self.models, self.stacking_classifier)
+		self.ki = KnowledgeIntegrator.KnowledgeIntegrator( self.kb, self.models, self.stacking_classifier, self.other_predictions)
 		res = eval(self.experiment)
 		self.writeToCSV(res, self.output_file)
 		
@@ -162,6 +171,7 @@ class NEMO_Experiment:
 		fold = (xtrain, None, ytrain, None)
 		ki.trainLevelOneModels(fold)
 		curr_res = ki.runModel(holdout)
+		print "Holdout Results: " + str(curr_res)
 		return curr_res.get(self.metric)
 		
 	def writeToCSV(self, results, filename):
@@ -176,8 +186,14 @@ class NEMO_Experiment:
 			file.write( key+","+(','.join(map(str, val)))+"\n")
 		file.close()
 		
-		
-		
+	def splitIntoAttributesOther(self, data):
+		if data is not None:
+			atr = list(set(self.kb.X) - set(self.other_predictions))
+			x = data[atr]
+			other = data[self.other_predictions]
+			return(x,other)
+		else:
+			return (None, None)
 def main():
 	exp = NEMO_Experiment('config/experiment.json')
 	exp.setUpExperiment()
