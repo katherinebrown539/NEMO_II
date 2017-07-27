@@ -286,12 +286,50 @@ class NEMO:
 		ki = KnowledgeIntegrator.KnowledgeIntegrator(self.kb, self.ml, self.stacking_classifier, self.other_predictions)
 		data = self.kb.getData()
 		shuffled_data = shuffle(data)
-		train, test = train_test_split(shuffled_data, test_size = 0.2)
+		splits = numpy.array_split(shuffled_data, 10)
+		ki_res = ki.testKI(splits,10,0)
+
+		self.kb.updateDatabaseWithResults(ki)
 		
-		ki.trainAndCreateMetaDataSet(ki.splitIntoFolds(train, 10, 0))
-		ki.trainMetaModel()
-		res = ki.runModel(test)
-		kb.updateDatabaseWithResults(ki)
+	def splitIntoFolds(self, data, k, seed):
+		shuffled_data = shuffle(data, random_state=seed)
+		#print shuffled_data
+		folds = []
+		num_in_folds = len(data) / k
+		start = 0
+		end = num_in_folds - 1
+		for i in range(0,k):
+			fold = shuffled_data.iloc[start:end]
+			start = end
+			end = end + num_in_folds - 1
+			#print fold
+			folds.append(self.splitIntoXY(fold))
+			
+		return folds
+	
+	def getTestTraining(self, curr, others):
+		xtest = curr[0]
+		ytest = curr[1]
+		
+		xtrainsets = []
+		ytrainsets = []
+
+		for curr in others:
+			xtrainsets.append(pandas.DataFrame(curr[0]))
+			ytrainsets.append(pandas.DataFrame(curr[1]))
+
+		xtrain = pandas.concat(xtrainsets)
+		ytrain = pandas.concat(ytrainsets)
+		return xtrain, xtest, ytrain, ytest
+	
+	def splitIntoXY(self, data):
+		#print data
+		#print(data.columns.tolist())
+		y = data[self.kb.Y] #need to change to reflect varying data...
+		#print y
+		x = data[self.kb.X]
+		#print x	
+		return (x,y)
 	
 	
 	def menu(self):
@@ -356,8 +394,8 @@ class NEMO:
 		elif choice == 'View Models in Optimization Queue (Any current optimization task will be halted and restarted)':
 			self.printInformationOnCurrentlyOptimizingModels()
 		elif choice == 'Run Knowledge Integrator':
-			#self.runKnowledgeIntegrator()
-			print "Run KnowledgeIntegrator"
+			self.runKnowledgeIntegrator()
+			#print "Run KnowledgeIntegrator"
 		else:
 			self.cancelOptimization()
 			sys.exit()

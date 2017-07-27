@@ -5,6 +5,7 @@ from sklearn.svm import SVC
 from KnowledgeBase import KnowledgeBase
 from Classifiers import ML_Controller
 from collections import deque
+from sklearn.utils import shuffle
 from sklearn.metrics import classification_report,confusion_matrix, accuracy_score, precision_score, f1_score, recall_score
 import pandas
 #import NEMO
@@ -19,17 +20,19 @@ class KnowledgeIntegrator:
 		self.kb = kb
 		self.level1_classifiers = level1_classifiers
 		if stacking_classifier is None or stacking_classifier == "Logistic Regression":
-			self.name = "KI_LogisticRegression"
+			self.algorithm_name = "KI_LogisticRegression"
 			self.stacking_classifier = LogisticRegression()
 		elif stacking_classifier == "Decision Tree":
 			self.stacking_classifier = DecisionTreeClassifier()
-			self.name = "KI_DecisionTree"
+			self.algorithm_name = "KI_DecisionTree"
 		elif stacking_classifier == "SVM":
 			self.stacking_classifier = SVC()
-			self.name = "KI_SVM"
+			self.algorithm_name = "KI_SVM"
 		self.meta_data_set = []
 		self.other_predictions = other_predictions
 		#self.keys.append(self.kb.Y)
+		self.algorithm_id = "111111111"
+		
 			
 	def trainLevelOneModels(self, fold):
 		xtrain,	xtest, ytrain, ytest = fold
@@ -84,10 +87,7 @@ class KnowledgeIntegrator:
 			predictions.columns = names
 			self.meta_data_set.append(predictions)
 		self.meta_data_set = pandas.concat(self.meta_data_set)
-		# print "Self.meta_data_set"
-		# print self.meta_data_set
-		#print self.meta_data_set
-		
+
 	def createMetaDataSet(self, folds):
 		self.resetKeys()
 		names = self.keys
@@ -155,7 +155,7 @@ class KnowledgeIntegrator:
 		self.meta_data_set.append(predictions)	
 		self.meta_data_set = pandas.DataFrame(self.meta_data_set)
 		# print "Meta DATA Set"
-		# print self.meta_data_set
+		#print self.meta_data_set
 		
 		x,y = self.splitMetaIntoXY(self.meta_data_set)
 		x = self.transform(x)
@@ -168,30 +168,76 @@ class KnowledgeIntegrator:
 		f1 = f1_score(y,predictions, average=av)
 		cm = confusion_matrix(y,predictions)
 		
-		to_return =  {"Accuracy": accuracy, "Precision": precision, "Recall": recall, "F1": f1, "CM": cm}
+		#to_return =  {"Accuracy": accuracy, "Precision": precision, "Recall": recall, "F1": f1, "Confusion_Matrix": cm}
+		to_return =  {"Accuracy": accuracy, "Precision": precision, "Recall": recall, "F1": f1, "Confusion_Matrix": cm}
 		return to_return
+	
+	def testKI(self, splits, num_folds, random_seed):
+		holdout = splits.pop()
+		remain = pandas.concat(splits)
+		folded_data = deque(self.splitIntoFolds(remain, num_folds, random_seed))
+		folds = []
+		for i in range(0, num_folds):
+			curr = folded_data.popleft()
+			info = self.getTestTraining(curr, folded_data)
+			folds.append(info)
+			folded_data.append(curr)
+		#print len(folds)
+		self.trainAndCreateMetaDataSet(folds)
+		self.trainMetaModel()
+		xtrain, ytrain = self.splitIntoXY(remain)
+		fold = (xtrain, None, ytrain, None)
+		self.trainLevelOneModels(fold)
+		curr_res = self.runModel(holdout)
+		print "Holdout Results: " + str(curr_res)
+		curr_res["ID"] = self.algorithm_id
+		curr_res["Name"] = self.algorithm_name
+		self.results = curr_res
+		return curr_res
+		
+	def splitIntoFolds(self, data, k, seed):
+		shuffled_data = shuffle(data, random_state=seed)
+		#print shuffled_data
+		folds = []
+		num_in_folds = len(data) / k
+		start = 0
+		end = num_in_folds - 1
+		for i in range(0,k):
+			fold = shuffled_data.iloc[start:end]
+			start = end
+			end = end + num_in_folds - 1
+			#print fold
+			folds.append(self.splitIntoXY(fold))
 			
+		return folds
+	
+	def getTestTraining(self, curr, others):
+		xtest = curr[0]
+		ytest = curr[1]
+		
+		xtrainsets = []
+		ytrainsets = []
+
+		for curr in others:
+			xtrainsets.append(pandas.DataFrame(curr[0]))
+			ytrainsets.append(pandas.DataFrame(curr[1]))
+
+		xtrain = pandas.concat(xtrainsets)
+		ytrain = pandas.concat(ytrainsets)
+		return xtrain, xtest, ytrain, ytest
+	
 	def crossValidateMetaModel(self, k):
 		pass
 		
 	def getName(self):
-		return self.name
+		return self.algorithm_name
 		
 	def splitMetaIntoXY(self, data):
 		self.resetKeys()
 		#print data
 		y = data[self.kb.Y]
 		x = data[self.keys]
-		# print "X"
-		# print x
-		# print "Y"
-		# print y
-		# cols = deque(data.columns.tolist())
-		# y_name = cols.pop()
-		# x_names = list(cols)
-		# y = data[y_name] #need to change to reflect varying data...
-		# x = data[x_names]
-
+		
 		return(x,y)
 		
 	def splitIntoAttributesOther(self, data):
@@ -202,6 +248,7 @@ class KnowledgeIntegrator:
 			return(x,other)
 		else:
 			return (None, None)
+			
 	def splitIntoXY(self, data):
 	#print data
 		#print(data.columns.tolist())
