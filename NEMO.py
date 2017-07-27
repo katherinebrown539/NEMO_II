@@ -356,7 +356,8 @@ class NEMO:
 		elif choice == 'View Models in Optimization Queue (Any current optimization task will be halted and restarted)':
 			self.printInformationOnCurrentlyOptimizingModels()
 		elif choice == 'Run Knowledge Integrator':
-			self.runKnowledgeIntegrator()
+			#self.runKnowledgeIntegrator()
+			print "Run KnowledgeIntegrator"
 		else:
 			self.cancelOptimization()
 			sys.exit()
