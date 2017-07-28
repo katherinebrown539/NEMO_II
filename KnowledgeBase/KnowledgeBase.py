@@ -1,6 +1,7 @@
 import MySQLdb
 import MySQLdb.cursors
 import sys
+import pandas
 import json
 import pandas
 ##############################################################################################################
@@ -104,8 +105,11 @@ class KnowledgeBase:
 	
 
 	def updateDatabaseWithResults(self, algorithm):
-		results = (algorithm.results['ID'], algorithm.results['Name'], algorithm.results['Accuracy'],  algorithm.results['Precision'], algorithm.results['Recall'], algorithm.results['F1'], str(algorithm.results['Confusion_Matrix']).replace('\n', ""))
-		stmt = "insert into AlgorithmResults(algorithm_id, algorithm_name, accuracy, prec, recall, f1, confusion_matrix) values (%s,%s,%s,%s,%s,%s,%s)"
+		# results = (algorithm.results['ID'], algorithm.results['Name'], algorithm.results['Accuracy'],  algorithm.results['Precision'], algorithm.results['Recall'], algorithm.results['F1'], str(algorithm.results['Confusion_Matrix']).replace('\n', ""))
+		# stmt = "insert into AlgorithmResults(algorithm_id, algorithm_name, accuracy, prec, recall, f1, confusion_matrix) values (%s,%s,%s,%s,%s,%s,%s)"
+
+		results = (algorithm.results['ID'], algorithm.results['Name'], algorithm.results['Accuracy'],  algorithm.results['Precision'], algorithm.results['Recall'], algorithm.results['F1'])
+		stmt = "insert into AlgorithmResults(algorithm_id, algorithm_name, accuracy, prec, recall, f1) values (%s,%s,%s,%s,%s,%s)"
 		# print stmt
 		# print str(results)
 		self.executeQuery(stmt, results)
@@ -201,6 +205,10 @@ class KnowledgeBase:
 	def removeCurrentModel(self, model):
 		stmt = "delete from CurrentModel where algorithm_id = " + model.algorithm_id
 		self.executeQuery(stmt)
+		
+	def getData(self):
+		stmt = "select * from DATA"
+		return pandas.read_sql_query(stmt, self.db)
 		
 	#DESTRUCTOR
 	#commits all changes to database and closes the connection

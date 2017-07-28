@@ -13,7 +13,7 @@ import os
 import time
 import random
 import json
-
+#test comment for git
 class NEMO_Experiment:
 	def __init__(self, filename):
 		self.NEMO_instance = NEMO(filename)
@@ -137,42 +137,45 @@ class NEMO_Experiment:
 		#complete experiment 1
 		res = self.experiment1()
 		# res = {}
+		print "res: " + str(res)
 		stack_res = []
 		for partition in self.partitions:
 			# #split 10/90
 			splits = numpy.array_split(partition, 10)
-			num = self.testKI(self.ki, splits)
+			#ki_res = self.testKI(self.ki,splits)
+			ki_res = self.ki.testKI(splits, self.num_folds, self.random_seed)
+			num = ki_res.get(self.metric)
+			print self.metric + " = " + str(num)
 			stack_res.append(num)
-		print stack_res
+		# print stack_res
 		mean = numpy.mean(stack_res)
 		std_ = numpy.std(stack_res)
 		stack_res.append(mean)
 		stack_res.append(std_)
-		print stack_res
+		# print stack_res
 		res[self.ki.getName()] = stack_res
-		print res
 		print ""
 		return res
-			
-	def testKI(self, ki, splits):
-		holdout = splits.pop()
-		remain = pandas.concat(splits)
-		folded_data = deque(self.splitIntoFolds(remain,self.num_folds,self.random_seed))
-		folds = []
-		for i in range(0, self.num_folds):
-			curr = folded_data.popleft()
-			info = self.getTestTraining(curr, folded_data)
-			folds.append(info)
-			folded_data.append(curr)
-		#print len(folds)
-		ki.trainAndCreateMetaDataSet(folds)
-		ki.trainMetaModel()
-		xtrain, ytrain = self.splitIntoXY(remain)
-		fold = (xtrain, None, ytrain, None)
-		ki.trainLevelOneModels(fold)
-		curr_res = ki.runModel(holdout)
-		print "Holdout Results: " + str(curr_res)
-		return curr_res.get(self.metric)
+	
+		
+	# def testKI(self, ki, splits):
+		# holdout = splits.pop()
+		# remain = pandas.concat(splits)
+		# folded_data = deque(self.splitIntoFolds(remain,self.num_folds,self.random_seed))
+		# folds = []
+		# for i in range(0, self.num_folds):
+			# curr = folded_data.popleft()
+			# info = self.getTestTraining(curr, folded_data)
+			# folds.append(info)
+			# folded_data.append(curr)
+		# print len(folds)
+		# ki.trainAndCreateMetaDataSet(folds)
+		# ki.trainMetaModel()
+		# xtrain, ytrain = self.splitIntoXY(remain)
+		# fold = (xtrain, None, ytrain, None)
+		# ki.trainLevelOneModels(fold)
+		# curr_res = ki.runModel(holdout)
+		# return curr_res
 		
 	def writeToCSV(self, results, filename):
 		file = open(filename, 'w')
@@ -194,6 +197,10 @@ class NEMO_Experiment:
 			return(x,other)
 		else:
 			return (None, None)
+<<<<<<< HEAD
+=======
+			
+>>>>>>> dev
 def main():
 	exp = NEMO_Experiment('config/experiment.json')
 	exp.setUpExperiment()
