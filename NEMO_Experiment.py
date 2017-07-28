@@ -197,10 +197,7 @@ class NEMO_Experiment:
 			return(x,other)
 		else:
 			return (None, None)
-<<<<<<< HEAD
-=======
-			
->>>>>>> dev
+
 def main():
 	exp = NEMO_Experiment('config/experiment.json')
 	exp.setUpExperiment()

@@ -237,20 +237,7 @@ class KnowledgeIntegrator:
 		#print data
 		y = data[self.kb.Y]
 		x = data[self.keys]
-<<<<<<< HEAD
-		# print "X"
-		# print x
-		# print "Y"
-		# print y
-		# cols = deque(data.columns.tolist())
-		# y_name = cols.pop()
-		# x_names = list(cols)
-		# y = data[y_name] #need to change to reflect varying data...
-		# x = data[x_names]
 
-=======
-		
->>>>>>> dev
 		return(x,y)
 		
 	def splitIntoAttributesOther(self, data):
@@ -261,10 +248,7 @@ class KnowledgeIntegrator:
 			return(x,other)
 		else:
 			return (None, None)
-<<<<<<< HEAD
-=======
-			
->>>>>>> dev
+
 	def splitIntoXY(self, data):
 	#print data
 		#print(data.columns.tolist())

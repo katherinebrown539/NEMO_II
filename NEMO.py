@@ -288,14 +288,6 @@ class NEMO:
 		ki = KnowledgeIntegrator.KnowledgeIntegrator(self.kb, self.ml, self.stacking_classifier, self.other_predictions)
 		data = self.kb.getData()
 		shuffled_data = shuffle(data)
-<<<<<<< HEAD
-		train, test = train_test_split(shuffled_data, test_size = 0.2)
-		
-		ki.trainAndCreateMetaDataSet(ki.splitIntoFolds(train, 10, 0))
-		ki.trainMetaModel()
-		res = ki.runModel(test)
-		kb.updateDatabaseWithResults(ki)
-=======
 		splits = numpy.array_split(shuffled_data, 10)
 		ki_res = ki.testKI(splits,10,0)
 
@@ -340,7 +332,7 @@ class NEMO:
 		x = data[self.kb.X]
 		#print x	
 		return (x,y)
->>>>>>> dev
+
 	
 	
 	def menu(self):
@@ -405,13 +397,10 @@ class NEMO:
 		elif choice == 'View Models in Optimization Queue (Any current optimization task will be halted and restarted)':
 			self.printInformationOnCurrentlyOptimizingModels()
 		elif choice == 'Run Knowledge Integrator':
-<<<<<<< HEAD
 			#self.runKnowledgeIntegrator()
 			print "Run KnowledgeIntegrator"
-=======
 			self.runKnowledgeIntegrator()
 			#print "Run KnowledgeIntegrator"
->>>>>>> dev
 		else:
 			self.cancelOptimization()
 			sys.exit()
