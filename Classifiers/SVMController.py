@@ -18,7 +18,7 @@ class SVMController:
 		random.seed()
 		for i in range(1,10):
 			self.algorithm_id = self.algorithm_id + str(random.randint(1,9))
-		
+		self.svm = None
 		self.kb = kb
 		
 	def createModel(self, x, y, attributes=None):
@@ -81,8 +81,10 @@ class SVMController:
 		self.algorithm_id = id
 		self.createModelFromID(x,y,id)
 		
-	def runModel(self, multi=False):
-		#
+	def runModel(self, multi=False, x = None, y = None):
+		if x is not None:
+			self.X_test = x
+			self.y_test = y
 		av = ''
 		if not multi:
 			av = 'binary'
@@ -108,7 +110,13 @@ class SVMController:
 
 	def predict(self, x):
 		return self.svm.predict(x)
-		
+	
+	def fit(self,x,y):
+		self.svm.fit(x,y)
+	
+	def isModelCreated(self):
+		return self.svm is not None
+	
 	def set_params(self, attr):
 		self.svm.set_params(**attr)
 		

@@ -1,5 +1,5 @@
 from KnowledgeBase import KnowledgeBase
-from Classifiers import ML_Controller, KnowledgeIntegrator
+from Classifiers import ML_Controller, KnowledgeIntegrator, SemiSupervisedController
 from collections import deque
 from NEMO import NEMO
 import pandas
@@ -66,6 +66,10 @@ class NEMO_Experiment:
 		self.stacking_classifier = info["STACKER"]
 		self.use_features = info["USE_FEATURES"] == "True"
 		self.other_predictions = info["OTHER_PREDICTIONS"] if info['OTHER_PREDICTIONS'] != "None" else None
+		info = json_data['SEMI_SUPERVISED']
+		self.split_method = info["SPLIT_METHOD"]
+		self.num_train = info["k"]
+		
 		
 	def getTestTraining(self, curr, others):
 		xtest = curr[0]
@@ -113,6 +117,7 @@ class NEMO_Experiment:
 		for mdl in self.algorithms:
 			self.models.append(ML_Controller.ML_Controller(self.kb, mdl))
 		self.ki = KnowledgeIntegrator.KnowledgeIntegrator( self.kb, self.models, self.stacking_classifier, self.other_predictions, self.use_features)
+		self.semi_supervised = SemiSupervisedController.SemiSupervisedController(self.models, self.kb, self.split_method, self.num_train)
 		res = eval(self.experiment)
 		self.writeToCSV(res, self.output_file)
 		
@@ -158,25 +163,23 @@ class NEMO_Experiment:
 		print ""
 		return res
 	
-		
-	# def testKI(self, ki, splits):
-		# holdout = splits.pop()
-		# remain = pandas.concat(splits)
-		# folded_data = deque(self.splitIntoFolds(remain,self.num_folds,self.random_seed))
-		# folds = []
-		# for i in range(0, self.num_folds):
-			# curr = folded_data.popleft()
-			# info = self.getTestTraining(curr, folded_data)
-			# folds.append(info)
-			# folded_data.append(curr)
-		# print len(folds)
-		# ki.trainAndCreateMetaDataSet(folds)
-		# ki.trainMetaModel()
-		# xtrain, ytrain = self.splitIntoXY(remain)
-		# fold = (xtrain, None, ytrain, None)
-		# ki.trainLevelOneModels(fold)
-		# curr_res = ki.runModel(holdout)
-		# return curr_res
+	def experiment3(self):
+		res = {}
+		for classifier in self.models:
+			res[classifier.getName()] = []
+		res[self.ki.getName()] = []
+		count = 1
+		for partition in self.partitions:
+			print "partition: " + str(count)
+			self.semi_supervised.split(seed = self.random_seed, data = partition)
+			self.semi_supervised.trainClassifiers(self.stacking_classifier, self.other_predictions, self.use_features)
+			part_res = self.semi_supervised.testClassifiers(self.metric, self.random_seed, self.num_folds)
+			
+			for classifier in self.models:
+				res[classifier.getName()].append(part_res.get(classifier.getName()))
+			res[self.ki.getName()].append(part_res.get(self.ki.getName()))
+			count = count+1
+		return res	
 		
 	def writeToCSV(self, results, filename):
 		file = open(filename, 'w')

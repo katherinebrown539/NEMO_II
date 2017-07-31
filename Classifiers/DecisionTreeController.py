@@ -18,7 +18,7 @@ class DecisionTreeController:
 		random.seed()
 		for i in range(1,10):
 			self.algorithm_id = self.algorithm_id + str(random.randint(1,9))
-		
+		self.tree = None
 		self.kb = kb
 		
 	def createModel(self, x, y, attributes=None):
@@ -46,6 +46,7 @@ class DecisionTreeController:
 		else:
 			self.tree = DecisionTreeClassifier(random_state=0)
 			
+		print "Number of training instances: "+ str(len(self.X_train.index))
 		self.tree.fit(self.X_train, self.y_train)
 		
 	def createModelFromID(self, x, y, id):
@@ -81,8 +82,10 @@ class DecisionTreeController:
 		self.algorithm_id = id
 		self.createModelFromID(x,y,id)
 		
-	def runModel(self, multi=False):
-		
+	def runModel(self, multi=False, x = None, y = None,):
+		if x is not None:
+			self.X_test = x
+			self.y_test = y
 		av = ''
 		if not multi:
 			av = 'binary'
@@ -93,6 +96,9 @@ class DecisionTreeController:
 		# predictions = cross_val_predict(self.tree, self.x, labels)
 		# accuracy_all = cross_val_score(self.tree, self.x, labels, cv=10)
 		# accuracy = numpy.mean(accuracy_all)
+		print "Number of test instances: " + str(len(self.X_test.index))
+		
+		
 		predictions = self.tree.predict(self.X_test)	
 		accuracy = accuracy_score(self.y_test,predictions)
 		precision = precision_score(self.y_test,predictions, average=av)
@@ -108,7 +114,10 @@ class DecisionTreeController:
 
 	def predict(self, x):
 		return self.tree.predict(x)
-		
+	
+	def fit(self,x,y):
+		self.tree.fit(x,y)
+	
 	def set_params(self, attr):
 		self.tree.set_params(**attr)
 		
@@ -119,6 +128,9 @@ class DecisionTreeController:
 		if method == 'Coordinate Ascent':
 			return self.coordinateAscent(metric)
 
+	def isModelCreated(self):
+		return self.tree is not None		
+			
 	def coordinateAscent(self, metric):
 		best_model = self
 		bst = 0.0

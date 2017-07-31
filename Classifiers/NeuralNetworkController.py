@@ -132,8 +132,10 @@ class NeuralNetworkController:
 		
 		self.mlp.fit(self.X_train, self.y_train)
 		
-	def runModel(self, multi=True):
-		
+	def runModel(self, multi=True, x = None, y = None):
+		if x is not None:
+			self.X_test = x
+			self.y_test = y
 		av = ''
 		if not multi:
 			av = 'binary'
@@ -271,6 +273,11 @@ class NeuralNetworkController:
 			
 		return to_return
 	
+	def fit(self,x,y):
+		self.mlp.fit(x,y)
+	def isModelCreated(self):
+		return self.mlp is not None
+		
 	def set_params(self, attributes):
 		self.mlp.set_params(**attributes)
 		

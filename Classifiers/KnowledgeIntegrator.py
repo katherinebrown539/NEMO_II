@@ -132,6 +132,7 @@ class KnowledgeIntegrator:
 	def trainMetaModel(self, data=None):
 		if data is None:
 			data = self.meta_data_set
+		
 		# print data
 		# print "Data"
 		# print data
@@ -180,9 +181,7 @@ class KnowledgeIntegrator:
 		print len(self.meta_data_set)
 		self.meta_data_set = pandas.DataFrame(predictions).T
 		self.meta_data_set.columns = names
-		
-		
-		
+
 		if self.use_features:
 			self.meta_data_set.index = x.index
 			self.meta_data_set = self.meta_data_set.merge(x, left_index=True, right_index=True)

@@ -57,16 +57,22 @@ class ML_Controller:
 			self.algorithm.createModelFromID(self.data, self.target, id)
 	
 	def createModelPreSplit(self, xtrain, xtest, ytrain, ytest, attributes=None):
+		if attributes is None and self.algorithm.isModelCreated():
+			attributes = self.get_params()
 		self.algorithm.createModelPreSplit(xtrain, xtest, ytrain, ytest, attributes)
 	
 	def copyModel(self, id):
 		self.algorithm.copyModel(self.data, self.target, id)
 	
+	def fit(self, x, y):
+		
+		self.algorithm.fit(x,y)
+	
 	def predict(self, x):
 		return self.algorithm.predict(x)
 	
-	def runAlgorithm(self):
-		results = self.algorithm.runModel(self.kb.multi)
+	def runAlgorithm(self, x = None, y = None):
+		results = self.algorithm.runModel(self.kb.multi, x, y)
 		#self.kb.updateDatabaseWithResults(self.algorithm)
 		return results
 		
@@ -75,6 +81,7 @@ class ML_Controller:
 	
 	def getName(self):
 		return self.algorithm.algorithm_name
+		
 	def getID(self):
 		return self.algorithm.algorithm_id
 		
