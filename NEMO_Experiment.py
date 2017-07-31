@@ -64,6 +64,7 @@ class NEMO_Experiment:
 		self.experiment = "self.experiment"+str(info['EXPERIMENT'])+"()"
 		info = json_data['KNOWLEDGE_INTEGRATOR']
 		self.stacking_classifier = info["STACKER"]
+		self.use_features = info["USE_FEATURES"] == "True"
 		self.other_predictions = info["OTHER_PREDICTIONS"] if info['OTHER_PREDICTIONS'] != "None" else None
 		
 	def getTestTraining(self, curr, others):
@@ -111,7 +112,7 @@ class NEMO_Experiment:
 		self.models = []
 		for mdl in self.algorithms:
 			self.models.append(ML_Controller.ML_Controller(self.kb, mdl))
-		self.ki = KnowledgeIntegrator.KnowledgeIntegrator( self.kb, self.models, self.stacking_classifier, self.other_predictions)
+		self.ki = KnowledgeIntegrator.KnowledgeIntegrator( self.kb, self.models, self.stacking_classifier, self.other_predictions, self.use_features)
 		res = eval(self.experiment)
 		self.writeToCSV(res, self.output_file)
 		

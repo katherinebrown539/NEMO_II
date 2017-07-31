@@ -16,7 +16,7 @@ import os
 import time
 #git test for git
 class KnowledgeIntegrator:
-	def __init__(self, kb, level1_classifiers, stacking_classifier=None, other_predictions=None):
+	def __init__(self, kb, level1_classifiers, stacking_classifier=None, other_predictions=None, use_features=False):
 		self.kb = kb
 		self.level1_classifiers = level1_classifiers
 		if stacking_classifier is None or stacking_classifier == "Logistic Regression":
@@ -32,7 +32,7 @@ class KnowledgeIntegrator:
 		self.other_predictions = other_predictions
 		#self.keys.append(self.kb.Y)
 		self.algorithm_id = "111111111"
-		
+		self.use_features = use_features
 			
 	def trainLevelOneModels(self, fold):
 		xtrain,	xtest, ytrain, ytest = fold
@@ -85,6 +85,13 @@ class KnowledgeIntegrator:
 			predictions = pandas.DataFrame(predictions).T
 			#print predictions
 			predictions.columns = names
+			
+			if self.use_features:
+				predictions.index = xtest.index
+				#print predictions
+				predictions = predictions.merge(xtest, left_index=True, right_index=True)
+				# print predictions
+				
 			self.meta_data_set.append(predictions)
 		self.meta_data_set = pandas.concat(self.meta_data_set)
 
@@ -111,18 +118,31 @@ class KnowledgeIntegrator:
 			predictions.append(ytest.values)
 			predictions = pandas.DataFrame(predictions).T
 			predictions.columns = names
+			
+			if self.use_features:
+				predictions.index = xtest.index
+				#print predictions
+				predictions = predictions.merge(xtest, left_index=True, right_index=True)
+				# print predictions
+				
 			self.meta_data_set.append(predictions)
-		self.meta_data_set = pandas.DataFrame(set)
+		self.meta_data_set = pandas.DataFrame(self.meta_data_set)
 		
 		
 	def trainMetaModel(self, data=None):
 		if data is None:
 			data = self.meta_data_set
+		# print data
 		# print "Data"
 		# print data
-		x,y = self.splitMetaIntoXY(data)
+		x,y,features = self.splitMetaIntoXY(data)
 		#print x
 		x = self.transform(x)
+		if self.use_features:
+			x.index = features.index	
+			x = x.merge(features, right_index = True, left_index = True)
+			print "x"
+			print x
 		self.stacking_classifier.fit(x, y)
 		
 	def transform(self, x):
@@ -139,6 +159,9 @@ class KnowledgeIntegrator:
 		return x.T
 		
 	def runModel(self, data):
+		print len(data)
+		print "data"
+		#print data
 		x,y = self.splitIntoXY(data)
 		#strip the other_predictions
 		other = None
@@ -151,14 +174,34 @@ class KnowledgeIntegrator:
 		if self.other_predictions is not None:
 				predictions.append(other.values)
 		predictions.append(y.values)
+		self.resetKeys()
+		names = self.keys
+		names.append(self.kb.Y)
+		print len(self.meta_data_set)
+		self.meta_data_set = pandas.DataFrame(predictions).T
+		self.meta_data_set.columns = names
 		
-		self.meta_data_set.append(predictions)	
-		self.meta_data_set = pandas.DataFrame(self.meta_data_set)
-		# print "Meta DATA Set"
-		#print self.meta_data_set
 		
-		x,y = self.splitMetaIntoXY(self.meta_data_set)
+		
+		if self.use_features:
+			self.meta_data_set.index = x.index
+			self.meta_data_set = self.meta_data_set.merge(x, left_index=True, right_index=True)
+			print self.meta_data_set
+		
+		
+		x,y,features = self.splitMetaIntoXY(self.meta_data_set)
+		print "y"
+		print y
+		print "features"
+		print features
 		x = self.transform(x)
+		print "x"
+		print x
+		
+		if self.use_features:
+			x.index = features.index	
+			x = x.merge(features, right_index = True, left_index = True)
+		print x	
 		predictions = self.stacking_classifier.predict(x)
 		av = 'micro'
 		
@@ -173,6 +216,9 @@ class KnowledgeIntegrator:
 		return to_return
 	
 	def testKI(self, splits, num_folds, random_seed):
+		print "in test KI"
+		print self.meta_data_set
+		self.meta_data_set = []
 		holdout = splits.pop()
 		remain = pandas.concat(splits)
 		folded_data = deque(self.splitIntoFolds(remain, num_folds, random_seed))
@@ -182,7 +228,7 @@ class KnowledgeIntegrator:
 			info = self.getTestTraining(curr, folded_data)
 			folds.append(info)
 			folded_data.append(curr)
-		#print len(folds)
+		#print len(folds
 		self.trainAndCreateMetaDataSet(folds)
 		self.trainMetaModel()
 		xtrain, ytrain = self.splitIntoXY(remain)
@@ -237,8 +283,12 @@ class KnowledgeIntegrator:
 		#print data
 		y = data[self.kb.Y]
 		x = data[self.keys]
-
-		return(x,y)
+		try:
+			x_cols = list(set(self.kb.X) - set(self.keys))
+			features = data[x_cols]
+		except:
+			features = None
+		return(x,y,features)
 		
 	def splitIntoAttributesOther(self, data):
 		if data is not None:
