@@ -22,20 +22,34 @@ class RandomForestController:
 		self.kb = kb
 		
 	def createModel(self, x, y, attributes=None):
-		pass
+		self.x = x
+		self.y = y 
+		self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(x,y)
+		
+		if attributes is not None:
+			self.forest = RandomForestClassifier(random_state=None)
+			self.set_params(attributes)
+		else:
+			self.forest = RandomForestClassifier(random_state=0)
+			
+		self.forest.fit(self.X_train, self.y_train)
 	
 	def createModelPreSplit(self, xtrain, xtest, ytrain, ytest, attributes=None):
-		pass
+		self.X_train = xtrain
+		self.X_test = xtest
+		self.y_train = ytrain
+		self.y_test = ytest
+	
+		if attributes is not None:
+			self.forest = RandomForestClassifier(random_state=None)
+			self.set_params(attributes)
+		else:
+			self.forest = RandomForestClassifier(random_state=0)
+			
+		self.forest.fit(self.X_train, self.y_train)
+	
 	
 	def createModelFromID(self, x, y, id):
-
-		
-		# criterion - string in  ['gini', 'entropy']
-
-		# warm_start - bool
-		# class_weight - dict, list of dicts, "balanced"
-		
-		#run query
 		stmt = "select * from ModelRepository where algorithm_id = " + id
 		self.kb.executeQuery(stmt)
 		row = self.kb.fetchOne()
@@ -80,7 +94,7 @@ class RandomForestController:
  			attributes[key] = val
 			row = self.kb.fetchOne()
 		self.createModel(x,y,attributes)
-		pass
+		
 	
 	def copyModel(self,x,y,id):
 		self.algorithm_id = id
@@ -112,9 +126,6 @@ class RandomForestController:
 		self.kb.removeCurrentModel(self)
 		return to_return
 		
-	def coordinateAscent(self, metric):
-		pass
-	
 	def predict(self, x):
 		return self.forest.predict(x)
 	
@@ -133,3 +144,7 @@ class RandomForestController:
 
 	def isModelCreated(self):
 		return self.forest is not None		
+		
+	def coordinateAscent(self, metric):
+		#print "Coordinate Ascent for Random Forest"
+		return self

@@ -1,6 +1,6 @@
 #!/bin/bash
 #check to see if NEMO.pid exists
-if [[ -f /tmp/NEMO.pid ]];
+if [[ -f tmp/NEMO.pid ]];
 then
 	echo "RUNNING"
 else

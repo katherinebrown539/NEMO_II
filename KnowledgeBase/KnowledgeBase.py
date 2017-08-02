@@ -189,6 +189,18 @@ class KnowledgeBase:
 		self.executeQuery(stmt)
 
 	def updateDatabaseWithModel(self, model):
+		#check to see if model is in database
+		#if so, add modified char to id (mod_id)
+		# update ModelRepository set algorithm_id = mod_id where algorithm_id = model.algorithm_id
+		stmt = "select * from ModelRepository where algorithm_id = " + model.algorithm_id
+		self.executeQuery(stmt)
+		row = self.fetchOne()
+		mod_id = None
+		if row is not None: #it exists in the database
+			mod_id = model.algorithm_id + "*"
+			stmt = "update ModelRepository set algorithm_id = \'" + mod_id + "\' where algorithm_id = \'" + model.algorithm_id + "\'"
+			#print stmt
+			self.executeQuery(stmt)
 		arguments = model.get_params()
 		#print arguments
 		for key, value in arguments.iteritems():
@@ -196,6 +208,11 @@ class KnowledgeBase:
 			stmt = "insert into ModelRepository (algorithm_id, algorithm_name, arg_type, arg_val) values ( %s, %s, %s, %s)"
 			args = (model.algorithm_id, model.algorithm_name, key, str(value))
 			self.executeQuery(stmt, args)
+		#remove backup model...
+		if mod_id is not None: #we had to use mod_id
+			stmt = "delete from ModelRepository where algorithm_id = \'" + mod_id + "\'"
+			#print stmt
+			self.executeQuery(stmt)
 		
 	def addCurrentModel(self, model):
 		stmt = "insert into CurrentModel(algorithm_id) values (%s)"

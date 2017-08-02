@@ -37,12 +37,12 @@ class NEMO:
 	def __init__(self, filename):
 		self.kb = KnowledgeBase.KnowledgeBase(filename)
 		self.ml = [] #list of machine learners
+		self.secs = 45
 		self.queue = deque()
 		self.optimization_thread = None
 		self.stop_event = None
 		self.checkForCurrentModels()
 		self.checkForOptimizingModels()
-		self.secs = 45
 		with open(filename) as fd:
 			json_data = json.load(fd)
 		info = json_data['KNOWLEDGE_INTEGRATOR']
@@ -65,8 +65,10 @@ class NEMO:
 	def getAlgorithmType(self, id):
 		#assumes id has already been verified
 		stmt = "select algorithm_name from ModelRepository where algorithm_id = " + id
+		#print stmt
 		self.kb.executeQuery(stmt)
 		types = self.kb.fetchOne()
+		#print types
 		return types[0]
 		
 	#same model, different id
@@ -99,17 +101,24 @@ class NEMO:
 			print "ID does not exist in Model Repository"
 
 	def copy(self, this_id):
-		new_ml = ML_Controller.ML_Controller(self.kb, self.getAlgorithmType(this_id))
+		algorithm_type = ""
+		try:
+			algorithm_type = self.getAlgorithmType(this_id)
+		except:
+			this_id = this_id + "*"
+			algorithm_type = self.getAlgorithmType(this_id)
+		new_ml = ML_Controller.ML_Controller(self.kb, algorithm_type)
 		new_ml.copyModel(this_id)
-		self.kb.removeModelFromRepository(new_ml.algorithm)
+		#self.kb.removeModelFromRepository(new_ml.algorithm)
 		self.kb.updateDatabaseWithModel(new_ml.algorithm)
 		self.kb.addCurrentModel(new_ml.algorithm)
 		new_ml.runAlgorithm()
 		new_ml.updateDatabaseWithResults()
 		self.ml.append(new_ml)
+		return new_ml
 		
 	def setupNewML(self):
-		models = ['Neural Network', 'Decision Tree', 'SVM']
+		models = ['Neural Network', 'Decision Tree', 'SVM', 'Random Forest']
 		possible_choices = range(1, len(models)+1)
 		ch_strs = map(str, possible_choices)
 		input = ""
@@ -235,7 +244,7 @@ class NEMO:
 		#self.startOptimization()
 		
 	def printModelInformation(self, id=None):
-		#self.pauseOptimzation()
+		self.pauseOptimzation()
 		if id is None:
 			stmt = "select * from ModelRepository"
 		else:
@@ -254,7 +263,7 @@ class NEMO:
 			row = self.kb.fetchOne()
 			
 		print "\nNo Model Information to Show"
-		#self.startOptimization()
+		self.startOptimization()
 		
 	def printCurrentModelInformation(self):
 		for model in self.ml:
@@ -275,15 +284,19 @@ class NEMO:
 		row = self.kb.fetchOne()
 		while row is not None:
 			id = row[0] #get id
+			#print id
 			mdl = self.findAlgorithmBasedOnID(id)
 			if mdl is None:
 				mdl = self.copy(id)
+			print "created model"
 			# set optimization flag to true
 			mdl.isCurrentlyOptimizing = True
 			# enqueue to optimization queue
 			self.queue.append(mdl)	
-		self.startOptimization()	
-	
+			row = self.kb.fetchOne()
+		print "Finished checking for models"
+		self.startOptimization()
+		
 	def runKnowledgeIntegrator(self):
 		ki = KnowledgeIntegrator.KnowledgeIntegrator(self.kb, self.ml, self.stacking_classifier, self.other_predictions)
 		data = self.kb.getData()

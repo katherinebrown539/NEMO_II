@@ -85,11 +85,11 @@ class SVMController:
 		if x is not None:
 			self.X_test = x
 			self.y_test = y
-		av = ''
-		if not multi:
-			av = 'binary'
-		else:
-			av = 'micro'
+		av = 'micro'
+		# if not multi:
+			# av = 'binary'
+		# else:
+			# av = 'micro'
 		# c, r = self.y.shape
 		# labels = self.y.values.reshape(c,)
 		# predictions = cross_val_predict(self.svm, self.x, labels)

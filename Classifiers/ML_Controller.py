@@ -6,6 +6,7 @@ import pandas.io.sql as psql
 import KnowledgeBase
 import NeuralNetworkController
 import DecisionTreeController
+import RandomForestController
 import SVMController
 import random
 ##############################################################################################################
@@ -46,7 +47,9 @@ class ML_Controller:
 			self.algorithm = DecisionTreeController.DecisionTreeController(self.kb)
 		if algorithm_type == 'SVM':
 			self.algorithm = SVMController.SVMController(self.kb)
-	
+		if algorithm_type == "Random Forest":
+			self.algorithm = RandomForestController.RandomForestController(self.kb)
+
 	def get_params(self):
 		return self.algorithm.get_params()
 	
@@ -91,5 +94,5 @@ class ML_Controller:
 		self.algorithm.algorithm_id = curr_id
 		self.algorithm.results['ID'] = curr_id
 		self.kb.updateDatabaseWithResults(self.algorithm)
-		self.kb.removeModelFromRepository(self.algorithm)
+		#self.kb.removeModelFromRepository(self.algorithm)
 		self.kb.updateDatabaseWithModel(self.algorithm)

@@ -1,5 +1,5 @@
 from KnowledgeBase import KnowledgeBase
-from Classifiers import ML_Controller, KnowledgeIntegrator, SemiSupervisedController
+from Classifiers import ML_Controller, KnowledgeIntegrator, SemiSupervisedController, RandomForestController
 from collections import deque
 from NEMO import NEMO
 import pandas

@@ -46,7 +46,7 @@ class DecisionTreeController:
 		else:
 			self.tree = DecisionTreeClassifier(random_state=0)
 			
-		print "Number of training instances: "+ str(len(self.X_train.index))
+		#print "Number of training instances: "+ str(len(self.X_train.index))
 		self.tree.fit(self.X_train, self.y_train)
 		
 	def createModelFromID(self, x, y, id):
@@ -138,8 +138,9 @@ class DecisionTreeController:
 		current_model = best_model
 		while curr > bst:
 			bst = curr
-			best_model = curr
+			best_model = current_model
 			current_model = self.optimizeCriterion(metric, self)
+			#print "current_model @ coordinateAscent: " + str(current_model)
 			curr = current_model.results.get(metric)
 		curr = best_model.results.get(metric)
 		current_model = best_model
@@ -197,9 +198,13 @@ class DecisionTreeController:
 		attributes['criterion'] = "entropy" if attributes['criterion'] == 'gini' else 'gini'
 		
 		criterion_tree = DecisionTreeController(self.kb)
+		# print "criterion_tree: " + str(criterion_tree)
+		# print "best_model: " +  str(best_model)
 		criterion_tree.createModel(self.x, self.y, attributes)
 		criterion_tree.runModel(self.kb.multi)
 		if(criterion_tree.results.get(metric) >= best_model.results.get(metric)):
+			# print "criterion_tree: " + str(criterion_tree)
 			return criterion_tree		
 		else:
+			# print "best_model: " +  str(best_model)
 			return best_model
