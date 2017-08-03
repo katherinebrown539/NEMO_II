@@ -110,7 +110,7 @@ class RandomForestController:
 		else:
 			av = 'micro'
 		
-		print "Number of test instances: " + str(len(self.X_test.index))
+		#print "Number of test instances: " + str(len(self.X_test.index))
 		
 		
 		predictions = self.forest.predict(self.X_test)	
@@ -146,5 +146,111 @@ class RandomForestController:
 		return self.forest is not None		
 		
 	def coordinateAscent(self, metric):
-		#print "Coordinate Ascent for Random Forest"
-		return self
+		best_model = self
+		bst = 0.0
+		curr = best_model.results.get(metric)
+		current_model = best_model
+		while curr > bst:
+			bst = curr
+			best_model = current_model
+			current_model = self.optimizeCriterion(metric, self)
+			#print "current_model @ coordinateAscent: " + str(current_model)
+			curr = current_model.results.get(metric)
+		curr = best_model.results.get(metric)
+		current_model = best_model
+		while curr > bst:
+			bst = curr
+			best_model = curr
+			current_model = self.optimizeMaxFeatures(metric, self)
+			curr = current_model.results.get(metric)
+		curr = best_model.results.get(metric)
+		current_model = best_model
+		while curr > bst:
+			bst = curr
+			best_model = curr
+			current_model = self.optimizeNumEstimators(metric, self)
+			curr = current_model.results.get(metric)
+		
+		
+		return best_model
+	
+	def optimizeNumEstimators(self, metric, best_model):
+		current_attr = best_model.get_params()
+		current_num_estimators = current_attr.get('n_estimators')
+		percent = random.uniform(0,1)
+		num_inc = int((1 + percent) * current_num_estimators)
+		num_dec = int(percent * current_num_estimators)
+		
+		inc_forest = RandomForestController(self.kb)
+		inc_attr = current_attr
+		inc_attr['n_estimators'] = num_inc
+		inc_forest.createModel(self.x,self.y, inc_attr)
+		dec_forest = RandomForestController(self.kb)
+		dec_attr = current_attr
+		dec_attr['n_estimators'] = num_dec
+		dec_forest.createModel(self.x,self.y, dec_attr)
+		
+		if(inc_forest.results.get(metric) >= best_model.results.get(metric)) and (inc_forest.results.get(metric) >= dec_forest.results.get(metric)):
+			return inc_forest
+		if(dec_forest.results.get(metric) >= best_model.results.get(metric)) and (dec_forest.results.get(metric) >= inc_forest.results.get(metric)):
+			return dec_forest
+		else:
+			return best_model
+	
+	
+	def optimizeMaxFeatures(self, metric, best_model):
+		best_model_attributes = best_model.get_params()
+		#sqrt
+		sqrt_forest = RandomForestController(self.kb)
+		sqrt_attr = best_model_attributes
+		sqrt_attr['max_features'] = 'sqrt'
+		sqrt_forest.createModel(self.x, self.y, sqrt_attr)
+		sqrt_forest.runModel(self.kb.multi)
+		
+		#log2
+		log_forest = RandomForestController(self.kb)
+		log_attr = best_model_attributes
+		log_attr['max_features'] = 'log2'
+		log_forest.createModel(self.x, self.y, log_attr)
+		log_forest.runModel(self.kb.multi)
+		
+		#test between sqrt and log2
+		if(sqrt_forest.results.get(metric) >= best_model.results.get(metric) and sqrt_forest.results.get(metric) >= log_forest.results.get(metric)):
+			return sqrt_forest
+		if(log_forest.results.get(metric) >= best_model.results.get(metric) and log_forest.results.get(metric) >= sqrt_forest.results.get(metric)):
+			return log_forest
+		else:
+			return best_model
+		#random percent
+		best_metric = 0
+		best_percent_model = None
+		for i in range(1,100):
+			curr = i/100.0
+			percent_attr = best_model_attributes.get_params()
+			percent_attr['max_features'] = curr
+			percent_forest = RandomForestController(self.kb)
+			percent_forest.createModel(self.x, self.y, percent_attr)
+			percent_forest.runModel(self.kb.multi)
+			if percent_forest.results.get(metric) >= best_metric:
+				best_percent_model = percent_forest
+		
+		if best_percent_model.results.get(metric) >= best_model.results.get(metric):
+			return best_percent_model
+		else:
+			return best_model
+			
+	def optimizeCriterion(self, metric, best_model):
+		attributes = best_model.get_params()
+		attributes['criterion'] = "entropy" if attributes['criterion'] == 'gini' else 'gini'
+		
+		criterion_forest = RandomForestController(self.kb)
+		# print "criterion_forest: " + str(criterion_forest)
+		# print "best_model: " +  str(best_model)
+		criterion_forest.createModel(self.x, self.y, attributes)
+		criterion_forest.runModel(self.kb.multi)
+		if(criterion_forest.results.get(metric) >= best_model.results.get(metric)):
+			# print "criterion_forest: " + str(criterion_forest)
+			return criterion_forest		
+		else:
+			# print "best_model: " +  str(best_model)
+			return best_model

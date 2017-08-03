@@ -232,7 +232,7 @@ class NEMO:
 ############################################################################################################
 
 	def printAlgorithmResults(self):
-		#self.pauseOptimzation()
+		self.pauseOptimzation()
 		stmt = "select * from AlgorithmResults"
 		self.kb.executeQuery(stmt)
 		#self.kb.cursor.execute(stmt)
@@ -263,13 +263,14 @@ class NEMO:
 			row = self.kb.fetchOne()
 			
 		print "\nNo Model Information to Show"
-		self.startOptimization()
+		#self.startOptimization()
 		
 	def printCurrentModelInformation(self):
 		for model in self.ml:
 			self.printModelInformation(model.getID())
 	
 	def checkForCurrentModels(self):
+		#self.pauseOptimzation()
 		stmt = "select algorithm_id from CurrentModel"
 		self.kb.executeQuery(stmt)
 		#self.kb.cursor.execute(stmt)
@@ -277,7 +278,8 @@ class NEMO:
 		i = 0
 		while row is not None:
 			copy(row[0])
-			
+		#self.startOptimization()
+		
 	def checkForOptimizingModels(self):
 		stmt = "select * from CurrentlyOptimizingModels"
 		self.kb.executeQuery(stmt)
@@ -295,9 +297,10 @@ class NEMO:
 			self.queue.append(mdl)	
 			row = self.kb.fetchOne()
 		print "Finished checking for models"
-		self.startOptimization()
+		#self.startOptimization()
 		
 	def runKnowledgeIntegrator(self):
+		self.pauseOptimzation()
 		ki = KnowledgeIntegrator.KnowledgeIntegrator(self.kb, self.ml, self.stacking_classifier, self.other_predictions)
 		data = self.kb.getData()
 		shuffled_data = shuffle(data)
