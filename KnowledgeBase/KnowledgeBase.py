@@ -213,6 +213,7 @@ class KnowledgeBase:
 			stmt = "delete from ModelRepository where algorithm_id = \'" + mod_id + "\'"
 			#print stmt
 			self.executeQuery(stmt)
+		self.db.commit()
 		
 	def addCurrentModel(self, model):
 		stmt = "insert into CurrentModel(algorithm_id) values (%s)"

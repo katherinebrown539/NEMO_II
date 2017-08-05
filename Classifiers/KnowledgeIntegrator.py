@@ -31,7 +31,7 @@ class KnowledgeIntegrator:
 		self.meta_data_set = []
 		self.other_predictions = other_predictions
 		#self.keys.append(self.kb.Y)
-		self.algorithm_id = "111111111"
+		self.algorithm_id = "000000000"
 		self.use_features = use_features
 			
 	def trainLevelOneModels(self, fold):

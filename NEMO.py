@@ -37,7 +37,7 @@ class NEMO:
 	def __init__(self, filename):
 		self.kb = KnowledgeBase.KnowledgeBase(filename)
 		self.ml = [] #list of machine learners
-		self.secs = 45
+		self.secs = 10
 		self.queue = deque()
 		self.optimization_thread = None
 		self.stop_event = None
@@ -297,7 +297,8 @@ class NEMO:
 			self.queue.append(mdl)	
 			row = self.kb.fetchOne()
 		print "Finished checking for models"
-		#self.startOptimization()
+		self.menu()
+		self.startOptimization()
 		
 	def runKnowledgeIntegrator(self):
 		self.pauseOptimzation()

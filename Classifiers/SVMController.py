@@ -135,10 +135,17 @@ class SVMController:
 		while curr > bst:
 			bst = curr
 			best_model = curr_mdl
+			self.kb.updateDatabaseWithModel(best_model)
 			curr_mdl = self.optimizeC(metric, self)
 			curr = curr_mdl.results.get(metric)
-			
-		#best_model = self.optimizeKernel(metric, best_model)
+		current_model = best_model
+		while curr > bst:
+			bst = curr
+			best_model = current_model
+			current_model = self.optimizeKernel(metric, best_model)
+			#print "current_model @ coordinateAscent: " + str(current_model)
+			curr = current_model.results.get(metric)	
+		self.kb.updateDatabaseWithModel(best_model)
 		return best_model
 	def optimizeC(self, metric, best_model):
 		attributes = best_model.get_params()

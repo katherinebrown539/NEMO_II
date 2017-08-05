@@ -142,6 +142,7 @@ class DecisionTreeController:
 			current_model = self.optimizeCriterion(metric, self)
 			#print "current_model @ coordinateAscent: " + str(current_model)
 			curr = current_model.results.get(metric)
+		self.kb.updateDatabaseWithModel(best_model)
 		curr = best_model.results.get(metric)
 		current_model = best_model
 		while curr > bst:
@@ -149,7 +150,7 @@ class DecisionTreeController:
 			best_model = curr
 			current_model = self.optimizeMaxFeatures(metric, self)
 			curr = current_model.results.get(metric)
-		
+		self.kb.updateDatabaseWithModel(best_model)
 		return best_model
 	
 	def optimizeMaxFeatures(self, metric, best_model):

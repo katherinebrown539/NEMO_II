@@ -178,11 +178,11 @@ class NeuralNetworkController:
 				break
 			else:
 				bestModel = next 
-				#update Model information...
+				self.kb.updateDatabaseWithModel(bestModel)
 				
 		# print "Done optimizing this model"
 		bestModel = bestModel.optimizeNumberOfLayers(metric, bestModel)
-		
+		self.kb.updateDatabaseWithModel(bestModel)
 		
 		return bestModel
 		
