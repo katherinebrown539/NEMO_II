@@ -168,7 +168,9 @@ class NEMO:
 			model.isCurrentlyOptimizing = True
 			# enqueue to optimization queue
 			self.queue.append(model)	
-		
+		else:
+			print "Error adding model with ID: " + id
+			
 	def startOptimization(self):
 		# init thread with optimize worker
 		if self.queue is not None:
@@ -302,14 +304,17 @@ class NEMO:
 		
 	def runKnowledgeIntegrator(self):
 		self.pauseOptimzation()
-		ki = KnowledgeIntegrator.KnowledgeIntegrator(self.kb, self.ml, self.stacking_classifier, self.other_predictions)
-		data = self.kb.getData()
-		shuffled_data = shuffle(data)
-		splits = numpy.array_split(shuffled_data, 10)
-		ki_res = ki.testKI(splits,10,0)
+		try:
+			ki = KnowledgeIntegrator.KnowledgeIntegrator(self.kb, self.ml, self.stacking_classifier, self.other_predictions)
+			data = self.kb.getData()
+			shuffled_data = shuffle(data)
+			splits = numpy.array_split(shuffled_data, 10)
+			ki_res = ki.testKI(splits,10,0)
 
-		self.kb.updateDatabaseWithResults(ki)
-		
+			self.kb.updateDatabaseWithResults(ki)
+			print "Run KnowledgeIntegrator"
+		except:
+			print "Error running Knowledge Integrator. Please ensure models are created and try again"
 	def splitIntoFolds(self, data, k, seed):
 		shuffled_data = shuffle(data, random_state=seed)
 		#print shuffled_data
@@ -415,7 +420,6 @@ class NEMO:
 			self.printInformationOnCurrentlyOptimizingModels()
 		elif choice == 'Run Knowledge Integrator':
 			#self.runKnowledgeIntegrator()
-			print "Run KnowledgeIntegrator"
 			self.runKnowledgeIntegrator()
 			#print "Run KnowledgeIntegrator"
 		else:

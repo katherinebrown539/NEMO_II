@@ -11,7 +11,13 @@
  "DATA":{
 	"DATA": "",
 	"SCHEMA": "",
-	"CLASS": ""
+	"CLASS": "",
+	"MULTI-CLASS": ""
+	},
+	
+ "KNOWLEDGE_INTEGRATOR":{
+	"STACKER": "",
+	"OTHER_PREDICTIONS": "None"
 	}
 	
   
