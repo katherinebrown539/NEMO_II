@@ -63,7 +63,10 @@ class SVMController:
 			if val == 'None' or val == 'NULL':
 				val = None
 			if val is not None:
-				if key in ['C', 'gamma', 'coef0', 'tol', 'cache_size']:
+				if key == "DATA_SOURCE":
+					row = self.kb.fetchOne()
+					continue
+				elif key in ['C', 'gamma', 'coef0', 'tol', 'cache_size']:
 					if key == 'gamma' and val == 'auto':
 						val = val
 					else:

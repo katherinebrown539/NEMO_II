@@ -12,7 +12,7 @@ import sys
 import os
 import time
 import json
-
+import traceback
 #test comment for git
 
 #one stop event, pass in the queue and number of seconds to spend optimizing
@@ -35,7 +35,14 @@ def optimizeWorker(queue, stp, secs):
 	
 class NEMO:
 	def __init__(self, filename):
-		self.kb = KnowledgeBase.KnowledgeBase(filename)
+		with open(filename) as fd:
+			json_data = json.load(fd)
+			
+		info = json_data['DATA']
+		print info['DATA_JSON']
+		self.kbs = self.readInAllDataSources(info['DATA_JSON'], filename)
+		self.kb = self.kbs[0]
+		
 		self.ml = [] #list of machine learners
 		self.secs = 10
 		self.queue = deque()
@@ -43,11 +50,11 @@ class NEMO:
 		self.stop_event = None
 		self.checkForCurrentModels()
 		self.checkForOptimizingModels()
-		with open(filename) as fd:
-			json_data = json.load(fd)
+		
 		info = json_data['KNOWLEDGE_INTEGRATOR']
 		self.stacking_classifier = info["STACKER"]
 		self.other_predictions = info["OTHER_PREDICTIONS"] if info['OTHER_PREDICTIONS'] != "None" else None
+		
 		
 	def findAlgorithmBasedOnID(self, id):
 		for model in self.ml:
@@ -77,7 +84,9 @@ class NEMO:
 		id = raw_input("Enter ID Here --> ")
 		if self.verifyID(id):
 			type = self.getAlgorithmType(id)
-			new_ml = ML_Controller.ML_Controller(self.kb, type)
+			kb = self.getDataSource(id)
+			
+			new_ml = ML_Controller.ML_Controller(kb, type)
 			new_ml.createModel(id)
 			self.kb.updateDatabaseWithModel(new_ml.algorithm)	
 			self.kb.addCurrentModel(new_ml.algorithm)
@@ -107,7 +116,9 @@ class NEMO:
 		except:
 			this_id = this_id + "*"
 			algorithm_type = self.getAlgorithmType(this_id)
-		new_ml = ML_Controller.ML_Controller(self.kb, algorithm_type)
+		#getKB
+		kb = self.getDataSource(this_id)
+		new_ml = ML_Controller.ML_Controller(kb, algorithm_type)
 		new_ml.copyModel(this_id)
 		#self.kb.removeModelFromRepository(new_ml.algorithm)
 		self.kb.updateDatabaseWithModel(new_ml.algorithm)
@@ -132,7 +143,8 @@ class NEMO:
 		self.createML(input)
 		
 	def createML(self, input):
-		new_ml = ML_Controller.ML_Controller(self.kb, input)
+		kb = self.selectDataSource()
+		new_ml = ML_Controller.ML_Controller(kb, input)
 		new_ml.createModel()
 		self.kb.updateDatabaseWithModel(new_ml.algorithm)	
 		self.kb.addCurrentModel(new_ml.algorithm)
@@ -238,10 +250,11 @@ class NEMO:
 		stmt = "select * from AlgorithmResults"
 		self.kb.executeQuery(stmt)
 		#self.kb.cursor.execute(stmt)
-		print "Algorithm ID\t\t\tAlgorithm Name\t\t\tAccuracy\t\t\tPrecision\t\t\tRecall\t\t\tF1 Score\t\t\t"
+		print "Algorithm ID\t\tAlgorithm Name\t\tData Source\t\tAccuracy\t\tPrecision\t\tRecall\t\tF1 Score\t\t"
 		row = self.kb.fetchOne()
 		while row != None:
-			print "%s\t\t\t%s\t\t\t%s\t\t\t%s\t\t\t%s\t\t\t%s\t\t\t" % (row[0], row[1], row[2], row[3], row[4], row[5])
+			#print row
+			print "%s\t\t%s\t\t%s\t\t%s\t\t%s\t\t%s\t\t%s" % (row[0], row[1], row[2], row[3], row[4], row[5],row[6])
 			row = self.kb.fetchOne()
 		#self.startOptimization()
 		
@@ -305,8 +318,21 @@ class NEMO:
 	def runKnowledgeIntegrator(self):
 		self.pauseOptimzation()
 		try:
-			ki = KnowledgeIntegrator.KnowledgeIntegrator(self.kb, self.ml, self.stacking_classifier, self.other_predictions)
-			data = self.kb.getData()
+			#choose data set
+			kb = self.selectDataSource()
+			mls = []
+			#get all mls that use that data set
+			for m in self.ml:
+				print "kb.name = " + kb.name
+				print "m.kb.name = " + m.kb.name
+				if kb.name == m.kb.name:
+					mls.append(m)
+			if len(mls) == 0:
+				print "No Models for Data Source Chosen. Please select a different data source"
+				return None
+			#pass that into the KI.
+			ki = KnowledgeIntegrator.KnowledgeIntegrator(kb, mls, self.stacking_classifier, self.other_predictions)
+			data = kb.getData()
 			shuffled_data = shuffle(data)
 			splits = numpy.array_split(shuffled_data, 10)
 			ki_res = ki.testKI(splits,10,0)
@@ -315,6 +341,8 @@ class NEMO:
 			print "Run KnowledgeIntegrator"
 		except:
 			print "Error running Knowledge Integrator. Please ensure models are created and try again"
+			traceback.print_exc()
+			
 	def splitIntoFolds(self, data, k, seed):
 		shuffled_data = shuffle(data, random_state=seed)
 		#print shuffled_data
@@ -346,16 +374,62 @@ class NEMO:
 		ytrain = pandas.concat(ytrainsets)
 		return xtrain, xtest, ytrain, ytest
 	
-	def splitIntoXY(self, data):
-		#print data
+	def splitIntoXY(self, data, kb=None):
+		if kb is None:
+			kb = self.kb
 		#print(data.columns.tolist())
-		y = data[self.kb.Y] #need to change to reflect varying data...
+		y = data[kb.Y] #need to change to reflect varying data...
 		#print y
-		x = data[self.kb.X]
+		x = data[kb.X]
 		#print x	
 		return (x,y)
 
+	def readInAllDataSources(self, data_json, config):
+		kbs = []
+		print data_json
+		with open(data_json) as fd:
+			json_data = json.load(fd)
+		print type(json_data)	
+		print json_data
+		print json_data.itervalues()
+		for key,val in json_data.iteritems():
+			print key + ": " + str(val)
+			kbs.append(KnowledgeBase.KnowledgeBase(config, val))
+		return kbs
+		
+	def printAllDataSources(self):
+		print "Data Sources"
+		for i in range(0,len(self.kbs)):
+			print str(i+1) + ". " + self.kbs[i].name
+
+	def selectDataSource(self):
+		possible_choices = range(1, len(self.kbs)+1)
+		ch_strs = map(str, possible_choices)
+		input = ""
+		while input not in ch_strs:
+			self.printAllDataSources()
+			input = raw_input("--> ")
+		#choice = options[int(input)-1]
+		to_return = self.kbs[int(input)-1]
+		return to_return
 	
+	def verifyDataSource(self, data_str):
+		sources = []
+		for kb in self.kbs:
+			sources.append(kb.name)
+		return data_str in sources
+	
+	def getDataSource(self, id):
+		stmt = "select arg_val from ModelRepository where arg_type = \'DATA_SOURCE\' and algorithm_id = " + id
+		worked = self.kb.executeQuery(stmt)
+		row = self.kb.fetchOne()
+		data_name = row[0]
+		print data_name
+		if self.verifyDataSource(data_name):
+			for kb in self.kbs:
+				if kb.name == data_name:
+					return kb
+		#return self.kb		
 	
 	def menu(self):
 		#TODO
@@ -376,7 +450,7 @@ class NEMO:
 		options = ['Create New Model', 'Create New Model Based on ID', 'Create a Copy of a Model Based on ID', 'Run Model', 'Run Knowledge Integrator', 'Add Model to Optimization Queue', 'Optimize All Models', 
 		'Output All Model Results (Any current optimization task will be halted and restarted)', 'View Information on All Models (Any current optimization task will be halted and restarted)',
 		'View Information on Current Models (Any current optimization task will be halted and restarted)', 'View Models in Optimization Queue (Any current optimization task will be halted and restarted)',
-		'Cancel Selected Optimization Task', 'Cancel All Optimization Tasks', 'Quit NEMO']
+		'Cancel Selected Optimization Task', 'Cancel All Optimization Tasks', 'View Available Data Sources','Quit NEMO']
 		possible_choices = range(1, len(options)+1)
 		ch_strs = map(str, possible_choices)
 		input = ""
@@ -422,6 +496,8 @@ class NEMO:
 			#self.runKnowledgeIntegrator()
 			self.runKnowledgeIntegrator()
 			#print "Run KnowledgeIntegrator"
+		elif choice == 'View Available Data Sources':
+			self.printAllDataSources()
 		else:
 			self.cancelOptimization()
 			sys.exit()

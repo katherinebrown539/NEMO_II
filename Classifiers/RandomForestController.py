@@ -62,6 +62,9 @@ class RandomForestController:
 			if val == 'None' or val == 'NULL':
 				val = None
 			if val is not None:
+				if key == "DATA_SOURCE":
+					row = self.kb.fetchOne()
+					continue
 				if key == 'max_features':
 					lst = list(val)
 					if lst.count('.') > 0:

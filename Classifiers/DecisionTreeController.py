@@ -63,7 +63,10 @@ class DecisionTreeController:
 			if val == 'None' or val == 'NULL':
 				val = None
 			if val is not None:
-				if key in ['max_features', 'max_depth', 'max_leaf_nodes', 'random_state']:
+				if key == "DATA_SOURCE":
+					row = self.kb.fetchOne()
+					continue
+				elif key in ['max_features', 'max_depth', 'max_leaf_nodes', 'random_state']:
 					val = int(val)
 				elif key in ['min_weight_fraction_leaf', 'min_impurity_split']:
 					val = float(val)

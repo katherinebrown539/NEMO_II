@@ -8,6 +8,7 @@ drop table if exists CurrentlyOptimizingModels;
 create table AlgorithmResults(
 	algorithm_id varchar(16),
 	algorithm_name varchar(255), 
+	data_source varchar(255),
 	accuracy double, 
 	prec double, 
 	recall double, 

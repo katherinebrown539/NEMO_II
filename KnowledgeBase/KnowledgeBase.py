@@ -35,12 +35,12 @@ class KnowledgeBase:
 	#	Assumptions: On separate lines, the file contains the MySQL schema for creation of the DATA table
 	def importData(self, data_file, schema_file):
 		
-		self.cursor.execute("drop table if exists DATA;")
+		self.cursor.execute("drop table if exists " + self.name + ";")
 		#db.commit()
 		
 		#read in schema 
 		self.readSchemaFile(schema_file)
-		stmt = "create table DATA ( "
+		stmt = "create table " + self.name + " ( "
 
 		while len(self.schema) > 1:
 			stmt = stmt + self.schema.pop() + ", "
@@ -54,7 +54,7 @@ class KnowledgeBase:
 		f = open(data_file, 'r')
 		for line in f:
 			#print line
-			stmt = "insert into DATA values ( "
+			stmt = "insert into " + self.name + " values ( "
 			curr_ = line.split(',')
 			
 			for i in range(0,len(curr_)):
@@ -108,14 +108,14 @@ class KnowledgeBase:
 		# results = (algorithm.results['ID'], algorithm.results['Name'], algorithm.results['Accuracy'],  algorithm.results['Precision'], algorithm.results['Recall'], algorithm.results['F1'], str(algorithm.results['Confusion_Matrix']).replace('\n', ""))
 		# stmt = "insert into AlgorithmResults(algorithm_id, algorithm_name, accuracy, prec, recall, f1, confusion_matrix) values (%s,%s,%s,%s,%s,%s,%s)"
 
-		results = (algorithm.results['ID'], algorithm.results['Name'], algorithm.results['Accuracy'],  algorithm.results['Precision'], algorithm.results['Recall'], algorithm.results['F1'])
-		stmt = "insert into AlgorithmResults(algorithm_id, algorithm_name, accuracy, prec, recall, f1) values (%s,%s,%s,%s,%s,%s)"
+		results = (algorithm.results['ID'], algorithm.results['Name'], self.name, algorithm.results['Accuracy'],  algorithm.results['Precision'], algorithm.results['Recall'], algorithm.results['F1'])
+		stmt = "insert into AlgorithmResults(algorithm_id, algorithm_name, data_source, accuracy, prec, recall, f1) values (%s,%s,%s,%s,%s,%s,%s)"
 		# print stmt
 		# print str(results)
 		self.executeQuery(stmt, results)
 		
 	def getData(self):
-		stmt = "select * from DATA"
+		stmt = "select * from " + self.name
 		return pandas.read_sql_query(stmt, self.db)
 		
 	#Constructor
@@ -123,7 +123,7 @@ class KnowledgeBase:
 	# * login_file - a text file containing the login and database information
 	#	Assumptions: On separate lines, the file must contain HOST, PORT, MySQL USER NAME, PASSWORD, DATABASE	
 	#Postconditions: Connects to database
-	def __init__(self, config_file):
+	def __init__(self, config_file, file_info_dict=None):
 		with open(config_file) as fd:
 			json_data = json.load(fd)
 			
@@ -138,10 +138,14 @@ class KnowledgeBase:
 		self.db = MySQLdb.connect(host = self.HOST, port = self.PORT, user = self.USER, passwd = self.PASSWD, db = self.DATABASE)
 		self.cursor = self.db.cursor()
 		
-		file_info = json_data['DATA']		
+		
+		file_info = file_info_dict if file_info_dict is not None else json_data['DATA']
+		
+		self.name = file_info["DATA_NAME"]	
 		self.schema = None
 		self.X = None
 		self.Y = file_info['CLASS']
+		print self.name
 		print file_info['DATA']
 		print file_info['SCHEMA']
 		print self.Y
@@ -149,6 +153,7 @@ class KnowledgeBase:
 		self.importData(file_info['DATA'], file_info['SCHEMA'])
 	
 	def executeQuery(self, query, args=None):
+		#self.connect()
 		complete = False
 		#print query
 		#if args is not None: print args
@@ -160,21 +165,27 @@ class KnowledgeBase:
 				else:
 					self.cursor.execute(query, args)
 			except (AttributeError, MySQLdb.OperationalError):
-				self.db = MySQLdb.connect(host = self.HOST, port = self.PORT, user = self.USER, passwd = self.PASSWD, db = self.DATABASE)
-				self.cursor = self.db.cursor()
+				self.connect()
 			complete = True
-	
+			self.db.commit()
+		#self.disconnect()
+		
 	def fetchOne(self):
 		complete = False
+		#self.connect()
 		while not complete:
 			try:
-				return self.cursor.fetchone()
+				to_return =  self.cursor.fetchone()
+				complete = True
+				return to_return
 			except (AttributeError, MySQLdb.OperationalError):
 				self.db = MySQLdb.connect(host = self.HOST, port = self.PORT, user = self.USER, passwd = self.PASSWD, db = self.DATABASE)
 				self.cursor = self.db.cursor()
-			complete=True
-	
+			
+		#self.disconnect()
+		
 	def fetchAll(self):
+		#self.connect()
 		complete = False
 		while not complete:
 			try:
@@ -183,7 +194,8 @@ class KnowledgeBase:
 				self.db = MySQLdb.connect(host = self.HOST, port = self.PORT, user = self.USER, passwd = self.PASSWD, db = self.DATABASE)
 				self.cursor = self.db.cursor()
 			complete=True
-			
+		#self.disconnect()
+		
 	def removeModelFromRepository(self, model):
 		stmt = "delete from ModelRepository where algorithm_id = " + model.algorithm_id
 		self.executeQuery(stmt)
@@ -203,6 +215,9 @@ class KnowledgeBase:
 			self.executeQuery(stmt)
 		arguments = model.get_params()
 		#print arguments
+		stmt = "insert into ModelRepository (algorithm_id, algorithm_name, arg_type, arg_val) values ( %s, %s, %s, %s)"
+		args =  (model.algorithm_id, model.algorithm_name, "DATA_SOURCE", self.name)
+		self.executeQuery(stmt, args)
 		for key, value in arguments.iteritems():
 			#print key + ": " + str(value)
 			stmt = "insert into ModelRepository (algorithm_id, algorithm_name, arg_type, arg_val) values ( %s, %s, %s, %s)"
@@ -225,9 +240,20 @@ class KnowledgeBase:
 		self.executeQuery(stmt)
 		
 	def getData(self):
-		stmt = "select * from DATA"
-		return pandas.read_sql_query(stmt, self.db)
+		#self.connect()
+		stmt = "select * from " + self.name
+		to_return =  pandas.read_sql_query(stmt, self.db)
+		#self.disconnect()
+		return to_return
 		
+	def connect(self):
+		self.db = MySQLdb.connect(host = self.HOST, port = self.PORT, user = self.USER, passwd = self.PASSWD, db = self.DATABASE)
+		self.cursor = self.db.cursor()
+	
+	def disconnect(self):
+		self.db.commit()
+		self.db.close()
+	
 	#DESTRUCTOR
 	#commits all changes to database and closes the connection
 	def __del__(self):

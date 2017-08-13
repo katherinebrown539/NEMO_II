@@ -56,6 +56,9 @@ class NeuralNetworkController:
 			if val == 'None' or val == 'NULL' or val is None:
 				val = None
 			else:
+				if key == "DATA_SOURCE":
+					row = self.kb.fetchOne()
+					continue
 				if key in ['alpha', 'tol', 'momentum', 'validation_fraction', 'beta_1', 'beta_2', 'epsilon', 'learning_rate_init', 'power_t']:
 					val = float(val)
 				elif key in ['batch_size', 'max_iter', 'random_state']:
@@ -66,7 +69,7 @@ class NeuralNetworkController:
 				elif key == 'hidden_layer_sizes':
 					val = self.convertStringToTuple(val)
 			attributes[key] = val
-			row = self.kb.fetchOne()	
+			row = self.kb.fetchOne()
 
 			
 		self.createModel(x,y, attributes)

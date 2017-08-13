@@ -138,7 +138,7 @@ class KnowledgeIntegrator:
 		# print data
 		x,y,features = self.splitMetaIntoXY(data)
 		#print x
-		x = self.transform(x)
+		x = self.transform(x, data)
 		if self.use_features:
 			x.index = features.index	
 			x = x.merge(features, right_index = True, left_index = True)
@@ -146,10 +146,14 @@ class KnowledgeIntegrator:
 			print x
 		self.stacking_classifier.fit(x, y)
 		
-	def transform(self, x):
+	def transform(self, x, data=None):
 		le = preprocessing.LabelEncoder()
-		#LabelEncoder()
-		le.fit([ "c34.0", "c34.1", "c34.2", "c34.3", "c34.9", "c50.1", "c50.2", "c50.3", "c50.4", "c50.5", "c50.8", "c50.9"])
+		
+		#possible_values = Series(x).unique()
+		possible_values = x.stack().unique()
+		print str(possible_values)
+		#[ "c34.0", "c34.1", "c34.2", "c34.3", "c34.9", "c50.1", "c50.2", "c50.3", "c50.4", "c50.5", "c50.8", "c50.9"]
+		le.fit(possible_values)
 		new_x = []
 		for column in x:
 			#print column
@@ -193,7 +197,7 @@ class KnowledgeIntegrator:
 		print y
 		print "features"
 		print features
-		x = self.transform(x)
+		x = self.transform(x, self.meta_data_set)
 		print "x"
 		print x
 		
