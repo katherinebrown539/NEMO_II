@@ -136,6 +136,8 @@ class NeuralNetworkController:
 		self.mlp.fit(self.X_train, self.y_train)
 		
 	def runModel(self, multi=True, x = None, y = None):
+		self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.x,self.y)
+		self.mlp.fit(self.X_train, self.y_train)
 		if x is not None:
 			self.X_test = x
 			self.y_test = y

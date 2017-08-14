@@ -50,6 +50,20 @@ class ML_Controller:
 		if algorithm_type == "Random Forest":
 			self.algorithm = RandomForestController.RandomForestController(self.kb)
 
+	def changeKB(self, new_kb):
+		self.kb = new_kb
+		if self.algorithm is not None:
+			self.algorithm.kb = new_kb
+		cols = ",".join(self.kb.X)
+		stmt = "select " + cols + " from " + self.kb.name + ";"
+		#print stmt
+		self.data = pandas.read_sql_query(stmt, self.kb.db)
+		#print self.data
+		#print "data length = " + str(len(self.data))
+		stmt = "select " + self.kb.Y + " from " + self.kb.name
+		#print stmt
+		self.target = pandas.read_sql_query(stmt, self.kb.db)
+			
 	def get_params(self):
 		return self.algorithm.get_params()
 	

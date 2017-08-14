@@ -85,6 +85,8 @@ class SVMController:
 		self.createModelFromID(x,y,id)
 		
 	def runModel(self, multi=False, x = None, y = None):
+		self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.x,self.y)
+		self.svm.fit(self.X_train, self.y_train)
 		if x is not None:
 			self.X_test = x
 			self.y_test = y
@@ -150,6 +152,7 @@ class SVMController:
 			curr = current_model.results.get(metric)	
 		self.kb.updateDatabaseWithModel(best_model)
 		return best_model
+		
 	def optimizeC(self, metric, best_model):
 		attributes = best_model.get_params()
 		percent = random.randint(1,100)

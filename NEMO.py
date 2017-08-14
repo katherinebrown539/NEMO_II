@@ -42,7 +42,8 @@ class NEMO:
 		print info['DATA_JSON']
 		self.kbs = self.readInAllDataSources(info['DATA_JSON'], filename)
 		self.kb = self.kbs[0]
-		
+		self.data_file = info['DATA_JSON']
+		self.config_file = filename
 		self.ml = [] #list of machine learners
 		self.secs = 10
 		self.queue = deque()
@@ -109,7 +110,7 @@ class NEMO:
 		else:
 			print "ID does not exist in Model Repository"
 
-	def copy(self, this_id):
+	def copy(self, this_id, new_kb = None):
 		algorithm_type = ""
 		try:
 			algorithm_type = self.getAlgorithmType(this_id)
@@ -117,7 +118,12 @@ class NEMO:
 			this_id = this_id + "*"
 			algorithm_type = self.getAlgorithmType(this_id)
 		#getKB
-		kb = self.getDataSource(this_id)
+		kb = None
+		if new_kb is None:
+			kb = self.getDataSource(this_id)
+		else:
+			kb = new_kb
+		self.kb.executeQuery("delete from CurrentModel where algorithm_id="+this_id)	
 		new_ml = ML_Controller.ML_Controller(kb, algorithm_type)
 		new_ml.copyModel(this_id)
 		#self.kb.removeModelFromRepository(new_ml.algorithm)
@@ -281,6 +287,7 @@ class NEMO:
 		#self.startOptimization()
 		
 	def printCurrentModelInformation(self):
+		print len(self.ml)
 		for model in self.ml:
 			self.printModelInformation(model.getID())
 	
@@ -292,7 +299,8 @@ class NEMO:
 		row = self.kb.fetchOne()
 		i = 0
 		while row is not None:
-			copy(row[0])
+			self.copy(row[0])
+			row = self.kb.fetchOne()
 		#self.startOptimization()
 		
 	def checkForOptimizingModels(self):
@@ -431,6 +439,29 @@ class NEMO:
 					return kb
 		#return self.kb		
 	
+	def refreshDataSources(self):
+		self.cancelOptimization()
+		self.kbs = self.readInAllDataSources(self.data_file, self.config_file)
+		new_mls = []
+		for ml in self.ml:
+			kb = self.selectDataSource()
+			ml = self.copy(ml.getID(), kb)
+			new_mls.append(ml)
+			ml.kb.updateDatabaseWithModel(ml.algorithm)
+		self.ml = new_mls
+		
+	def swapDataSource(self):
+		self.cancelOptimization()
+		this_id = raw_input("Enter ID Here --> ")
+		if self.verifyID(this_id):
+			ml = self.findAlgorithmBasedOnID(this_id)
+			self.ml.remove(ml)
+			kb = self.selectDataSource()
+			ml = self.copy(ml.getID(), kb)
+			ml.kb.updateDatabaseWithModel(ml.algorithm)
+		else:
+			print "Invalid ID."
+		
 	def menu(self):
 		#TODO
 		#1. Create New Model\n
@@ -450,7 +481,7 @@ class NEMO:
 		options = ['Create New Model', 'Create New Model Based on ID', 'Create a Copy of a Model Based on ID', 'Run Model', 'Run Knowledge Integrator', 'Add Model to Optimization Queue', 'Optimize All Models', 
 		'Output All Model Results (Any current optimization task will be halted and restarted)', 'View Information on All Models (Any current optimization task will be halted and restarted)',
 		'View Information on Current Models (Any current optimization task will be halted and restarted)', 'View Models in Optimization Queue (Any current optimization task will be halted and restarted)',
-		'Cancel Selected Optimization Task', 'Cancel All Optimization Tasks', 'View Available Data Sources','Quit NEMO']
+		'Cancel Selected Optimization Task', 'Cancel All Optimization Tasks', 'View Available Data Sources', 'Refresh Data Sources (Optimization Will Be Canceled)', 'Swap Data Source on Model (Optimization Will Be Canceled)', 'Quit NEMO']
 		possible_choices = range(1, len(options)+1)
 		ch_strs = map(str, possible_choices)
 		input = ""
@@ -498,6 +529,10 @@ class NEMO:
 			#print "Run KnowledgeIntegrator"
 		elif choice == 'View Available Data Sources':
 			self.printAllDataSources()
+		elif choice == 'Refresh Data Sources (Optimization Will Be Canceled)':
+			print "Refesh data sources"
+		elif choice == 'Swap Data Source on Model (Optimization Will Be Canceled)':
+			self.swapDataSource()
 		else:
 			self.cancelOptimization()
 			sys.exit()
