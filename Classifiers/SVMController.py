@@ -85,7 +85,7 @@ class SVMController:
 		self.createModelFromID(x,y,id)
 		
 	def runModel(self, multi=False, x = None, y = None):
-		self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.x,self.y)
+		#self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.x,self.y)
 		self.svm.fit(self.X_train, self.y_train)
 		if x is not None:
 			self.X_test = x
