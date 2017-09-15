@@ -12,6 +12,7 @@ class NELController:
         with open(facts_file) as fd:
             json_data = json.load(fd)
 
+        print(type(json_data['Classifiers']))
         print(json_data['Classifiers'])
 
 
