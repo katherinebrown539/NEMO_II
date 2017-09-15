@@ -14,6 +14,8 @@ class NELController:
 
         for classifier in json_data:
             print (classifier)
+            for attribute, value in classifier.iteritems():
+                print attribute, value # example usage
 
 def main():
     filename = "config/facts.json"
