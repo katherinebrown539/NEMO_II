@@ -20,7 +20,7 @@ class NELController:
 
 
     def createClassifier(self, class_dict):
-        print (class_dict)
+        #print (class_dict)
         classifier_name = class_dict['Classifier_Name']
         data_source = class_dict['Data_Source']
         algorithm = class_dict['Algorithm']
