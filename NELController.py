@@ -12,10 +12,10 @@ class NELController:
         with open(facts_file) as fd:
             json_data = json.load(fd)
 
+        print (json_data)
         for classifier in json_data:
             print (classifier)
-            for attribute, value in classifier.iteritems():
-                print attribute, value # example usage
+
 
 def main():
     filename = "config/facts.json"
