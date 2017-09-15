@@ -12,12 +12,28 @@ class NELController:
         with open(facts_file) as fd:
             json_data = json.load(fd)
 
-        print(type(json_data['Classifiers']))
-        print(json_data['Classifiers'])
+        #print(type(json_data['Classifiers']))
+        #print(json_data['Classifiers'])
         classifiers = json_data['Classifiers']
         for classifier in classifiers:
-            print (classifier)
+            self.createClassifier(classifier)
 
+
+    def createClassifier(self, class_dict):
+        print (classifier)
+        classifier_name = class_dict['Classifier_Name']
+        data_source = class_dict['Data_Source']
+        algorithm = class_dict['Algorithm']
+        target = class_dict['Target']
+        features = class_dict['Features']
+        print(classifier_name)
+        print(data_source)
+        print(algorithm)
+        print(target)
+        print(features)
+        
+    def parseFeatures(self, feature_string):
+        pass
 
 def main():
     filename = "config/facts.json"
