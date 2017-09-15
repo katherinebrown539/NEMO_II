@@ -14,6 +14,9 @@ class NELController:
 
         print(type(json_data['Classifiers']))
         print(json_data['Classifiers'])
+        classifiers = json_data['Classifiers']
+        for classifier in classifiers:
+            print (classifier)
 
 
 def main():
