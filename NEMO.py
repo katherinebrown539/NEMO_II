@@ -319,7 +319,7 @@ class NEMO:
 			# enqueue to optimization queue
 			self.queue.append(mdl)
 			row = self.kb.fetchOne()
-		print "Finished checking for models"
+		#print "Finished checking for models"
 		#self.menu()
 		self.startOptimization()
 

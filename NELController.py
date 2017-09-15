@@ -32,9 +32,8 @@ class NELController:
         #kb = copy.deepcopy(self.NEMO.getDataSource(data_source))
 
 
-
     def parseFeatures(self, feature_string):
-        pass
+        print(feature_string)
 
 def main():
     facts = "config/facts.json"
