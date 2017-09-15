@@ -14,7 +14,7 @@ class NELController:
 
         #print (json_data)
         for classifier in json_data:
-            print (classifier)
+            print (type(classifier))
 
 
 def main():
