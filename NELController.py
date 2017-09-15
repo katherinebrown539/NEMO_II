@@ -8,7 +8,7 @@ from sklearn.utils import shuffle
 import threading, sys, os, time, json, traceback, pandas, numpy
 
 class NELController:
-    def __init__(facts_file):
+    def __init__(self, facts_file):
         with open(facts_file) as fd:
             json_data = json.load(fd)
 
