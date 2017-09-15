@@ -1,0 +1,9 @@
+{
+  "Classifier_1":{
+    "Data_Source": "data source",
+    "SQL": "True if current sql, false otherwise",
+    "Algorithm": "algorithm",
+    "Target": "Class",
+    "Features": "ALL", "ALL-{}", "{}"
+  }
+}
