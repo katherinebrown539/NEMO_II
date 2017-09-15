@@ -1,22 +1,24 @@
 #!/usr/bin/env python
 from KnowledgeBase import KnowledgeBase
 from Classifiers import ML_Controller, KnowledgeIntegrator
+import NEMO
 import MySQLdb
 from collections import deque
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 import threading, sys, os, time, json, traceback, pandas, numpy
+import copy
 
 class NELController:
-    def __init__(self, facts_file):
+    def __init__(self, facts_file, config_file):
         with open(facts_file) as fd:
             json_data = json.load(fd)
 
-        #print(type(json_data['Classifiers']))
-        #print(json_data['Classifiers'])
+        self.NEMO = NEMO.NEMO(config_file)
+
         classifiers = json_data['Classifiers']
         for classifier in classifiers:
-            self.createClassifier(classifier)
+            created_classifier = self.createClassifier(classifier)
 
 
     def createClassifier(self, class_dict):
@@ -26,18 +28,17 @@ class NELController:
         algorithm = class_dict['Algorithm']
         target = class_dict['Target']
         features = class_dict['Features']
-        print(classifier_name)
-        print(data_source)
-        print(algorithm)
-        print(target)
-        print(features)
+        features = self.parseFeatures(features)
+        #kb = copy.deepcopy(self.NEMO.getDataSource(data_source))
+
+
 
     def parseFeatures(self, feature_string):
         pass
 
 def main():
-    filename = "config/facts.json"
-    NELController(filename)
+    facts = "config/facts.json"
+    NELController(facts)
 
 if __name__ == '__main__':
     main()
