@@ -38,7 +38,7 @@ class NELController:
 
 def main():
     facts = "config/facts.json"
-    NELController(facts)
+    NELController(facts, "config/config.json")
 
 if __name__ == '__main__':
     main()
