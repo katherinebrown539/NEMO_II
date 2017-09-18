@@ -39,7 +39,7 @@ class NELController:
         print(feature_string[0])
         if feature_string[0] == '{':
             print("Case 1")
-        elif feature_string[4] == '-':
+        elif feature_string.length >= 4 and feature_string[4] == '-':
             print("Case 2")
         elif feature_string == 'ALL':
             print("Case 3")
