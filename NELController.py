@@ -31,7 +31,7 @@ class NELController:
         #features = self.parseFeatures(features)
         kb = self.NEMO.getDataSourceFromName(data_source) #will need copy constructor for KnowledgeBase
         all_feats = kb.X
-        all_feats.append(kb.y)
+        all_feats.append(kb.Y)
         self.parseFeatures(features, target, all_feats)
 
     def parseFeatures(self, feature_string, target, all):
