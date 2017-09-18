@@ -32,15 +32,20 @@ class NELController:
         kb = self.NEMO.getDataSourceFromName(data_source) #will need copy constructor for KnowledgeBase
         all_feats = kb.X
         all_feats.append(kb.Y)
-        self.parseFeatures(features, target, all_feats)
+        x,y = self.parseFeatures(features, target, all_feats)
 
     def parseFeatures(self, feature_string, target, all):
         print(feature_string)
-        print(feature_string[0])
         if feature_string[0] == '{':
             print("Case 1")
+            feature_string = feature_string.strip('{}')
+            print (feature_string)
+            features = features_string.split(',')
+            print (features)
+            return(features,target)
         elif len(feature_string) >= 4 and feature_string[4] == '-':
             print("Case 2")
+
         elif feature_string == 'ALL':
             print("Case 3")
         else:
