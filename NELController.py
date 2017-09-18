@@ -28,7 +28,7 @@ class NELController:
         algorithm = class_dict['Algorithm']
         target = class_dict['Target']
         features = class_dict['Features']
-        features = self.parseFeatures(features)
+        #features = self.parseFeatures(features)
         kb = copy.deepcopy(self.NEMO.getDataSource(data_source))
         all_feats = kb.X
         all_feats.append(kb.y)
