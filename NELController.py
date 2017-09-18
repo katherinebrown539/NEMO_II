@@ -45,9 +45,10 @@ class NELController:
             return(features,target)
         elif len(feature_string) >= 4 and feature_string[4] == '-':
             print("Case 2")
-
+            return(feature_string,target)
         elif feature_string == 'ALL':
             print("Case 3")
+            return(feature_string,target)
         else:
             print("Invalid feature string")
 
