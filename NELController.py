@@ -37,14 +37,14 @@ class NELController:
     def parseFeatures(self, feature_string, target, all):
         print(feature_string)
         if feature_string[0] == '{':
-            print("Case 1")
             feature_string = feature_string.strip('{}')
-            print (feature_string)
             features = feature_string.split(',')
-            print (features)
             return(features,target)
         elif len(feature_string) >= 4 and feature_string[4] == '-':
             print("Case 2")
+            feature_string = feature_string[6:]
+            print(feature_string)
+
             return(feature_string,target)
         elif feature_string == 'ALL':
             print("Case 3")
@@ -52,8 +52,6 @@ class NELController:
         else:
             print("Invalid feature string")
 
-        #case1: {}
-            #make list of strings
         #case2: ALL - {}
             #get all column names and remove
         #case3: ALL
