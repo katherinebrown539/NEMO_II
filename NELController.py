@@ -35,7 +35,7 @@ class NELController:
         x,y = self.parseFeatures(features, target, all_feats)
         print(x)
     def parseFeatures(self, feature_string, target, all_features):
-        print(feature_string)
+        print("Feature String: " + feature_string)
         if feature_string[0] == '{':
             #pre-specified features
             print("Case 1")
