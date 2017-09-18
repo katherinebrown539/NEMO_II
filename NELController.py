@@ -37,6 +37,15 @@ class NELController:
     def parseFeatures(self, feature_string, target, all):
         print(feature_string)
         print(feature_string[0])
+        if feature_string[0] == '{':
+            print("Case 1")
+        elif feature_string[4] == '-':
+            print("Case 2")
+        elif feature_string == 'ALL':
+            print("Case 3")
+        else:
+            print("Invalid feature string")
+
         #case1: {}
             #make list of strings
         #case2: ALL - {}
