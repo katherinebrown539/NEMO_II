@@ -439,6 +439,11 @@ class NEMO:
 					return kb
 		#return self.kb
 
+	def getDataSourceFromName(self,name):
+		for kb in self.kbs:
+			if kb.name == name:
+				return kb
+
 	def refreshDataSources(self):
 		self.cancelOptimization()
 		self.kbs = self.readInAllDataSources(self.data_file, self.config_file)
