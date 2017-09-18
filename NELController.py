@@ -36,6 +36,7 @@ class NELController:
         print(x)
     def parseFeatures(self, feature_string, target, all_features):
         print("Feature String: " + feature_string)
+        print("Target: " + target)
         if feature_string[0] == '{':
             #pre-specified features
             print("Case 1")
@@ -63,10 +64,6 @@ class NELController:
         else:
             print("Invalid feature string")
 
-        #case2: ALL - {}
-            #get all column names and remove
-        #case3: ALL
-            #get all but target
 
 def main():
     facts = "config/facts.json"
