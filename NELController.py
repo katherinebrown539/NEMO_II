@@ -29,7 +29,7 @@ class NELController:
         target = class_dict['Target']
         features = class_dict['Features']
         #features = self.parseFeatures(features)
-        kb = copy.deepcopy(self.NEMO.getDataSource(data_source))
+        kb = self.NEMO.getDataSource(data_source) #will need copy constructor for KnowledgeBase
         all_feats = kb.X
         all_feats.append(kb.y)
         self.parseFeatures(features, target, all_feats)
