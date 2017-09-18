@@ -36,6 +36,7 @@ class NELController:
 
     def parseFeatures(self, feature_string, target, all):
         print(feature_string)
+        print(feature_string[0])
         #case1: {}
             #make list of strings
         #case2: ALL - {}
