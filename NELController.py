@@ -29,11 +29,19 @@ class NELController:
         target = class_dict['Target']
         features = class_dict['Features']
         features = self.parseFeatures(features)
-        #kb = copy.deepcopy(self.NEMO.getDataSource(data_source))
+        kb = copy.deepcopy(self.NEMO.getDataSource(data_source))
+        all_feats = kb.X
+        all_feats.append(kb.y)
+        self.parseFeatures(features, target, all_feats)
 
-
-    def parseFeatures(self, feature_string):
+    def parseFeatures(self, feature_string, target, all):
         print(feature_string)
+        #case1: {}
+            #make list of strings
+        #case2: ALL - {}
+            #get all column names and remove
+        #case3: ALL
+            #get all but target
 
 def main():
     facts = "config/facts.json"
