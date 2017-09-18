@@ -33,22 +33,33 @@ class NELController:
         all_feats = kb.X
         all_feats.append(kb.Y)
         x,y = self.parseFeatures(features, target, all_feats)
-
-    def parseFeatures(self, feature_string, target, all):
+        print(x)
+    def parseFeatures(self, feature_string, target, all_features):
         print(feature_string)
         if feature_string[0] == '{':
+            #pre-specified features
+            print("Case 1")
             feature_string = feature_string.strip('{}')
             features = feature_string.split(',')
+            print(features)
             return(features,target)
         elif len(feature_string) >= 4 and feature_string[4] == '-':
-            print("Case 2")
+            print("Case 2") #all minus case
             feature_string = feature_string[6:]
-            print(feature_string)
-
-            return(feature_string,target)
+            feature_string = feature_string.strip('{}')
+            features = feature_string.split(',')
+            while(all_features.count(target)):
+                all_features.remove(target)
+            for f in features:
+                while(all_features.count(f)):
+                    all_features.remove(f)
+            print(all_features)
+            return(all_features,target)
         elif feature_string == 'ALL':
-            print("Case 3")
-            return(feature_string,target)
+            print("Case 3") #all features
+            while(all_features.count(target)):
+                all_features.remove(target)
+            return(all_features,target)
         else:
             print("Invalid feature string")
 
