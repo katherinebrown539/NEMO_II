@@ -40,7 +40,7 @@ class NELController:
             print("Case 1")
             feature_string = feature_string.strip('{}')
             print (feature_string)
-            features = features_string.split(',')
+            features = feature_string.split(',')
             print (features)
             return(features,target)
         elif len(feature_string) >= 4 and feature_string[4] == '-':
