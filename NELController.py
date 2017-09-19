@@ -15,10 +15,11 @@ class NELController:
             json_data = json.load(fd)
 
         self.NEMO = NEMO.NEMO(config_file)
-
+        self.classifiers = []
         classifiers = json_data['Classifiers']
         for classifier in classifiers:
             created_classifier = self.createClassifier(classifier)
+            self.classifiers.append(created_classifier)
             print created_classifier
 
     def createClassifier(self, class_dict):
@@ -41,7 +42,8 @@ class NELController:
         new_kb.X = x
         new_kb.Y = y
         ml = ML_Controller.ML_Controller(kb, algorithm)
-        return {"Classifier_Name": classifier_name, "Classifier": ml}
+        return {"Classifier_Name": classifier_name, "Class": target, "Classifier": ml}
+
     def parseFeatures(self, feature_string, target, all_features):
         #print("Feature String: " + feature_string)
         #print("Target: " + target)
