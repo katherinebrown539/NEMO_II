@@ -152,6 +152,20 @@ class KnowledgeBase:
 		self.multi = file_info['MULTI-CLASS'] == "True"
 		self.importData(file_info['DATA'], file_info['SCHEMA'])
 
+	def copy(self, other_kb):
+		other_kb.HOST = self.HOST
+		other_kb.PORT = self.PORT
+		other_kb.USER = self.USER
+		other_kb.PASSWD = self.PASSWD
+		other_kb.DATABASE = self.DATABASE
+		other_kb.db = self.db
+		other_kb.cusor = self.db.cursor()
+		other_kb.name = self.name
+		other_kb.schema = self.schema
+		other_kb.X = self.X
+		other_kb.Y = self.Y
+		other_kb.multi = self.multi
+
 	def executeQuery(self, query, args=None):
 		#self.connect()
 		complete = False
