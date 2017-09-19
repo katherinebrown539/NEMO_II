@@ -19,7 +19,7 @@ class NELController:
         classifiers = json_data['Classifiers']
         for classifier in classifiers:
             created_classifier = self.createClassifier(classifier)
-
+            print created_classifier
 
     def createClassifier(self, class_dict):
         #print (class_dict)
@@ -40,7 +40,8 @@ class NELController:
         kb.cusor = kb.db.cursor()
         new_kb.X = x
         new_kb.Y = y
-        print("Hey, I'm still here........")
+        ml = ML_Controller.ML_Controller(kb, algorithm)
+        return {"Classifier_Name": classifier_Name, "Classifier": ml}
     def parseFeatures(self, feature_string, target, all_features):
         #print("Feature String: " + feature_string)
         #print("Target: " + target)
