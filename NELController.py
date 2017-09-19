@@ -35,10 +35,12 @@ class NELController:
         x,y = self.parseFeatures(features, target, all_feats)
         #print(x)
         #print(y)
+        kb.cursor.close()
         new_kb = copy.deepcopy(kb)
+        kb.cusor = kb.db.cusor()
         new_kb.X = x
         new_kb.Y = y
-        
+
     def parseFeatures(self, feature_string, target, all_features):
         #print("Feature String: " + feature_string)
         #print("Target: " + target)
