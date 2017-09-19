@@ -37,7 +37,7 @@ class NELController:
         #print(y)
         kb.cursor.close()
         new_kb = copy.deepcopy(kb)
-        kb.cusor = kb.db.cusor()
+        kb.cusor = kb.db.cursor()
         new_kb.X = x
         new_kb.Y = y
 
