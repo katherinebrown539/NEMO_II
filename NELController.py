@@ -41,7 +41,7 @@ class NELController:
         new_kb.X = x
         new_kb.Y = y
         ml = ML_Controller.ML_Controller(kb, algorithm)
-        return {"Classifier_Name": classifier_Name, "Classifier": ml}
+        return {"Classifier_Name": classifier_name, "Classifier": ml}
     def parseFeatures(self, feature_string, target, all_features):
         #print("Feature String: " + feature_string)
         #print("Target: " + target)
