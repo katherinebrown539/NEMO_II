@@ -19,7 +19,7 @@ class NELController:
         classifiers = json_data['Classifiers']
         for classifier in classifiers:
             created_classifier = self.createClassifier(classifier)
-            self.classifiers.append(created_classifier)
+            #self.classifiers.append(created_classifier)
             print created_classifier
 
     def createClassifier(self, class_dict):
@@ -38,9 +38,7 @@ class NELController:
         print(x)
         print(y)
 
-        #kb.cursor.close()
         new_kb = copy.deepcopy(kb)
-        #kb.cusor = kb.db.cursor()
 
         new_kb.X = x
         new_kb.Y = y
