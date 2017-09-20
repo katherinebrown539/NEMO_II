@@ -37,13 +37,17 @@ class NELController:
         x,y = self.parseFeatures(features, target, all_feats)
         print(x)
         print(y)
+
         kb.cursor.close()
         new_kb = copy.deepcopy(kb)
         kb.cusor = kb.db.cursor()
+
         new_kb.X = x
         new_kb.Y = y
         ml = ML_Controller.ML_Controller(kb, algorithm)
-        return {"Classifier_Name": classifier_name, "Class": target, "Classifier": ml}
+        d =  {"Classifier_Name": classifier_name, "Class": target, "Classifier": ml}
+        print d
+        return d
 
     #update comment
     def parseFeatures(self, feature_string, target, all_features):
