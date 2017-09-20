@@ -70,6 +70,7 @@ class NELController:
             print("Case 3") #all features
             print(all_features.count(target))
             while(all_features.count(target) > 0):
+                print("attempting to remove")
                 all_features.remove(target)
                 print("Removed")
             return(all_features,target)
