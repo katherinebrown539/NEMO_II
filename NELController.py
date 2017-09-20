@@ -33,6 +33,7 @@ class NELController:
         kb = self.NEMO.getDataSourceFromName(data_source) #will need copy constructor for KnowledgeBase
         all_feats = kb.X
         all_feats.append(kb.Y)
+        print("Got KB")
         x,y = self.parseFeatures(features, target, all_feats)
         #print(x)
         #print(y)
