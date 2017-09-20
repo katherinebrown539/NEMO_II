@@ -155,7 +155,9 @@ class KnowledgeBase:
 		self.importData(file_info['DATA'], file_info['SCHEMA'])
 
 	def copy(self):
+		self.cursor.close()
 		new_kb = KnowledgeBase(self.config_file, self.file_info_dict)
+		self.cursor = self.db.cursor()
 		return new_kb
 
 	def executeQuery(self, query, args=None):
