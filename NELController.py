@@ -71,6 +71,7 @@ class NELController:
             print(all_features.count(target))
             while(all_features.count(target) > 0):
                 all_features.remove(target)
+                print("Removed")
             return(all_features,target)
         else:
             print("Invalid feature string")
