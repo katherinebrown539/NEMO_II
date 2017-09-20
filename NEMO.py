@@ -440,9 +440,9 @@ class NEMO:
 		#return self.kb
 
 	def getDataSourceFromName(self,name):
-		#print(name)
+		print(name)
 		for kb in self.kbs:
-			#print(kb.name)
+			print(kb.name)
 			if kb.name == name:
 				return kb
 
