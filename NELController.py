@@ -33,10 +33,10 @@ class NELController:
         kb = self.NEMO.getDataSourceFromName(data_source) #will need copy constructor for KnowledgeBase
         all_feats = kb.X
         all_feats.append(kb.Y)
-        print("Got KB")
+        #print("Got KB")
         x,y = self.parseFeatures(features, target, all_feats)
-        #print(x)
-        #print(y)
+        print(x)
+        print(y)
         kb.cursor.close()
         new_kb = copy.deepcopy(kb)
         kb.cusor = kb.db.cursor()
@@ -70,9 +70,7 @@ class NELController:
             print("Case 3") #all features
             print(all_features.count(target))
             while(all_features.count(target) > 0):
-                print("attempting to remove")
                 all_features.remove(target)
-                print("Removed")
             return(all_features,target)
         else:
             print("Invalid feature string")
