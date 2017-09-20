@@ -124,6 +124,8 @@ class KnowledgeBase:
 	#	Assumptions: On separate lines, the file must contain HOST, PORT, MySQL USER NAME, PASSWORD, DATABASE
 	#Postconditions: Connects to database
 	def __init__(self, config_file, file_info_dict=None):
+		self.config_file = config_file
+		self.file_info_dict = file_info_dict
 		with open(config_file) as fd:
 			json_data = json.load(fd)
 
@@ -152,19 +154,9 @@ class KnowledgeBase:
 		self.multi = file_info['MULTI-CLASS'] == "True"
 		self.importData(file_info['DATA'], file_info['SCHEMA'])
 
-	def copy(self, other_kb):
-		other_kb.HOST = self.HOST
-		other_kb.PORT = self.PORT
-		other_kb.USER = self.USER
-		other_kb.PASSWD = self.PASSWD
-		other_kb.DATABASE = self.DATABASE
-		other_kb.db = self.db
-		other_kb.cusor = self.db.cursor()
-		other_kb.name = self.name
-		other_kb.schema = self.schema
-		other_kb.X = self.X
-		other_kb.Y = self.Y
-		other_kb.multi = self.multi
+	def copy(self):
+		new_kb = KnowledgeBase(self.config_file, self.file_info_dict)
+		return new_kb
 
 	def executeQuery(self, query, args=None):
 		#self.connect()

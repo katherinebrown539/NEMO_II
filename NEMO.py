@@ -441,9 +441,9 @@ class NEMO:
 
 	#update comment
 	def getDataSourceFromName(self,name):
-		print("To Find: " + name)
+		#print("To Find: " + name)
 		for kb in self.kbs:
-			print("Current: " + kb.name)
+			#print("Current: " + kb.name)
 			if kb.name == name:
 				return kb
 
