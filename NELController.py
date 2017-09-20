@@ -38,7 +38,7 @@ class NELController:
         #print(x)
         #print(y)
 
-        new_kb = kb #WILL NEED TO FIX THIS!!
+        new_kb = kb.copy() #WILL NEED TO FIX THIS!!
 
         new_kb.X = x
         new_kb.Y = y
