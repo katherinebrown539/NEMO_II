@@ -38,7 +38,7 @@ class NELController:
         print(x)
         print(y)
 
-        new_kb = copy.deepcopy(kb)
+        new_kb = kb
 
         new_kb.X = x
         new_kb.Y = y
