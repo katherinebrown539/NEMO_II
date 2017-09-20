@@ -19,7 +19,7 @@ class NELController:
         classifiers = json_data['Classifiers']
         for classifier in classifiers:
             created_classifier = self.createClassifier(classifier)
-            #self.classifiers.append(created_classifier)
+            self.classifiers.append(created_classifier)
             print created_classifier
 
     def createClassifier(self, class_dict):
@@ -35,10 +35,10 @@ class NELController:
         all_feats.append(kb.Y)
         #print("Got KB")
         x,y = self.parseFeatures(features, target, all_feats)
-        print(x)
-        print(y)
+        #print(x)
+        #print(y)
 
-        new_kb = kb
+        new_kb = kb #WILL NEED TO FIX THIS!!
 
         new_kb.X = x
         new_kb.Y = y
