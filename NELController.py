@@ -47,8 +47,8 @@ class NELController:
 
     #update comment
     def parseFeatures(self, feature_string, target, all_features):
-        #print("Feature String: " + feature_string)
-        #print("Target: " + target)
+        print("Feature String: " + feature_string)
+        print("Target: " + target)
         if feature_string[0] == '{':
             #pre-specified features
             print("Case 1")
@@ -67,7 +67,7 @@ class NELController:
                     all_features.remove(f)
             return(all_features,target)
         elif feature_string == 'ALL':
-            #print("Case 3") #all features
+            print("Case 3") #all features
             while(all_features.count(target)):
                 all_features.remove(target)
             return(all_features,target)
