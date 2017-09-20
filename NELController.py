@@ -51,12 +51,12 @@ class NELController:
         #print("Target: " + target)
         if feature_string[0] == '{':
             #pre-specified features
-            #print("Case 1")
+            print("Case 1")
             feature_string = feature_string.strip('{}')
             features = feature_string.split(',')
             return(features,target)
         elif len(feature_string) >= 4 and feature_string[4] == '-':
-            #print("Case 2") #all minus case
+            print("Case 2") #all minus case
             feature_string = feature_string[6:]
             feature_string = feature_string.strip('{}')
             features = feature_string.split(',')
