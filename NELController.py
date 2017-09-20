@@ -68,7 +68,7 @@ class NELController:
             return(all_features,target)
         elif feature_string == 'ALL':
             print("Case 3") #all features
-            while(all_features.count(target)):
+            while(all_features.count(target) > 0):
                 all_features.remove(target)
             return(all_features,target)
         else:
