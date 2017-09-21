@@ -123,7 +123,7 @@ class KnowledgeBase:
 	# * login_file - a text file containing the login and database information
 	#	Assumptions: On separate lines, the file must contain HOST, PORT, MySQL USER NAME, PASSWORD, DATABASE
 	#Postconditions: Connects to database
-	def __init__(self, config_file, file_info_dict=None):
+	def __init__(self, config_file, file_info_dict=None, copy=False):
 		self.config_file = config_file
 		self.file_info_dict = file_info_dict
 		with open(config_file) as fd:
@@ -152,7 +152,8 @@ class KnowledgeBase:
 		print file_info['SCHEMA']
 		print self.Y
 		self.multi = file_info['MULTI-CLASS'] == "True"
-		self.importData(file_info['DATA'], file_info['SCHEMA'])
+		if not copy:
+			self.importData(file_info['DATA'], file_info['SCHEMA'])
 
 	def copy(self):
 		print("About to close current cursor")
