@@ -38,8 +38,8 @@ class NELController:
         #print(x)
         #print(y)
 
-        #new_kb = kb.copy() #WILL NEED TO FIX THIS!!
-        new_kb = kb
+        new_kb = kb.copy() #WILL NEED TO FIX THIS!!
+        #new_kb = kb
         new_kb.X = x
         new_kb.Y = y
         ml = ML_Controller.ML_Controller(kb, algorithm)
