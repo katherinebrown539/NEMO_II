@@ -159,7 +159,7 @@ class KnowledgeBase:
 		print("About to close current cursor")
 		self.cursor.close()
 		print("Closed current cursor, about to create new_kb")
-		new_kb = KnowledgeBase(self.config_file, self.file_info_dict)
+		new_kb = KnowledgeBase(self.config_file, self.file_info_dict, copy=True)
 		print("Created new kb")
 		self.cursor = self.db.cursor()
 		print("Opened cursor")
