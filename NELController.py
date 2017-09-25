@@ -20,8 +20,9 @@ class NELController:
         for classifier in classifiers:
             created_classifier = self.createClassifier(classifier)
             self.classifiers.append(created_classifier)
-            print created_classifier['Classifier'].runAlgorithm()
             #run classifiers
+            print created_classifier['Classifier'].runAlgorithm()
+
 
         #parse constraints
         #group by Constraint and Right-Class Member
