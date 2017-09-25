@@ -156,13 +156,9 @@ class KnowledgeBase:
 			self.importData(file_info['DATA'], file_info['SCHEMA'])
 
 	def copy(self):
-		print("About to close current cursor")
 		self.cursor.close()
-		print("Closed current cursor, about to create new_kb")
 		new_kb = KnowledgeBase(self.config_file, self.file_info_dict, copy=True)
-		print("Created new kb")
 		self.cursor = self.db.cursor()
-		print("Opened cursor")
 		return new_kb
 
 	def executeQuery(self, query, args=None):
