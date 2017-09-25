@@ -48,6 +48,7 @@ class NELController:
         new_kb.Y = y
         print("Algorithm: " + algorithm)
         ml = ML_Controller.ML_Controller(kb, algorithm)
+        ml.createModel()
         d =  {"Classifier_Name": classifier_name, "Class": target, "Classifier": ml}
         #print d
         return d
