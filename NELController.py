@@ -46,6 +46,7 @@ class NELController:
         #new_kb = kb
         new_kb.X = x
         new_kb.Y = y
+        print("Algorithm: " + algorithm)
         ml = ML_Controller.ML_Controller(kb, algorithm)
         d =  {"Classifier_Name": classifier_name, "Class": target, "Classifier": ml}
         #print d
