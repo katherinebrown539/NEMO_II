@@ -27,6 +27,8 @@ class NELController:
         self.NEMO.printAlgorithmResults()
         #parse constraints
 
+        constraint_data = json_data['Constraints']
+        print constraint_data
         #group by Constraint and Right-Class Member
 
     def createClassifier(self, class_dict):
