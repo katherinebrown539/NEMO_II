@@ -33,7 +33,7 @@ class NELController:
         parser = ConstraintLanguage()
         for c in constraint_data:
             print c
-            constraints.append(parser.parse(c))
+            constraints.append(parser.parse(c['Relationship']))
         print constraints
 
         #group by Constraint and Right-Class Member
