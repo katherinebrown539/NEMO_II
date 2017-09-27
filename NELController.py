@@ -28,7 +28,8 @@ class NELController:
         #parse constraints
 
         constraint_data = json_data['Constraints']
-        print constraint_data
+        for c in constraint_data:
+            print c
         #group by Constraint and Right-Class Member
 
     def createClassifier(self, class_dict):
