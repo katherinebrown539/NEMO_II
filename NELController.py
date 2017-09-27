@@ -15,16 +15,17 @@ class NELController:
             json_data = json.load(fd)
 
         self.NEMO = NEMO.NEMO(config_file)
+        self.NEMO.resetAlgorithmResults()
         self.classifiers = []
         classifiers = json_data['Classifiers']
         for classifier in classifiers:
             created_classifier = self.createClassifier(classifier)
             self.classifiers.append(created_classifier)
             #run classifiers
-            print created_classifier['Classifier'].runAlgorithm()
-
-
+            created_classifier['Classifier'].runAlgorithm()
+        self.NEMO.printAlgorithmResults()
         #parse constraints
+
         #group by Constraint and Right-Class Member
 
     def createClassifier(self, class_dict):

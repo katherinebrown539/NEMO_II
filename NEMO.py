@@ -251,6 +251,20 @@ class NEMO:
 
 ############################################################################################################
 
+	def resetAlgorithmResults(self):
+		stmt = "drop table if exists AlgorithmResults"
+		self.kb.executeQuery(stmt)
+		stmt = "create table AlgorithmResults(
+			algorithm_id varchar(16),
+			algorithm_name varchar(255),
+			data_source varchar(255),
+			accuracy double,
+			prec double,
+			recall double,
+			f1 double,
+			confusion_matrix varchar(512))"
+		self.kb.executeQuery(stmt)
+
 	def printAlgorithmResults(self):
 		self.pauseOptimzation()
 		stmt = "select * from AlgorithmResults"
