@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 import threading, sys, os, time, json, traceback, pandas, numpy
 import copy
-import ConstraintLanguage
+from ConstraintLanguage import ConstraintLanguage
 
 class NELController:
     def __init__(self, facts_file, config_file):
@@ -34,7 +34,7 @@ class NELController:
         for c in constraint_data:
             print c
             constraints.append(parser.parse(c))
-        print constraints    
+        print constraints
 
         #group by Constraint and Right-Class Member
 
