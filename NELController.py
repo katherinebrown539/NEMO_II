@@ -23,7 +23,7 @@ class NELController:
             self.classifiers.append(created_classifier)
             #run classifiers
             created_classifier['Classifier'].runAlgorithm()
-            create_classifier['Classifier'].updateDatabaseWithResults()
+            created_classifier['Classifier'].updateDatabaseWithResults()
         self.NEMO.printAlgorithmResults()
         #parse constraints
 
