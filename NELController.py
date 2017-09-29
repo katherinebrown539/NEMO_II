@@ -51,6 +51,7 @@ class NELController:
                 if classifier['Class'] in [constraint['LEFT_MEMBER'], constraint['RIGHT_MEMBER']]:
                     classifiers.append(classifiers)
             source['Classifiers'] = classifiers
+            print source
             constraint_groups.append(source)
         print constraint_groups
 
