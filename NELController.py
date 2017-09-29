@@ -39,6 +39,17 @@ class NELController:
         print constraints
 
         #group by Constraint and Right-Class Member
+        #markov blanket
+        #knowledge integrator
+        constraint_set = ['SUBSET', 'MUTEX', 'LOGEQ', 'XOR']
+        constraint_groups = []
+        for constraint in constraints:
+            source = {}
+            source['Constraint'] = constraint
+            classifiers = []
+            for classifier in self.classifiers:
+                print classifier
+
 
     def createClassifier(self, class_dict):
         #print (class_dict)

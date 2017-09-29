@@ -2,7 +2,7 @@
 
 class ConstraintLanguage:
     def __init__(self, str_=None):
-        #self.constraint_str = str_
+        self.constraint_str = str_
         self.constraint = {}
         self.validConstraints = ['SUBSET', 'MUTEX', 'LOGEQ', 'XOR']
         self.validMemberOperations = ['and', 'or', 'not']
