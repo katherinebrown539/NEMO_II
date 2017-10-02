@@ -1,4 +1,4 @@
-from KnowledgeBase import KnowledgeBase
+import KnowledgeBase
 
 def main():
 	kb = KnowledgeBase.KnowledgeBase("config/config.json")
