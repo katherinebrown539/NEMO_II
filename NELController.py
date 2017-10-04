@@ -30,12 +30,12 @@ class NELController:
         #knowledge integrator
 
     def createClassifiers(self, classifiers):
-    for classifier in classifiers:
-        created_classifier = self.createClassifier(classifier)
-        self.classifiers.append(created_classifier)
-        #run classifiers
-        created_classifier['Classifier'].runAlgorithm()
-        created_classifier['Classifier'].updateDatabaseWithResults()
+        for classifier in classifiers:
+            created_classifier = self.createClassifier(classifier)
+            self.classifiers.append(created_classifier)
+            #run classifiers
+            created_classifier['Classifier'].runAlgorithm()
+            created_classifier['Classifier'].updateDatabaseWithResults()
 
     def parseConstraints(self, constraint_data):
         #constraint_data = json_data['Constraints']
