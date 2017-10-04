@@ -19,16 +19,26 @@ class NELController:
         self.NEMO.resetAlgorithmResults()
         self.classifiers = []
         classifiers = json_data['Classifiers']
-        for classifier in classifiers:
-            created_classifier = self.createClassifier(classifier)
-            self.classifiers.append(created_classifier)
-            #run classifiers
-            created_classifier['Classifier'].runAlgorithm()
-            created_classifier['Classifier'].updateDatabaseWithResults()
+        self.createClassifiers(classifiers)
         self.NEMO.printAlgorithmResults()
         #parse constraints
+        self.parseConstraints(json_data['Constraints'])
 
-        constraint_data = json_data['Constraints']
+
+        #group by Constraint and Right-Class Member
+        #markov blanket
+        #knowledge integrator
+
+    def createClassifiers(self, classifiers):
+    for classifier in classifiers:
+        created_classifier = self.createClassifier(classifier)
+        self.classifiers.append(created_classifier)
+        #run classifiers
+        created_classifier['Classifier'].runAlgorithm()
+        created_classifier['Classifier'].updateDatabaseWithResults()
+
+    def parseConstraints(self, constraint_data):
+        #constraint_data = json_data['Constraints']
         constraints = []
         parser = ConstraintLanguage()
         for c in constraint_data:
@@ -37,24 +47,6 @@ class NELController:
             print c
             constraints.append(c)
         print constraints
-
-        #group by Constraint and Right-Class Member
-        #markov blanket
-        #knowledge integrator
-        constraint_set = ['SUBSET', 'MUTEX', 'LOGEQ', 'XOR']
-        constraint_groups = []
-        for constraint in constraints:
-            source = {}
-            source['Constraint'] = constraint
-            classifiers = []
-            for classifier in self.classifiers:
-                if classifier['Class'] in [constraint['LEFT_MEMBER'], constraint['RIGHT_MEMBER']]:
-                    classifiers.append(classifiers)
-            source['Classifiers'] = classifiers
-            print source
-            constraint_groups.append(source)
-        print constraint_groups
-
 
     def createClassifier(self, class_dict):
         #print (class_dict)
