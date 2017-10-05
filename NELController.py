@@ -31,6 +31,7 @@ class NELController:
     def generateMarkovBlanket(self):
         self.blankets = []
         #create blanket dicts
+        right_members_that_exist = []
         for constraint in self.constraints:
             right_member = constraint['RIGHT_MEMBER']
             if right_member not in right_members_that_exist:
@@ -38,6 +39,7 @@ class NELController:
                 blanket['RIGHT_MEMBER'] = right_member
                 blanket['CLASSES_THAT_INFLUENCE'] = []
                 blanket['CLASSIFIERS_THAT_INFLUENCE'] = []
+                right_members_that_exist.append(right_member)
 
         #cycle through constraints and add to blanket dict
         for i in range(0, len(self.constraints)):
