@@ -83,6 +83,7 @@ class NELController:
 
     def parseConstraints(self, constraint_data):
         #constraint_data = json_data['Constraints']
+        print(constraint_data)
         self.constraints = []
         parser = ConstraintLanguage()
         for c in constraint_data:
