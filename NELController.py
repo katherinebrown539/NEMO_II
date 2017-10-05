@@ -23,6 +23,7 @@ class NELController:
         self.NEMO.printAlgorithmResults()
         #parse constraints
         self.parseConstraints(json_data['Constraints'])
+        print("Constraints:")
         for c in self.constraints:
             print c
         self.generateMarkovBlanket()
@@ -40,10 +41,10 @@ class NELController:
         right_members_that_exist = []
         for constraint in self.constraints:
             right_member = constraint['RIGHT_MEMBER']
-            print("right_members_that_exist = " + str(right_members_that_exist))
-            print("current right_member = " + str(right_member))
+            #print("right_members_that_exist = " + str(right_members_that_exist))
+            #print("current right_member = " + str(right_member))
             if right_member not in right_members_that_exist:
-                print("not in")
+                #print("not in")
                 blanket = {}
                 blanket['RIGHT_MEMBER'] = right_member
                 blanket['CLASSES_THAT_INFLUENCE'] = []
