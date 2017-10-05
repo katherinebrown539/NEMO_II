@@ -36,7 +36,10 @@ class NELController:
         right_members_that_exist = []
         for constraint in self.constraints:
             right_member = constraint['RIGHT_MEMBER']
+            print("right_members_that_exist = " + str(right_members_that_exist))
+            print("current right_member = " + str(right_member))
             if right_member not in right_members_that_exist:
+                print("not in")
                 blanket = {}
                 blanket['RIGHT_MEMBER'] = right_member
                 blanket['CLASSES_THAT_INFLUENCE'] = []
@@ -80,9 +83,9 @@ class NELController:
         for c in constraint_data:
             print c
             c = parser.parse(c['Relationship'])
-            print c
+            #print c
             self.constraints.append(c)
-        print self.constraints
+        #print self.constraints
 
     def createClassifier(self, class_dict):
         #print (class_dict)
