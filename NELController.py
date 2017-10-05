@@ -61,7 +61,7 @@ class NELController:
                 if classifier['Class'] == b['RIGHT_MEMBER'] or classifier['Class'] in b['CLASSES_THAT_INFLUENCE']:
                     b['CLASSIFIERS_THAT_INFLUENCE'].append(classifier)
 
-        for b in blankets:
+        for b in self.blankets:
             print b
 
     def createClassifiers(self, classifiers):
