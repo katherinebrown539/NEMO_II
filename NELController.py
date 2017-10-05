@@ -23,11 +23,44 @@ class NELController:
         self.NEMO.printAlgorithmResults()
         #parse constraints
         self.parseConstraints(json_data['Constraints'])
-
+        self.generateMarkovBlanket()
 
         #group by Constraint and Right-Class Member
         #markov blanket
         #knowledge integrator
+    def generateMarkovBlanket(self):
+        self.blankets = []
+        #create blanket dicts
+        for constraint in self.constraints:
+            right_member = constraint['RIGHT_MEMBER']
+            if right_member in not right_members_that_exist:
+                blanket = {}
+                blanket['RIGHT_MEMBER'] = right_member
+                blanket['CLASSES_THAT_INFLUENCE'] = []
+                blanket['CLASSIFIERS_THAT_INFLUENCE'] = []
+
+        #cycle through constraints and add to blanket dict
+        for i in range(0, len(self.constraints)):
+            left_members []
+            right_member = self.constraints[i]['RIGHT_MEMBER']
+            for j in range(0, len(self.constraints)):
+                if i == j: continue
+                if right_member == self.constraints[j]['RIGHT_MEMBER']:
+                    left_members.append[self.constraints[j]['RIGHT_MEMBER']]
+            for b in self.blankets:
+                if b['RIGHT_MEMBER'] == right_member:
+                    b['CLASSES_THAT_INFLUENCE'] = left_members
+                    break;
+        #cycle through classifiers and add to blanket dict
+        for classifier in self.classifiers:
+            for b in self.blankets:
+                #test to see if it matches the RIGHT_MEMBER
+                #check to see if matches the LEFT_MEMBER
+                if classifier['Class'] == b['RIGHT_MEMBER'] or classifier['Class'] in b['CLASSES_THAT_INFLUENCE']:
+                    b['CLASSIFIERS_THAT_INFLUENCE'].append(classifier)
+
+        for b in blankets:
+            print b
 
     def createClassifiers(self, classifiers):
         for classifier in classifiers:
@@ -39,7 +72,7 @@ class NELController:
 
     def parseConstraints(self, constraint_data):
         #constraint_data = json_data['Constraints']
-        constraints = []
+        self.constraints = []
         parser = ConstraintLanguage()
         for c in constraint_data:
             print c
