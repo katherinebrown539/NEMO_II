@@ -87,9 +87,9 @@ class NELController:
         parser = ConstraintLanguage()
         for c in constraint_data:
             #print c
-            c = parser.parse(c['Relationship'])
+            parsed = parser.parse(c['Relationship'])
             #print c
-            self.constraints.append(c)
+            self.constraints.append(parsed)
         #print self.constraints
 
     def createClassifier(self, class_dict):
