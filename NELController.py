@@ -24,7 +24,9 @@ class NELController:
         #parse constraints
         self.parseConstraints(json_data['Constraints'])
         self.generateMarkovBlanket()
-
+        print("Printing blankets")
+        for b in self.blankets:
+            print(b)
         #group by Constraint and Right-Class Member
         #markov blanket
         #knowledge integrator
@@ -61,8 +63,7 @@ class NELController:
                 if classifier['Class'] == b['RIGHT_MEMBER'] or classifier['Class'] in b['CLASSES_THAT_INFLUENCE']:
                     b['CLASSIFIERS_THAT_INFLUENCE'].append(classifier)
 
-        for b in self.blankets:
-            print b
+
 
     def createClassifiers(self, classifiers):
         for classifier in classifiers:
