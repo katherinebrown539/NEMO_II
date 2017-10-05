@@ -23,6 +23,8 @@ class NELController:
         self.NEMO.printAlgorithmResults()
         #parse constraints
         self.parseConstraints(json_data['Constraints'])
+        for c in self.constraints:
+            print c
         self.generateMarkovBlanket()
         print("Printing blankets")
         for b in self.blankets:
@@ -83,9 +85,9 @@ class NELController:
         self.constraints = []
         parser = ConstraintLanguage()
         for c in constraint_data:
-            print c
+            #print c
             c = parser.parse(c['Relationship'])
-            print c
+            #print c
             self.constraints.append(c)
         #print self.constraints
 
