@@ -33,7 +33,7 @@ class NELController:
         #create blanket dicts
         for constraint in self.constraints:
             right_member = constraint['RIGHT_MEMBER']
-            if right_member in not right_members_that_exist:
+            if right_member not in right_members_that_exist:
                 blanket = {}
                 blanket['RIGHT_MEMBER'] = right_member
                 blanket['CLASSES_THAT_INFLUENCE'] = []
