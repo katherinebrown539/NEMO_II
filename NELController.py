@@ -41,7 +41,7 @@ class NELController:
 
         #cycle through constraints and add to blanket dict
         for i in range(0, len(self.constraints)):
-            left_members []
+            left_members = []
             right_member = self.constraints[i]['RIGHT_MEMBER']
             for j in range(0, len(self.constraints)):
                 if i == j: continue
