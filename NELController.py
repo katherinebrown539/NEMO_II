@@ -85,7 +85,7 @@ class NELController:
         for c in constraint_data:
             print c
             c = parser.parse(c['Relationship'])
-            #print c
+            print c
             self.constraints.append(c)
         #print self.constraints
 
