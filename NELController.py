@@ -48,7 +48,7 @@ class NELController:
             for j in range(0, len(self.constraints)):
                 if i == j: continue
                 if right_member == self.constraints[j]['RIGHT_MEMBER']:
-                    left_members.append[self.constraints[j]['RIGHT_MEMBER']]
+                    left_members.append(self.constraints[j]['RIGHT_MEMBER'])
             for b in self.blankets:
                 if b['RIGHT_MEMBER'] == right_member:
                     b['CLASSES_THAT_INFLUENCE'] = left_members
