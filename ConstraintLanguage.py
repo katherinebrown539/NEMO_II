@@ -11,7 +11,7 @@ class ConstraintLanguage:
 
     def parse(self, string):
         self.constraint_str = string
-        print(self.constraint_str)
+        #print(self.constraint_str)
         self.parseConstraint()
         self.parseMembers()
         #print(self.constraint)
