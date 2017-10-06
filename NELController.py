@@ -55,6 +55,7 @@ class NELController:
             right_member = self.constraints[i]['RIGHT_MEMBER']
             for j in range(0, len(self.constraints)):
                 if i == j: continue
+                print self.constraints[j]['LEFT_MEMBER']
                 if right_member == self.constraints[j]['RIGHT_MEMBER']:
                     left_members.append(self.constraints[j]['LEFT_MEMBER'])
             for b in self.blankets:
