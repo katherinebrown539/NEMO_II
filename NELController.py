@@ -92,6 +92,7 @@ class NELController:
             print parsed
             self.constraints.append(parsed)
             #print self.constraints
+        print("CONSTRAINTS:")
         for c in self.constraints:
             print c
 
