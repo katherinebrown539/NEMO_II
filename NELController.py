@@ -22,6 +22,8 @@ class NELController:
         self.createClassifiers(classifiers)
         self.NEMO.printAlgorithmResults()
         #parse constraints
+        self.constraints = []
+        self.blankets = []
         self.parseConstraints(json_data['Constraints'])
         print("Constraints:")
         for c in self.constraints:
@@ -36,7 +38,7 @@ class NELController:
     def generateMarkovBlanket(self):
         for c in self.constraints:
             print(c)
-        self.blankets = []
+
         #create blanket dicts
         right_members_that_exist = []
         for constraint in self.constraints:
@@ -84,7 +86,7 @@ class NELController:
     def parseConstraints(self, constraint_data):
         #constraint_data = json_data['Constraints']
         print(constraint_data)
-        self.constraints = []
+
         parser = ConstraintLanguage()
         for c in constraint_data:
             #print c
@@ -92,9 +94,7 @@ class NELController:
             print parsed
             self.constraints.append(parsed)
             #print self.constraints
-        print("CONSTRAINTS:")
-        for c in self.constraints:
-            print c
+
 
     def createClassifier(self, class_dict):
         #print (class_dict)
