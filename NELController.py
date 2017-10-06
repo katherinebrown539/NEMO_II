@@ -92,7 +92,8 @@ class NELController:
             print parsed
             self.constraints.append(parsed)
             #print self.constraints
-        #print self.constraints
+        for c in self.constraints:
+            print c
 
     def createClassifier(self, class_dict):
         #print (class_dict)
