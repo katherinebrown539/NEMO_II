@@ -33,16 +33,12 @@ class NELController:
         #markov blanket
         #knowledge integrator
     def generateMarkovBlanket(self):
-        #print("CONSTRAINTS:")
-        #for c in self.constraints:
-            #print(c)
-
         #create blanket dicts
         right_members_that_exist = []
         for constraint in self.constraints:
             right_member = constraint['RIGHT_MEMBER']
-            #print("right_members_that_exist = " + str(right_members_that_exist))
-            #print("current right_member = " + str(right_member))
+            print("right_members_that_exist = " + str(right_members_that_exist))
+            print("current right_member = " + str(right_member))
             if right_member not in right_members_that_exist:
                 #print("not in")
                 blanket = {}
