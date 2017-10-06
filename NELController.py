@@ -36,8 +36,9 @@ class NELController:
         #markov blanket
         #knowledge integrator
     def generateMarkovBlanket(self):
-        #for c in self.constraints:
-            #print(c)
+        print("CONSTRAINTS:")
+        for c in self.constraints:
+            print(c)
 
         #create blanket dicts
         right_members_that_exist = []
@@ -73,7 +74,8 @@ class NELController:
                 if classifier['Class'] == b['RIGHT_MEMBER'] or classifier['Class'] in b['CLASSES_THAT_INFLUENCE']:
                     b['CLASSIFIERS_THAT_INFLUENCE'].append(classifier)
 
-
+        for b in self.blankets:
+            print b
 
     def createClassifiers(self, classifiers):
         for classifier in classifiers:
