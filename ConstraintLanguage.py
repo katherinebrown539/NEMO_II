@@ -14,7 +14,7 @@ class ConstraintLanguage:
         print(self.constraint_str)
         self.parseConstraint()
         self.parseMembers()
-        print(self.constraint)
+        #print(self.constraint)
         return self.constraint
 
     def parseConstraint(self):
