@@ -25,9 +25,6 @@ class NELController:
         self.constraints = []
         self.blankets = []
         self.parseConstraints(json_data['Constraints'])
-        print("Constraints:")
-        for c in self.constraints:
-            print c
         self.generateMarkovBlanket()
         #print("Printing blankets")
         #for b in self.blankets:
@@ -36,9 +33,9 @@ class NELController:
         #markov blanket
         #knowledge integrator
     def generateMarkovBlanket(self):
-        print("CONSTRAINTS:")
-        for c in self.constraints:
-            print(c)
+        #print("CONSTRAINTS:")
+        #for c in self.constraints:
+            #print(c)
 
         #create blanket dicts
         right_members_that_exist = []
