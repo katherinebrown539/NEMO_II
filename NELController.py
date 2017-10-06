@@ -55,14 +55,12 @@ class NELController:
             right_member = self.constraints[i]['RIGHT_MEMBER']
             for j in range(0, len(self.constraints)):
                 if i == j: continue
-                #print self.constraints[j]
                 if right_member == self.constraints[j]['RIGHT_MEMBER']:
-                    #print self.constraints[j]['LEFT_MEMBER']
                     left_members.append(self.constraints[j]['LEFT_MEMBER'])
-            for b in self.blankets:
-                if b['RIGHT_MEMBER'] == right_member:
-                    b['CLASSES_THAT_INFLUENCE'] = left_members
-                    break;
+        for b in self.blankets:
+            if b['RIGHT_MEMBER'] == right_member:
+                b['CLASSES_THAT_INFLUENCE'] = left_members
+                break;
         #cycle through classifiers and add to blanket dict
         for classifier in self.classifiers:
             for b in self.blankets:
