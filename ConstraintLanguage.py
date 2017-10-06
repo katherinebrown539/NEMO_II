@@ -14,8 +14,8 @@ class ConstraintLanguage:
         print(self.constraint_str)
         self.parseConstraint()
         self.parseMembers()
-        return self.constraint
         print(self.constraint)
+        return self.constraint
 
     def parseConstraint(self):
         colon_count = self.constraint_str.count(":")
