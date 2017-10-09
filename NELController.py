@@ -48,13 +48,16 @@ class NELController:
         KI_Lung = KnowledgeIntegrator.KnowledgeIntegrator(lung_kb, lung_blanket['CLASSIFIERS_THAT_INFLUENCE'], stacking_classifier='Decision Tree', other_predictions=None, use_features=False)
         KI_Breast = KnowledgeIntegrator.KnowledgeIntegrator(breast_kb, breast_blanket['CLASSIFIERS_THAT_INFLUENCE'], stacking_classifier='Decision Tree', other_predictions=None, use_features=False)
         #run KIs
-        data = kb.getData()
+        data = lung_kb.getData()
         shuffled_data = shuffle(data)
         splits = numpy.array_split(shuffled_data, 10)
         num_folds = 10
         random_seed = 0
         results = []
         results.append(KI_Lung.testKI(splits, num_folds, random_seed))
+        data = breast_kb.getData()
+        shuffled_data = shuffle(data)
+        splits = numpy.array_split(shuffled_data, 10)
         results.append(KI_Breast.testKI(splits, num_folds, random_seed))
         for r in results:
             print r
