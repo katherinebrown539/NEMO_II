@@ -49,25 +49,25 @@ class NELController:
                 right_members_that_exist.append(right_member)
                 self.blankets.append(blanket)
         #cycle through constraints and add to blanket dict
-        for i in range(0, len(self.constraints)):
-            print self.constraints[i]
-            left_members = []
-            right_member = self.constraints[i]['RIGHT_MEMBER']
-            for j in range(0, len(self.constraints)):
-                if i == j: continue
-                if right_member == self.constraints[j]['RIGHT_MEMBER']:
-                    left_members.append(self.constraints[j]['LEFT_MEMBER'])
-        for b in self.blankets:
-            if b['RIGHT_MEMBER'] == right_member:
-                b['CLASSES_THAT_INFLUENCE'] = left_members
-                break;
-        #cycle through classifiers and add to blanket dict
-        for classifier in self.classifiers:
-            for b in self.blankets:
-                #test to see if it matches the RIGHT_MEMBER
-                #check to see if matches the LEFT_MEMBER
-                if classifier['Class'] == b['RIGHT_MEMBER'] or classifier['Class'] in b['CLASSES_THAT_INFLUENCE']:
-                    b['CLASSIFIERS_THAT_INFLUENCE'].append(classifier)
+        # for i in range(0, len(self.constraints)):
+        #     print self.constraints[i]
+        #     left_members = []
+        #     right_member = self.constraints[i]['RIGHT_MEMBER']
+        #     for j in range(0, len(self.constraints)):
+        #         if i == j: continue
+        #         if right_member == self.constraints[j]['RIGHT_MEMBER']:
+        #             left_members.append(self.constraints[j]['LEFT_MEMBER'])
+        # for b in self.blankets:
+        #     if b['RIGHT_MEMBER'] == right_member:
+        #         b['CLASSES_THAT_INFLUENCE'] = left_members
+        #         break;
+        # #cycle through classifiers and add to blanket dict
+        # for classifier in self.classifiers:
+        #     for b in self.blankets:
+        #         #test to see if it matches the RIGHT_MEMBER
+        #         #check to see if matches the LEFT_MEMBER
+        #         if classifier['Class'] == b['RIGHT_MEMBER'] or classifier['Class'] in b['CLASSES_THAT_INFLUENCE']:
+        #             b['CLASSIFIERS_THAT_INFLUENCE'].append(classifier)
         print "BLANKETS:"
         for b in self.blankets:
             print b
