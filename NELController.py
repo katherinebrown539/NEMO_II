@@ -26,20 +26,30 @@ class NELController:
         self.blankets = []
         self.parseConstraints(json_data['Constraints'])
         self.generateMarkovBlanket()
-        #print("Printing blankets")
-        #for b in self.blankets:
-            #print(b)
-        #group by Constraint and Right-Class Member
-        #markov blanket
-        #knowledge integrator
+
+    #will need to generalize for other data sets......
+    def runBlanketsInKI(self):
+        lung_blanket = None
+        breast_blanket = None
+        for b in self.blankets:
+            if b['LEFT_MEMBER'] == 'LUNG':
+                lung_blanket = b
+            elif b['LEFT_MEMBER'] == 'BREAST':
+                breast_blanket = b
+        lung_kb = NEMO.getDataSourceFromName('ORNL_BINARY_SUBSITES')
+        breast_kb = NEMO.getDataSourceFromName('ORNL_BINARY_SUBSITES')
+
+        KI_Lung = KnowledgeIntegrator.KnowledgeIntegrator(lung_kb, lung_blanket['CLASSIFIERS_THAT_INFLUENCE'], stacking_classifier='Decision Tree', other_predictions=None, use_features=False)
+        KI_Breast = KnowledgeIntegrator.KnowledgeIntegrator(breast_kb, breast_blanket['CLASSIFIERS_THAT_INFLUENCE'], stacking_classifier='Decision Tree', other_predictions=None, use_features=False)
+        #run KIs
     def generateMarkovBlanket(self):
         #create blanket dicts
         self.blankets = []
         right_members_that_exist = []
         for constraint in self.constraints:
             right_member = constraint['RIGHT_MEMBER']
-            print("right_members_that_exist = " + str(right_members_that_exist))
-            print("current right_member = " + str(right_member))
+            #print("right_members_that_exist = " + str(right_members_that_exist))
+            #print("current right_member = " + str(right_member))
             if right_member not in right_members_that_exist:
                 #print("not in")
                 blanket = {}
@@ -49,7 +59,7 @@ class NELController:
                 right_members_that_exist.append(right_member)
                 self.blankets.append(blanket)
         for constraint in self.constraints:
-            print constraint
+            #print constraint
             to_use = None
             for blanket in self.blankets:
                 if blanket['RIGHT_MEMBER'] == constraint['RIGHT_MEMBER']:
