@@ -48,6 +48,14 @@ class NELController:
                 blanket['CLASSIFIERS_THAT_INFLUENCE'] = []
                 right_members_that_exist.append(right_member)
                 self.blankets.append(blanket)
+        for constraint in self.constraints:
+            print constraint
+            to_use = None
+            for blanket in self.blankets:
+                if blanket['RIGHT_MEMBER'] == constraint['RIGHT_MEMBER']:
+                    to_use = blanket
+                    break
+            to_use['CLASSES_THAT_INFLUENCE'].append(constraint['LEFT_MEMBER'])
         #cycle through constraints and add to blanket dict
         # for i in range(0, len(self.constraints)):
         #     print self.constraints[i]
