@@ -34,12 +34,12 @@ class NELController:
         lung_kb = None
         breast_kb = None
         for b in self.blankets:
-            if b['LEFT_MEMBER'] == 'LUNG':
+            if b['RIGHT_MEMBER'] == 'LUNG':
                 lung_blanket = b
                 for classifier in b['CLASSIFIERS_THAT_INFLUENCE']:
                     if classifier['Class'] == 'LUNG':
                             lung_kb = classifier['Class'].kb
-            elif b['LEFT_MEMBER'] == 'BREAST':
+            elif b['RIGHT_MEMBER'] == 'BREAST':
                 breast_blanket = b
                 for classifier in b['CLASSIFIERS_THAT_INFLUENCE']:
                     if classifier['Class'] == 'BREAST':
