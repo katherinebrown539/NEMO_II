@@ -26,18 +26,24 @@ class NELController:
         self.blankets = []
         self.parseConstraints(json_data['Constraints'])
         self.generateMarkovBlanket()
-
+        self.runBlanketsInKI()
     #will need to generalize for other data sets......
     def runBlanketsInKI(self):
         lung_blanket = None
         breast_blanket = None
+        lung_kb = None
+        breast_kb = None
         for b in self.blankets:
             if b['LEFT_MEMBER'] == 'LUNG':
                 lung_blanket = b
+                for classifier in b['CLASSIFIERS_THAT_INFLUENCE']:
+                    if classifier['Class'] == 'LUNG':
+                            lung_kb = classifier['Class'].kb
             elif b['LEFT_MEMBER'] == 'BREAST':
                 breast_blanket = b
-        lung_kb = NEMO.getDataSourceFromName('ORNL_BINARY_SUBSITES')
-        breast_kb = NEMO.getDataSourceFromName('ORNL_BINARY_SUBSITES')
+                for classifier in b['CLASSIFIERS_THAT_INFLUENCE']:
+                    if classifier['Class'] == 'BREAST':
+                            breast_kb = classifier['Class'].kb
 
         KI_Lung = KnowledgeIntegrator.KnowledgeIntegrator(lung_kb, lung_blanket['CLASSIFIERS_THAT_INFLUENCE'], stacking_classifier='Decision Tree', other_predictions=None, use_features=False)
         KI_Breast = KnowledgeIntegrator.KnowledgeIntegrator(breast_kb, breast_blanket['CLASSIFIERS_THAT_INFLUENCE'], stacking_classifier='Decision Tree', other_predictions=None, use_features=False)
