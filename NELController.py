@@ -33,20 +33,23 @@ class NELController:
         breast_blanket = None
         lung_kb = None
         breast_kb = None
+        lung_classifiers = []
+        breast_classifiers = []
         for b in self.blankets:
             if b['RIGHT_MEMBER'] == 'LUNG':
                 lung_blanket = b
                 for classifier in b['CLASSIFIERS_THAT_INFLUENCE']:
                     if classifier['Class'] == 'LUNG':
                             lung_kb = classifier['Classifier'].kb
+                    lung_classifiers.append(classifier['Classifier'])
             elif b['RIGHT_MEMBER'] == 'BREAST':
                 breast_blanket = b
                 for classifier in b['CLASSIFIERS_THAT_INFLUENCE']:
                     if classifier['Class'] == 'BREAST':
                             breast_kb = classifier['Classifier'].kb
-
-        KI_Lung = KnowledgeIntegrator.KnowledgeIntegrator(lung_kb, lung_blanket['CLASSIFIERS_THAT_INFLUENCE'], stacking_classifier='Decision Tree', other_predictions=None, use_features=False)
-        KI_Breast = KnowledgeIntegrator.KnowledgeIntegrator(breast_kb, breast_blanket['CLASSIFIERS_THAT_INFLUENCE'], stacking_classifier='Decision Tree', other_predictions=None, use_features=False)
+                    breast_classifiers.append(classifier['Classifier'])
+        KI_Lung = KnowledgeIntegrator.KnowledgeIntegrator(lung_kb, lung_classifiers, stacking_classifier='Decision Tree', other_predictions=None, use_features=False)
+        KI_Breast = KnowledgeIntegrator.KnowledgeIntegrator(breast_kb, breast_classifiers, stacking_classifier='Decision Tree', other_predictions=None, use_features=False)
         #run KIs
         data = lung_kb.getData()
         shuffled_data = shuffle(data)
