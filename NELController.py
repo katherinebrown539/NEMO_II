@@ -38,12 +38,12 @@ class NELController:
                 lung_blanket = b
                 for classifier in b['CLASSIFIERS_THAT_INFLUENCE']:
                     if classifier['Class'] == 'LUNG':
-                            lung_kb = classifier['Class'].kb
+                            lung_kb = classifier['Classifier'].kb
             elif b['RIGHT_MEMBER'] == 'BREAST':
                 breast_blanket = b
                 for classifier in b['CLASSIFIERS_THAT_INFLUENCE']:
                     if classifier['Class'] == 'BREAST':
-                            breast_kb = classifier['Class'].kb
+                            breast_kb = classifier['Classifier'].kb
 
         KI_Lung = KnowledgeIntegrator.KnowledgeIntegrator(lung_kb, lung_blanket['CLASSIFIERS_THAT_INFLUENCE'], stacking_classifier='Decision Tree', other_predictions=None, use_features=False)
         KI_Breast = KnowledgeIntegrator.KnowledgeIntegrator(breast_kb, breast_blanket['CLASSIFIERS_THAT_INFLUENCE'], stacking_classifier='Decision Tree', other_predictions=None, use_features=False)
