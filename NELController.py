@@ -59,7 +59,7 @@ class NELController:
         results = []
         results.append(KI_Lung.testKI(splits, num_folds, random_seed))
         data = breast_kb.getData()
-        shuffled_data = shuffle(data)
+        shuffled_data = data #shuffle(data)
         splits = numpy.array_split(shuffled_data, 10)
         results.append(KI_Breast.testKI(splits, num_folds, random_seed))
         for r in results:
