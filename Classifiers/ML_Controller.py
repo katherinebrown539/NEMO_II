@@ -28,12 +28,12 @@ class ML_Controller:
 	def __init__(self, kb, algorithm_type):
 		cols = ",".join(kb.X)
 		stmt = "select " + cols + " from " + kb.name + ";"
-		#print stmt
+		print stmt
 		self.data = pandas.read_sql_query(stmt, kb.db)
 		#print self.data
 		#print "data length = " + str(len(self.data))
 		stmt = "select " + kb.Y + " from " + kb.name
-		#print stmt
+		print stmt
 		self.target = pandas.read_sql_query(stmt, kb.db)
 		#print self.target
 		#print "target length = " + str(len(self.target))
