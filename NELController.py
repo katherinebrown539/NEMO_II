@@ -153,8 +153,8 @@ class NELController:
             #print("Case 1")
             feature_string = feature_string.strip('{}')
             features = feature_string.split(',')
-            print("Features: " + features)
-            print("Target: " + target)
+            print("Features: " + str(features))
+            print("Target: " + str(target))
             return(features,target)
         elif len(feature_string) >= 4 and feature_string[4] == '-':
             #print("Case 2") #all minus case
