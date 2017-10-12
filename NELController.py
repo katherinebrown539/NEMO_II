@@ -130,8 +130,8 @@ class NELController:
         all_feats.append(kb.Y)
         #print("Got KB")
         x,y = self.parseFeatures(features, target, all_feats)
-        #print(x)
-        #print(y)
+        print(x)
+        print(y)
 
         new_kb = kb.copy() #WILL NEED TO FIX THIS!!
         #new_kb = kb

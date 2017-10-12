@@ -44,11 +44,11 @@ class ML_Controller:
 		print algorithm_type
 		if algorithm_type == "Neural Network":
 			self.algorithm = NeuralNetworkController.NeuralNetworkController(self.kb)
-		if algorithm_type == "Decision Tree":
+		elif algorithm_type == "Decision Tree":
 			self.algorithm = DecisionTreeController.DecisionTreeController(self.kb)
-		if algorithm_type == 'SVM':
+		elif algorithm_type == 'SVM':
 			self.algorithm = SVMController.SVMController(self.kb)
-		if algorithm_type == "Random Forest":
+		elif algorithm_type == "Random Forest":
 			self.algorithm = RandomForestController.RandomForestController(self.kb)
 		else:
 			self.algorithm = DecisionTreeController.DecisionTreeController(self.kb)
