@@ -164,7 +164,7 @@ class KnowledgeBase:
 	def executeQuery(self, query, args=None):
 		#self.connect()
 		complete = False
-		#print query
+		print query
 		#if args is not None: print args
 		while not complete:
 			try:
