@@ -50,6 +50,8 @@ class ML_Controller:
 			self.algorithm = SVMController.SVMController(self.kb)
 		if algorithm_type == "Random Forest":
 			self.algorithm = RandomForestController.RandomForestController(self.kb)
+		else:
+			self.algorithm = DecisionTreeController.DecisionTreeController(self.kb)
 
 	def changeKB(self, new_kb):
 		self.kb = new_kb
