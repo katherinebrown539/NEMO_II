@@ -26,6 +26,7 @@ class ML_Controller:
 	#Postconditions:
 	# * Data will be imported from the
 	def __init__(self, kb, algorithm_type):
+		print kb.X
 		cols = ",".join(kb.X)
 		stmt = "select " + cols + " from " + kb.name + ";"
 		print stmt
