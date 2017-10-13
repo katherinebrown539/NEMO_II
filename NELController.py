@@ -41,7 +41,7 @@ class NELController:
             if classifier['Class'] == 'ISS16':
                 iss_kb = classifier['Classifier'].kb
             clses.append(classifier['Classifier'])
-        KI = KnowledgeIntegrator.KnowledgeIntegrator(iss_kb, clses, stacking_classifier='Decision Tree', other_predictions=None, use_features=False)
+        KI = KnowledgeIntegrator.KnowledgeIntegrator(iss_kb, clses, stacking_classifier='Decision Tree', other_predictions=None, use_features=True)
         data = iss_kb.getData()
         shuffled_data = shuffle(data)
         splits = numpy.array_split(shuffled_data, num_folds)
