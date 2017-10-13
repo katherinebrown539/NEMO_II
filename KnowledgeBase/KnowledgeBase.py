@@ -114,9 +114,9 @@ class KnowledgeBase:
 		# print str(results)
 		self.executeQuery(stmt, results)
 
-	def getData(self):
-		stmt = "select * from " + self.name
-		return pandas.read_sql_query(stmt, self.db)
+	# def getData(self):
+	# 	stmt = "select * from " + self.name
+	# 	return pandas.read_sql_query(stmt, self.db)
 
 	#Constructor
 	#Preconditions:
@@ -255,6 +255,7 @@ class KnowledgeBase:
 		print("self.X = " + str(self.X))
 		print("INDEX =  " + str(to_return.columns))
 		print to_return.head(20)
+		self.X = list(to_return.columns)
 		#self.disconnect()
 		return to_return
 
