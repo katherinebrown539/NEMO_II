@@ -29,6 +29,28 @@ class NELController:
         self.runBlanketsInKI()
     #will need to generalize for other data sets......
     def runBlanketsInKI(self):
+        self.runTraumaBlanketsInKI()
+
+    def runTraumaBlanketsInKI(self):
+        iss_blanket = self.blankets[0]
+        iss_kb = None
+        clses = []
+        num_folds = 10
+        random_seed = 0
+        for classifier in iss_blanket['CLASSIFIERS_THAT_INFLUENCE']:
+            if classifier['Class'] == 'ISS16':
+                iss_kb = classifier['Classifier'].kb
+            clses.append(classifier['Classifier'])
+        KI = KnowledgeIntegrator.KnowledgeIntegrator(iss_kb, clses, stacking_classifier='Decision Tree', other_predictions=None, use_features=False)
+        data = iss_kb.getData()
+        shuffled_data = shuffle(data)
+        splits = numpy.array_split(shuffled_data, num_folds)
+        results = []
+        results.append(KI_Lung.testKI(splits, num_folds, random_seed))
+        for r in results:
+            print(r)
+            
+    def runORNLBlanketsInKI(self):
         lung_blanket = None
         breast_blanket = None
         lung_kb = None
