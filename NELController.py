@@ -46,10 +46,10 @@ class NELController:
         shuffled_data = shuffle(data)
         splits = numpy.array_split(shuffled_data, num_folds)
         results = []
-        results.append(KI_Lung.testKI(splits, num_folds, random_seed))
+        results.append(KI.testKI(splits, num_folds, random_seed))
         for r in results:
             print(r)
-            
+
     def runORNLBlanketsInKI(self):
         lung_blanket = None
         breast_blanket = None
