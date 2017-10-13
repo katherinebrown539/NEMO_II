@@ -252,7 +252,7 @@ class KnowledgeBase:
 		#self.connect()
 		stmt = "select * from " + self.name
 		to_return =  pandas.read_sql_query(stmt, self.db)
-		print("INDEX: " + str(to_return.head(20).index.to_list()))
+		print("INDEX: " + str(to_return.columns.to_list()))
 		print to_return.head(20)
 		#self.disconnect()
 		return to_return
