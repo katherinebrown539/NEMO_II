@@ -33,6 +33,7 @@ class NELController:
         self.runTraumaBlanketsInKI()
 
     def printModel(self, model):
+        from sklearn import tree
         dot_data = tree.export_graphviz(model, out_file="ModelPrintout")
         graph = graphviz.Source(dot_data)
         graph.render("ModelPrintout")
