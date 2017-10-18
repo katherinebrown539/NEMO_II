@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import graphviz
 from KnowledgeBase import KnowledgeBase
 from Classifiers import ML_Controller, KnowledgeIntegrator
 import NEMO
@@ -31,6 +32,11 @@ class NELController:
     def runBlanketsInKI(self):
         self.runTraumaBlanketsInKI()
 
+    def printModel(self, model):
+        dot_data = tree.export_graphviz(model, out_file="ModelPrintout")
+        graph = graphviz.Source(dot_data)
+        graph.render("ModelPrintout")
+
     def runTraumaBlanketsInKI(self):
         iss_blanket = self.blankets[0]
         iss_kb = None
@@ -49,6 +55,7 @@ class NELController:
         results.append(KI.testKI(splits, num_folds, random_seed))
         for r in results:
             print(r)
+        self.printModel(KI.stacking_classifier)
 
     def runORNLBlanketsInKI(self):
         lung_blanket = None
