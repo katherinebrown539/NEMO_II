@@ -36,7 +36,7 @@ class NELController:
         from sklearn import tree
         if model is not None:
             print(str(type(model)))
-        dot_data = tree.export_graphviz(model, out_file="ModelPrintout")
+        dot_data = tree.export_graphviz(model, out_file=None)
         graph = graphviz.Source(dot_data)
         graph.render("ModelPrintout")
 
