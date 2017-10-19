@@ -77,12 +77,14 @@ class NELController:
             if b['RIGHT_MEMBER'] == 'LUNG':
                 lung_blanket = b
                 for classifier in b['CLASSIFIERS_THAT_INFLUENCE']:
+                    print(classifier['Class'])
                     if classifier['Class'] == 'LUNG':
                             lung_kb = classifier['Classifier'].kb
                     lung_classifiers.append(classifier['Classifier'])
             elif b['RIGHT_MEMBER'] == 'BREAST':
                 breast_blanket = b
                 for classifier in b['CLASSIFIERS_THAT_INFLUENCE']:
+                    print(classifier['Class'])
                     if classifier['Class'] == 'BREAST':
                             breast_kb = classifier['Classifier'].kb
                     breast_classifiers.append(classifier['Classifier'])
