@@ -48,11 +48,12 @@ class NELController:
         random_seed = 0
         i = 0
         for classifier in iss_blanket['CLASSIFIERS_THAT_INFLUENCE']:
-            print(str(i) + " . " + classifier['Class'])
             if classifier['Class'] == 'ISS16':
                 iss_kb = classifier['Classifier'].kb
             else:
+                print(str(i) + " . " + classifier['Class'])
                 clses.append(classifier['Classifier'])
+                i = i+1
 
         KI = KnowledgeIntegrator.KnowledgeIntegrator(iss_kb, clses, stacking_classifier='Decision Tree', other_predictions=None, use_features=False)
         data = iss_kb.getData()
