@@ -55,7 +55,7 @@ class KnowledgeBase:
 		for line in f:
 			#print line
 			stmt = "insert into " + self.name + " values ( "
-			print stmt
+			#print stmt
 			curr_ = line.split(',')
 
 			for i in range(0,len(curr_)):
