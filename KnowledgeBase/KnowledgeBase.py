@@ -55,6 +55,7 @@ class KnowledgeBase:
 		for line in f:
 			#print line
 			stmt = "insert into " + self.name + " values ( "
+			print stmt
 			curr_ = line.split(',')
 
 			for i in range(0,len(curr_)):
@@ -250,7 +251,9 @@ class KnowledgeBase:
 
 	def getData(self):
 		#self.connect()
-		stmt = "select * from " + self.name
+		#stmt = "select * from " + self.name
+		stmt = "select " + ",".join(myList ) + ", " + self.y + "from " + self.name
+		print stmt
 		to_return =  pandas.read_sql_query(stmt, self.db)
 		print("self.X = " + str(self.X))
 		print("INDEX =  " + str(to_return.columns))
