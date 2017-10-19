@@ -30,7 +30,8 @@ class NELController:
         self.runBlanketsInKI()
     #will need to generalize for other data sets......
     def runBlanketsInKI(self):
-        self.runTraumaBlanketsInKI()
+        #self.runTraumaBlanketsInKI()
+        self.runORNLBlanketsInKI()
 
     def printModel(self, model):
         from sklearn import tree
