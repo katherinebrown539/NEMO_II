@@ -252,7 +252,7 @@ class KnowledgeBase:
 	def getData(self):
 		#self.connect()
 		#stmt = "select * from " + self.name
-		stmt = "select " + ",".join(self.X ) + ", " + self.Y + "from " + self.name
+		stmt = "select " + ",".join(self.X ) + ", " + self.Y + " from " + self.name
 		print stmt
 		to_return =  pandas.read_sql_query(stmt, self.db)
 		print("self.X = " + str(self.X))
