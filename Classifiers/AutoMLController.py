@@ -1,4 +1,4 @@
- import autosklearn.classification
+import autosklearn.classification
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_predict
 from sklearn.model_selection import cross_val_score
