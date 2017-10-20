@@ -4,10 +4,10 @@ import pandas
 from pandas import DataFrame
 import pandas.io.sql as psql
 import KnowledgeBase
-import NeuralNetworkController
-import DecisionTreeController
-import RandomForestController
-import SVMController
+#import NeuralNetworkController
+#import DecisionTreeController
+#import RandomForestController
+#import SVMController
 import random
 ##############################################################################################################
 # ML-Controller class																					     #

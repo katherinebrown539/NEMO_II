@@ -143,8 +143,8 @@ class KnowledgeIntegrator:
 		if self.use_features:
 			x.index = features.index
 			x = x.merge(features, right_index = True, left_index = True)
-			print "x"
-			print x
+			print() "x")
+			print (x)
 		self.stacking_classifier.fit(x, y)
 
 	def transform(self, x, data=None):
@@ -165,9 +165,9 @@ class KnowledgeIntegrator:
 		return x.T
 
 	def runModel(self, data):
-		print len(data)
-		print "data"
-		print data
+		print( len(data))
+		print ("data")
+		print (data)
 		x,y = self.splitIntoXY(data)
 		#strip the other_predictions
 		other = None
@@ -183,7 +183,7 @@ class KnowledgeIntegrator:
 		self.resetKeys()
 		names = self.keys
 		names.append(self.kb.Y)
-		print len(self.meta_data_set)
+		print (len(self.meta_data_set))
 		self.meta_data_set = pandas.DataFrame(predictions).T
 		self.meta_data_set.columns = names
 
@@ -194,18 +194,18 @@ class KnowledgeIntegrator:
 
 
 		x,y,features = self.splitMetaIntoXY(self.meta_data_set)
-		print "y"
-		print y
-		print "features"
-		print features
+		print( "y")
+		print (y)
+		print ("features")
+		print (features)
 		x = self.transform(x, self.meta_data_set)
-		print "x"
-		print x
+		print ("x")
+		print (x)
 
 		if self.use_features:
 			x.index = features.index
 			x = x.merge(features, right_index = True, left_index = True)
-		print x
+		print (x)
 		predictions = self.stacking_classifier.predict(x)
 		av = 'micro'
 
@@ -220,8 +220,8 @@ class KnowledgeIntegrator:
 		return to_return
 
 	def testKI(self, splits, num_folds, random_seed):
-		print "in test KI"
-		print self.meta_data_set
+		print ("in test KI")
+		print (self.meta_data_set)
 		self.meta_data_set = []
 		holdout = splits.pop()
 		remain = pandas.concat(splits)
@@ -239,7 +239,7 @@ class KnowledgeIntegrator:
 		fold = (xtrain, None, ytrain, None)
 		self.trainLevelOneModels(fold)
 		curr_res = self.runModel(holdout)
-		print "Holdout Results: " + str(curr_res)
+		print ("Holdout Results: " + str(curr_res))
 		curr_res["ID"] = self.algorithm_id
 		curr_res["Name"] = self.algorithm_name
 		self.results = curr_res
