@@ -35,23 +35,17 @@ class AutoMLController:
 		self.y = []
 		self.auto = None #autosklearn.classification.AutoSklearnClassifier(include_estimators = includes)
 
-	def createModel(self, x = None, y = None, attributes=None):
-        if (x is None) or (y is None):
-            self.x = x
-		    self.y = y
-        else:
-            cols = ",".join(kb.X)
-    		stmt = "select " + cols + " from " + kb.name + ";"
-            self.x = pandas.read_sql_query(stmt, kb.db)
-    		stmt = "select " + kb.Y + " from " + kb.name
-    		print stmt
-    		self.y = pandas.read_sql_query(stmt, kb.db)
+	def createModel(self):
+
+        cols = ",".join(kb.X)
+		stmt = "select " + cols + " from " + kb.name + ";"
+        self.x = pandas.read_sql_query(stmt, kb.db)
+		stmt = "select " + kb.Y + " from " + kb.name
+		print stmt
+		self.y = pandas.read_sql_query(stmt, kb.db)
 		#self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(x,y)
 
-		if attributes is not None:
-			pass
-		else:
-			self.auto = autosklearn.classification.AutoSklearnClassifier(include_estimators = includes, resampling_strategy='cv', resampling_strategy_arguments={'folds': 10})
+		self.auto = autosklearn.classification.AutoSklearnClassifier(include_estimators = includes, resampling_strategy='cv', resampling_strategy_arguments={'folds': 10})
 
 		#self.tree.fit(self.X_train, self.y_train)
 
