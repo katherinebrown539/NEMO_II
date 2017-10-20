@@ -80,8 +80,8 @@ class AutoMLController:
 
 	def isModelCreated(self):
 		return self.auto is not None
-
-    def createModelPreSplit(self, xtrain, xtest, ytrain, ytest, attributes=None):
+		
+	def createModelPreSplit(self, xtrain, xtest, ytrain, ytest, attributes=None):
 		self.auto.fit(xtrain, ytrain)
 
 
