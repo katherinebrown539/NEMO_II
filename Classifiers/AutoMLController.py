@@ -52,7 +52,7 @@ class AutoMLController:
 	def runModel(self, multi=False, x = None, y = None):
 		#10 fold cv
 		X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, random_state=1)
-		self.auto.fit(X_train.copy(), y_train.copy(), dataset_name='digits')
+		self.auto.fit(X_train.copy(), y_train.copy())
 
 	    self.auto.refit(X_train.copy(), y_train.copy())
         results = {}
@@ -79,6 +79,9 @@ class AutoMLController:
 	def isModelCreated(self):
 		return self.auto is not None
 
+    def createModelPreSplit(self, xtrain, xtest, ytrain, ytest, attributes=None):
+        self.auto.fit(xtrain, ytrain)
+
 
 
 ################################ UNNEEDED FOR NELController #############################################
@@ -91,8 +94,6 @@ class AutoMLController:
 	def optimize(self, metric, method):
 		pass
 
-	def createModelPreSplit(self, xtrain, xtest, ytrain, ytest, attributes=None):
-		pass
 
 	def createModelFromID(self, x, y, id):
 		pass

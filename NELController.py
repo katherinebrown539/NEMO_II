@@ -27,11 +27,11 @@ class NELController:
         self.blankets = []
         self.parseConstraints(json_data['Constraints'])
         self.generateMarkovBlanket()
-        self.runBlanketsInKI()
+        #self.runBlanketsInKI()
     #will need to generalize for other data sets......
     def runBlanketsInKI(self):
-        #self.runTraumaBlanketsInKI()
-        self.runORNLBlanketsInKI()
+        self.runTraumaBlanketsInKI()
+        #self.runORNLBlanketsInKI()
 
     def printModel(self, model):
         from sklearn import tree
