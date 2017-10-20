@@ -18,7 +18,7 @@ class AutoMLController:
 		#algorithm in ['']
 		includes = []
 		includes.append(algorithm)
-		self.algorithm_name = "Auto " + algorithm
+		self.algorithm_name = "Auto " + algorithm + "_" + kb.name
 		self.algorithm_id = ""
 		random.seed()
 		for i in range(1,10):
@@ -35,9 +35,17 @@ class AutoMLController:
 		self.y = []
 		self.auto = None #autosklearn.classification.AutoSklearnClassifier(include_estimators = includes)
 
-	def createModel(self, x, y, attributes=None):
-		self.x = x
-		self.y = y
+	def createModel(self, x = None, y = None, attributes=None):
+        if X is None or Y is None:
+            self.x = x
+		    self.y = y
+        else:
+            cols = ",".join(kb.X)
+    		stmt = "select " + cols + " from " + kb.name + ";"
+            self.x = pandas.read_sql_query(stmt, kb.db)
+    		stmt = "select " + kb.Y + " from " + kb.name
+    		print stmt
+    		self.y = pandas.read_sql_query(stmt, kb.db)
 		#self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(x,y)
 
 		if attributes is not None:
@@ -68,6 +76,8 @@ class AutoMLController:
         # auc
         self.results = results
         print(results)
+        #algorithm_id, algorithm_name, data_source, accuracy, prec, recall, f1
+        kb.updateDatabaseWithResults(kb)
         return results
 
 	def predict(self, x):
