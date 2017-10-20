@@ -103,7 +103,7 @@ class NELController:
         splits = numpy.array_split(shuffled_data, 10)
         results.append(KI_Breast.testKI(splits, num_folds, random_seed))
         for r in results:
-            print r
+            print(r)
 
     def generateMarkovBlanket(self):
         #create blanket dicts
@@ -133,9 +133,9 @@ class NELController:
             for blanket in self.blankets:
                 if (classifier['Class'] in blanket['CLASSES_THAT_INFLUENCE']) or (classifier['Class'] == blanket['RIGHT_MEMBER']):
                     blanket['CLASSIFIERS_THAT_INFLUENCE'].append(classifier)
-        print "BLANKETS:"
+        print ("BLANKETS:")
         for b in self.blankets:
-            print b
+            print (b)
 
     def createClassifiers(self, classifiers):
         for classifier in classifiers:
