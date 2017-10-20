@@ -143,7 +143,7 @@ class KnowledgeIntegrator:
 		if self.use_features:
 			x.index = features.index
 			x = x.merge(features, right_index = True, left_index = True)
-			print*"x")
+			print("x")
 			print (x)
 		self.stacking_classifier.fit(x, y)
 
