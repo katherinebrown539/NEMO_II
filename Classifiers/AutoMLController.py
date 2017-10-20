@@ -36,15 +36,13 @@ class AutoMLController:
 		self.auto = None #autosklearn.classification.AutoSklearnClassifier(include_estimators = includes)
 
 	def createModel(self):
-
-        cols = ",".join(kb.X)
+		cols = ",".join(kb.X)
 		stmt = "select " + cols + " from " + kb.name + ";"
-        self.x = pandas.read_sql_query(stmt, kb.db)
+		self.x = pandas.read_sql_query(stmt, kb.db)
 		stmt = "select " + kb.Y + " from " + kb.name
 		print stmt
 		self.y = pandas.read_sql_query(stmt, kb.db)
 		#self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(x,y)
-
 		self.auto = autosklearn.classification.AutoSklearnClassifier(include_estimators = includes, resampling_strategy='cv', resampling_strategy_arguments={'folds': 10})
 
 		#self.tree.fit(self.X_train, self.y_train)
@@ -56,23 +54,23 @@ class AutoMLController:
 		X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, random_state=1)
 		self.auto.fit(X_train.copy(), y_train.copy())
 
-	    self.auto.refit(X_train.copy(), y_train.copy())
-        results = {}
-        #GET RIGHT SCORES
-        predictions = automl.predict(X_test)
-        # accuracy
-        results['Accuracy'] = sklearn.metrics.accuracy_score(y_test, predictions)
-        # precision recall f1 support
-        results['Precision'], results['Recall'], results['F1'], results['Support'] = sklearn.metrics.precision_recall_fscore_support(y_test, predictions)
-        # roc
-        results['ROC'] = sklearn.metrics.roc_curve(y_test, predictions)
-        results['ROC_AUC'] = sklearn.metrics.roc_auc_score(y_test, predictions)
-        # auc
-        self.results = results
-        print(results)
-        #algorithm_id, algorithm_name, data_source, accuracy, prec, recall, f1
-        kb.updateDatabaseWithResults(kb)
-        return results
+		self.auto.refit(X_train.copy(), y_train.copy())
+		results = {}
+		#GET RIGHT SCORES
+		predictions = automl.predict(X_test)
+		# accuracy
+		results['Accuracy'] = sklearn.metrics.accuracy_score(y_test, predictions)
+		# precision recall f1 support
+		results['Precision'], results['Recall'], results['F1'], results['Support'] = sklearn.metrics.precision_recall_fscore_support(y_test, predictions)
+		# roc
+		results['ROC'] = sklearn.metrics.roc_curve(y_test, predictions)
+		results['ROC_AUC'] = sklearn.metrics.roc_auc_score(y_test, predictions)
+		# auc
+		self.results = results
+		print(results)
+		#algorithm_id, algorithm_name, data_source, accuracy, prec, recall, f1
+		kb.updateDatabaseWithResults(kb)
+		return results
 
 	def predict(self, x):
 		return self.auto.predict(x)
@@ -84,7 +82,7 @@ class AutoMLController:
 		return self.auto is not None
 
     def createModelPreSplit(self, xtrain, xtest, ytrain, ytest, attributes=None):
-        self.auto.fit(xtrain, ytrain)
+		self.auto.fit(xtrain, ytrain)
 
 
 
