@@ -36,7 +36,7 @@ class AutoMLController:
 		self.auto = None #autosklearn.classification.AutoSklearnClassifier(include_estimators = includes)
 
 	def createModel(self, x = None, y = None, attributes=None):
-        if (X is None) or (Y is None):
+        if (x is None) or (y is None):
             self.x = x
 		    self.y = y
         else:
