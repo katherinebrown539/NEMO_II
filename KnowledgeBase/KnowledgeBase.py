@@ -148,10 +148,10 @@ class KnowledgeBase:
 		self.schema = None
 		self.X = None
 		self.Y = file_info['CLASS']
-		print self.name
-		print file_info['DATA']
-		print file_info['SCHEMA']
-		print self.Y
+		print (self.name)
+		print (file_info['DATA'])
+		print (file_info['SCHEMA'])
+		print (self.Y)
 		self.multi = file_info['MULTI-CLASS'] == "True"
 		if not copy:
 			self.importData(file_info['DATA'], file_info['SCHEMA'])
@@ -165,7 +165,7 @@ class KnowledgeBase:
 	def executeQuery(self, query, args=None):
 		#self.connect()
 		complete = False
-		print query
+		print (query)
 		#if args is not None: print args
 		while not complete:
 			try:
@@ -253,11 +253,11 @@ class KnowledgeBase:
 		#self.connect()
 		#stmt = "select * from " + self.name
 		stmt = "select " + ",".join(self.X ) + ", " + self.Y + " from " + self.name
-		print stmt
+		print (stmt)
 		to_return =  pandas.read_sql_query(stmt, self.db)
 		print("self.X = " + str(self.X))
 		print("INDEX =  " + str(to_return.columns))
-		print to_return.head(20)
+		print (to_return.head(20))
 		self.X = list(to_return.columns)
 		#self.disconnect()
 		return to_return
