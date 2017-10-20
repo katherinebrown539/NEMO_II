@@ -40,7 +40,7 @@ class AutoMLController:
 		stmt = "select " + cols + " from " + kb.name + ";"
 		self.x = pandas.read_sql_query(stmt, kb.db)
 		stmt = "select " + kb.Y + " from " + kb.name
-		print stmt
+		print (stmt)
 		self.y = pandas.read_sql_query(stmt, kb.db)
 		#self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(x,y)
 		self.auto = autosklearn.classification.AutoSklearnClassifier(include_estimators = includes, resampling_strategy='cv', resampling_strategy_arguments={'folds': 10})
@@ -80,7 +80,7 @@ class AutoMLController:
 
 	def isModelCreated(self):
 		return self.auto is not None
-		
+
 	def createModelPreSplit(self, xtrain, xtest, ytrain, ytest, attributes=None):
 		self.auto.fit(xtrain, ytrain)
 

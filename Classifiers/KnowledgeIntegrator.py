@@ -143,7 +143,7 @@ class KnowledgeIntegrator:
 		if self.use_features:
 			x.index = features.index
 			x = x.merge(features, right_index = True, left_index = True)
-			print() "x")
+			print*"x")
 			print (x)
 		self.stacking_classifier.fit(x, y)
 
@@ -152,7 +152,7 @@ class KnowledgeIntegrator:
 
 		#possible_values = Series(x).unique()
 		possible_values = x.stack().unique()
-		print str(possible_values)
+		print (str(possible_values))
 		#[ "c34.0", "c34.1", "c34.2", "c34.3", "c34.9", "c50.1", "c50.2", "c50.3", "c50.4", "c50.5", "c50.8", "c50.9"]
 		le.fit(possible_values)
 		new_x = []
@@ -190,7 +190,7 @@ class KnowledgeIntegrator:
 		if self.use_features:
 			self.meta_data_set.index = x.index
 			self.meta_data_set = self.meta_data_set.merge(x, left_index=True, right_index=True)
-			print self.meta_data_set
+			print (self.meta_data_set)
 
 
 		x,y,features = self.splitMetaIntoXY(self.meta_data_set)
