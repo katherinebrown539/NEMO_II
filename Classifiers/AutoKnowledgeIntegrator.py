@@ -35,7 +35,7 @@ class AutoKnowledgeIntegrator:
         split_ind = int(0.1*len(self.data))
         print("split index: " + str(split_ind))
         train = self.data[:split_ind]
-        holdout = self.data.[split_ind+1:]
+        holdout = self.data[split_ind+1:]
         print(str(len(self.data)))
         print(str(len(train)))
         print(str(len(holdout)))
