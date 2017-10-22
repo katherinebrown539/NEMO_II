@@ -64,8 +64,8 @@ class AutoKnowledgeIntegrator:
             columns.append(classifier.name)
 
         predictions = pandas.DataFrame(predictions)
-        predictions.transpose()
-        #predictions.columns = columns
+        predictiosn = predictions.transpose()
+        predictions.columns = columns
         print("PREDICTIONS:")
         print(predictions)
         #out-of-folds <- first stage models predict kth fold
