@@ -39,7 +39,7 @@ class AutoKnowledgeIntegrator:
         train.index = list(range(len(train)))
         holdout.index = list(range(len(holdout)))
 
-        return cv_step(train, holdout)
+        return self.cv_step(train, holdout)
 
 
     def cv_step(self, train, holdout):
