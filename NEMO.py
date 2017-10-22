@@ -39,7 +39,7 @@ class NEMO:
 			json_data = json.load(fd)
 
 		info = json_data['DATA']
-		print info['DATA_JSON']
+		print (info['DATA_JSON'])
 		self.kbs = self.readInAllDataSources(info['DATA_JSON'], filename)
 		self.kb = self.kbs[0]
 		self.data_file = info['DATA_JSON']
@@ -101,14 +101,14 @@ class NEMO:
 	def copyML(self):
 		#self.printModelInformation()
 		this_id = raw_input("Enter ID Here --> ")
-		print this_id
+		print (this_id)
 		if self.verifyID(this_id):
 			if self.findAlgorithmBasedOnID(id) is not None:
-				print "This model has already been created. . . "
+				print ("This model has already been created. . . ")
 			else:
 				self.copy(this_id)
 		else:
-			print "ID does not exist in Model Repository"
+			print ("ID does not exist in Model Repository")
 
 	def copy(self, this_id, new_kb = None):
 		algorithm_type = ""
@@ -141,9 +141,9 @@ class NEMO:
 		input = ""
 
 		while input not in ch_strs:
-			print "Pick A Model Type"
+			print ("Pick A Model Type")
 			for i in range(0, len(models)):
-				print ch_strs[i] + ". " + models[i]
+				print (ch_strs[i] + ". " + models[i])
 			input = raw_input("--> ")
 		input = models[int(input)-1]
 		self.createML(input)
@@ -168,7 +168,7 @@ class NEMO:
 			model.updateDatabaseWithResults()
 			return res
 		else:
-			print "Model with ID " + id + " does not exist"
+			print( "Model with ID " + id + " does not exist")
 
 ############################################################################################################
 	def optimizeAllModels(self):
@@ -179,7 +179,7 @@ class NEMO:
 		# retrieve model from id
 		model = self.findAlgorithmBasedOnID(id)
 		if model is not None and not model.isCurrentlyOptimizing: # check to see if optimization flag is true
-			print "Adding Model"
+			print ("Adding Model")
 			# add to currently optimizing table
 			self.addToCurrentlyOptimizingTable(id)
 			# set optimization flag to true
@@ -187,7 +187,7 @@ class NEMO:
 			# enqueue to optimization queue
 			self.queue.append(model)
 		else:
-			print "Error adding model with ID: " + id
+			print ("Error adding model with ID: " + id)
 
 	def startOptimization(self):
 		# init thread with optimize worker
@@ -247,7 +247,7 @@ class NEMO:
 			stmt = "insert into CurrentlyOptimizingModels(algorithm_id) values (%s)"
 			self.kb.executeQuery(stmt,(id,))
 		except (MySQLdb.IntegrityError):
-			print "Algorithm is already in queue for optimization"
+			print ("Algorithm is already in queue for optimization")
 
 ############################################################################################################
 
@@ -262,11 +262,11 @@ class NEMO:
 		stmt = "select * from AlgorithmResults"
 		self.kb.executeQuery(stmt)
 		#self.kb.cursor.execute(stmt)
-		print "Algorithm ID\t\tAlgorithm Name\t\tData Source\t\tAccuracy\t\tPrecision\t\tRecall\t\tF1 Score\t\t"
+		print( "Algorithm ID\t\tAlgorithm Name\t\tData Source\t\tAccuracy\t\tPrecision\t\tRecall\t\tF1 Score\t\t")
 		row = self.kb.fetchOne()
 		while row != None:
 			#print row
-			print "%s\t\t%s\t\t%s\t\t%s\t\t%s\t\t%s\t\t%s" % (row[0], row[1], row[2], row[3], row[4], row[5],row[6])
+			print ( "%s\t\t%s\t\t%s\t\t%s\t\t%s\t\t%s\t\t%s" % (row[0], row[1], row[2], row[3], row[4], row[5],row[6]))
 			row = self.kb.fetchOne()
 		#self.startOptimization()
 
@@ -283,17 +283,17 @@ class NEMO:
 		while row != None:
 			#print row
 			if current_id != row[0]:
-				print "\nCurrent Algorithm ID: " + row[0] + "\nAlgorithm Type: " + row[1]
+				print ("\nCurrent Algorithm ID: " + row[0] + "\nAlgorithm Type: " + row[1])
 				current_id = row[0]
 			val = row[3] if row[3] is not None else "None"
-			print row[2] + " = " + val
+			print (row[2] + " = " + val)
 			row = self.kb.fetchOne()
 
 		print "\nNo Model Information to Show"
 		#self.startOptimization()
 
 	def printCurrentModelInformation(self):
-		print len(self.ml)
+		print (str(len(self.ml)))
 		for model in self.ml:
 			self.printModelInformation(model.getID())
 
@@ -319,7 +319,7 @@ class NEMO:
 			mdl = self.findAlgorithmBasedOnID(id)
 			if mdl is None:
 				mdl = self.copy(id)
-			print "created model"
+			print ("created model")
 			# set optimization flag to true
 			mdl.isCurrentlyOptimizing = True
 			# enqueue to optimization queue
@@ -337,12 +337,12 @@ class NEMO:
 			mls = []
 			#get all mls that use that data set
 			for m in self.ml:
-				print "kb.name = " + kb.name
-				print "m.kb.name = " + m.kb.name
+				print ("kb.name = " + kb.name)
+				print ("m.kb.name = " + m.kb.name)
 				if kb.name == m.kb.name:
 					mls.append(m)
 			if len(mls) == 0:
-				print "No Models for Data Source Chosen. Please select a different data source"
+				print ("No Models for Data Source Chosen. Please select a different data source")
 				return None
 			#pass that into the KI.
 			ki = KnowledgeIntegrator.KnowledgeIntegrator(kb, mls, self.stacking_classifier, self.other_predictions)
@@ -352,9 +352,9 @@ class NEMO:
 			ki_res = ki.testKI(splits,10,0)
 
 			self.kb.updateDatabaseWithResults(ki)
-			print "Run KnowledgeIntegrator"
+			print ("Run KnowledgeIntegrator")
 		except:
-			print "Error running Knowledge Integrator. Please ensure models are created and try again"
+			print ("Error running Knowledge Integrator. Please ensure models are created and try again")
 			traceback.print_exc()
 
 	def splitIntoFolds(self, data, k, seed):
@@ -400,21 +400,21 @@ class NEMO:
 
 	def readInAllDataSources(self, data_json, config):
 		kbs = []
-		print data_json
+		print (data_json)
 		with open(data_json) as fd:
 			json_data = json.load(fd)
-		print type(json_data)
-		print json_data
-		print json_data.itervalues()
+		print (str(type(json_data)))
+		print (json_data)
+		print (json_data.itervalues())
 		for key,val in json_data.iteritems():
-			print key + ": " + str(val)
+			print (key + ": " + str(val))
 			kbs.append(KnowledgeBase.KnowledgeBase(config, val))
 		return kbs
 
 	def printAllDataSources(self):
-		print "Data Sources"
+		print( "Data Sources")
 		for i in range(0,len(self.kbs)):
-			print str(i+1) + ". " + self.kbs[i].name
+			print (str(i+1) + ". " + self.kbs[i].name)
 
 	def selectDataSource(self):
 		possible_choices = range(1, len(self.kbs)+1)
@@ -438,7 +438,7 @@ class NEMO:
 		worked = self.kb.executeQuery(stmt)
 		row = self.kb.fetchOne()
 		data_name = row[0]
-		print data_name
+		print (data_name)
 		if self.verifyDataSource(data_name):
 			for kb in self.kbs:
 				if kb.name == data_name:
@@ -500,9 +500,9 @@ class NEMO:
 		ch_strs = map(str, possible_choices)
 		input = ""
 		while input not in ch_strs:
-			print "Main Menu"
+			print ("Main Menu")
 			for i in range(0, len(options)):
-				print ch_strs[i] + ". " + options[i]
+				print( ch_strs[i] + ". " + options[i])
 			input = raw_input("--> ")
 
 		choice = options[int(input)-1]
@@ -544,7 +544,7 @@ class NEMO:
 		elif choice == 'View Available Data Sources':
 			self.printAllDataSources()
 		elif choice == 'Refresh Data Sources (Optimization Will Be Canceled)':
-			print "Refesh data sources"
+			print ("Refesh data sources")
 		elif choice == 'Swap Data Source on Model (Optimization Will Be Canceled)':
 			self.swapDataSource()
 		else:
@@ -554,11 +554,11 @@ class NEMO:
 def main():
 	pid = str(os.getpid())
 	dir =  os.path.dirname(os.path.realpath(__file__))
-	print dir
+	print (dir)
 	pidfile = "tmp/NEMO.pid"
 
 	if os.path.isfile(pidfile):
-		print "%s already exists, exiting" % pidfile
+		print( "%s already exists, exiting" % pidfile)
 		sys.exit()
 	file(pidfile, 'w').write(pid)
 	try:
