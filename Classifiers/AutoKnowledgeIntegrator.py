@@ -37,6 +37,7 @@ class AutoKnowledgeIntegrator:
         holdout = self.data[:split_ind]
         train = self.data[split_ind:]
         train.index = list(range(len(train)))
+        print("INDEX:" + str(train.index.tolist()))
         print("TRAIN:")
         print(train[list(range(5182,51816))])
 
@@ -50,7 +51,7 @@ class AutoKnowledgeIntegrator:
         #fit first stage models on k-1 folds
         #train_x, train_y = self.splitDataIntoXY(train)
         for train_index, test_index in kf.split(train):
-            print("INDEX:" + str(train.index.tolist()))
+
             print("TRAIN:", train_index, "TEST:", test_index)
             training, testing = train[train_index], train[test_index]
             train_x_train, train_y_train = self.splitDataIntoXY(training)
