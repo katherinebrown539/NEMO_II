@@ -27,7 +27,7 @@ class NELController:
         self.blankets = []
         self.parseConstraints(json_data['Constraints'])
         self.generateMarkovBlanket()
-        #self.runBlanketsInKI()
+        self.runBlanketsInKI()
     #will need to generalize for other data sets......
     def runBlanketsInKI(self):
         self.runTraumaBlanketsInKI()
@@ -57,11 +57,12 @@ class NELController:
                 i = i+1
 
         KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(iss_kb, clses, stacking_classifier='Decision Tree', use_features=False)
+        KI.testKI(k = 10, random_seed)
         #data = iss_kb.getData()
         #shuffled_data = shuffle(data)
         #splits = numpy.array_split(shuffled_data, num_folds)
         #results = []
-        #results.append(KI.testKI(splits, num_folds, random_seed))
+        #results.append()
         #for r in results:
         #    print(r)
         #self.printModel(KI.stacking_classifier)

@@ -7,6 +7,7 @@ from Classifiers import ML_Controller
 from collections import deque
 from sklearn.utils import shuffle
 from sklearn.metrics import classification_report,confusion_matrix, accuracy_score, precision_score, f1_score, recall_score
+from sklearn.model_selection import train_test_split, KFold
 import pandas, MySQLdb, threading, sys, os, time, random
 
 class AutoKnowledgeIntegrator:
@@ -27,3 +28,14 @@ class AutoKnowledgeIntegrator:
         self.data = self.kb.getData()
         print("DATA")
         print(self.data)
+
+    def testKI(self, k = 10, random_seed = None):
+        self.X = self.data[self.kb.X]
+        print("X:")
+        print(X)
+        self.y = self.data[[self.kb.Y]]
+        print("Y:")
+        print(y)
+        train, holdout = train_test_split(self.data, test_size=0.1)
+        kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)
+        for train_index, test_index in kf.split(X)
