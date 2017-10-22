@@ -95,7 +95,7 @@ class NEMO:
 			new_ml.updateDatabaseWithResults()
 			self.ml.append(new_ml)
 		else:
-			print "ID does not exist in Model Repository"
+			print ("ID does not exist in Model Repository")
 
 	#makes a copy w/ same id
 	def copyML(self):
