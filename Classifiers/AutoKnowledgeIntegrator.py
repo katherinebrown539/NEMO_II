@@ -75,6 +75,10 @@ class AutoKnowledgeIntegrator:
         self.stacking_classifier.fit(predictions_x, predictions_y)
         #now predict holdout
         x, y = self.splitDataIntoXY(holdout)
+        print("X for Holdout:")
+        print(x)
+        print("Y for Holdout:")
+        print(y)
         holdout_predictions = []
         for classifier in self.level1_classifiers:
             holdout_predictions.append([])
