@@ -30,7 +30,8 @@ class AutoKnowledgeIntegrator:
         print(self.data)
 
     def testKI(self, k = 10, random_seed = None):
-        #train, holdout = train_test_split(self.data, test_size=0.1, shuffle=False)
+        print("In testKI...")
+        #train, holdout = train_test_split(self.data, test_size=0.1)
         split_ind = int(0.1*len(self.data))
         train = self.data.iloc[:,:split_ind]
         holdout = self.data.iloc[:, split_ind:]
@@ -47,6 +48,7 @@ class AutoKnowledgeIntegrator:
         #fit first stage models on k-1 folds
         train_x, train_y = self.splitDataIntoXY(train)
         for train_index, test_index in kf.split(train):
+            print("TRAIN:", train_index, "TEST:", test_index)
             train_x_train, train_x_test = train_x[train_index], train_x[test_index]
             train_y_train, train_y_test = train_y[train_index], train_y[test_index]
             i = 0
