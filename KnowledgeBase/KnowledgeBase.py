@@ -138,7 +138,7 @@ class KnowledgeBase:
 		self.DATABASE = info['DB']
 
 
-		self.db = MySQLdb.connect(host = self.HOST, port = self.PORT, user = self.USER, passwd = self.PASSWD, db = self.DATABASE)
+		self.db = MySQLdb.connect(host = self.HOST, port = self.PORT, user = self.USER, passwd = self.PASSWD, db = self.DATABASE, use_unicode=True, charset="utf8")
 		self.cursor = self.db.cursor()
 
 
