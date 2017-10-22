@@ -34,8 +34,8 @@ class AutoKnowledgeIntegrator:
         #train, holdout = train_test_split(self.data, test_size=0.1)
         split_ind = int(0.1*len(self.data))
         print("split index: " + str(split_ind))
-        train = self.data[:split_ind]
-        holdout = self.data[split_ind+1:]
+        holdout = self.data[:split_ind]
+        train = self.data[split_ind+1:]
         print(str(len(self.data)))
         print(str(len(train)))
         print(str(len(holdout)))
@@ -48,11 +48,12 @@ class AutoKnowledgeIntegrator:
         #split training data into k folds
         kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)#will shuffle data manually above
         #fit first stage models on k-1 folds
-        train_x, train_y = self.splitDataIntoXY(train)
+        #train_x, train_y = self.splitDataIntoXY(train)
         for train_index, test_index in kf.split(train):
             print("TRAIN:", train_index, "TEST:", test_index)
-            train_x_train, train_x_test = train_x[train_index], train_x[test_index]
-            train_y_train, train_y_test = train_y[train_index], train_y[test_index]
+            training, testing = train[train_index], train[test_index]
+            train_x_train, train_y_train = self.splitDataIntoXY(training)
+            test_x_train, test_y_train = self.splitDataIntoXY(testing)
             i = 0
             for classifier in self.level1_classifiers:
                 classifier.fit(train_x_train, train_y_train)
