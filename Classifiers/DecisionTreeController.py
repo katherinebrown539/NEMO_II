@@ -20,35 +20,35 @@ class DecisionTreeController:
 			self.algorithm_id = self.algorithm_id + str(random.randint(1,9))
 		self.tree = None
 		self.kb = kb
-		
+
 	def createModel(self, x, y, attributes=None):
 		self.x = x
-		self.y = y 
+		self.y = y
 		self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(x,y)
-		
+
 		if attributes is not None:
 			self.tree = DecisionTreeClassifier(random_state=None)
 			self.set_params(attributes)
 		else:
 			self.tree = DecisionTreeClassifier(random_state=0)
-			
+
 		self.tree.fit(self.X_train, self.y_train)
 
-	def createModelPreSplit(self, xtrain, xtest, ytrain, ytest, attributes=None):	
+	def createModelPreSplit(self, xtrain, xtest, ytrain, ytest, attributes=None):
 		self.X_train = xtrain
 		self.X_test = xtest
 		self.y_train = ytrain
 		self.y_test = ytest
-		
+
 		if attributes is not None:
 			self.tree = DecisionTreeClassifier(random_state=None)
 			self.set_params(attributes)
 		else:
 			self.tree = DecisionTreeClassifier(random_state=0)
-			
+
 		#print "Number of training instances: "+ str(len(self.X_train.index))
 		self.tree.fit(self.X_train, self.y_train)
-		
+
 	def createModelFromID(self, x, y, id):
 		#run query
 		stmt = "select * from ModelRepository where algorithm_id = " + id
@@ -75,16 +75,16 @@ class DecisionTreeController:
 					if lst.count('.') > 0:
 						val = float(val)
 					else:
-						val = int(val)	
+						val = int(val)
 			#print type(val)
- 			attributes[key] = val
+			attributes[key] = val
 			row = self.kb.fetchOne()
 		self.createModel(x,y,attributes)
-		
+
 	def copyModel(self,x,y,id):
 		self.algorithm_id = id
 		self.createModelFromID(x,y,id)
-		
+
 	def runModel(self, multi=False, x = None, y = None):
 		#self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.x,self.y)
 		self.tree.fit(self.X_train, self.y_train)
@@ -102,40 +102,40 @@ class DecisionTreeController:
 		# accuracy_all = cross_val_score(self.tree, self.x, labels, cv=10)
 		# accuracy = numpy.mean(accuracy_all)
 		print "Number of test instances: " + str(len(self.X_test.index))
-		
-		
-		predictions = self.tree.predict(self.X_test)	
+
+
+		predictions = self.tree.predict(self.X_test)
 		accuracy = accuracy_score(self.y_test,predictions)
 		precision = precision_score(self.y_test,predictions, average=av)
 		recall = recall_score(self.y_test, predictions, average=av)
 		f1 = f1_score(self.y_test,predictions, average=av)
 		cm = confusion_matrix(self.y_test,predictions)
-		
+
 		self.results = {'ID': self.algorithm_id, 'Name': self.algorithm_name, 'Accuracy': accuracy, 'Precision': precision, 'Recall': recall, 'F1': f1, 'Confusion_Matrix': cm}
-		
+
 		to_return =  (self.algorithm_id, self.algorithm_name, accuracy, precision, recall, f1, cm)
 		self.kb.removeCurrentModel(self)
 		return to_return
 
 	def predict(self, x):
 		return self.tree.predict(x)
-	
+
 	def fit(self,x,y):
 		self.tree.fit(x,y)
-	
+
 	def set_params(self, attr):
 		self.tree.set_params(**attr)
-		
+
 	def get_params(self):
 		return self.tree.get_params()
-		
+
 	def optimize(self, metric, method):
 		if method == 'Coordinate Ascent':
 			return self.coordinateAscent(metric)
 
 	def isModelCreated(self):
-		return self.tree is not None		
-			
+		return self.tree is not None
+
 	def coordinateAscent(self, metric):
 		best_model = self
 		bst = 0.0
@@ -157,7 +157,7 @@ class DecisionTreeController:
 			curr = current_model.results.get(metric)
 		self.kb.updateDatabaseWithModel(best_model)
 		return best_model
-	
+
 	def optimizeMaxFeatures(self, metric, best_model):
 		best_model_attributes = best_model.get_params()
 		#sqrt
@@ -166,14 +166,14 @@ class DecisionTreeController:
 		sqrt_attr['max_features'] = 'sqrt'
 		sqrt_tree.createModel(self.x, self.y, sqrt_attr)
 		sqrt_tree.runModel(self.kb.multi)
-		
+
 		#log2
 		log_tree = DecisionTreeController(self.kb)
 		log_attr = best_model_attributes
 		log_attr['max_features'] = 'log2'
 		log_tree.createModel(self.x, self.y, log_attr)
 		log_tree.runModel(self.kb.multi)
-		
+
 		#test between sqrt and log2
 		if(sqrt_tree.results.get(metric) >= best_model.results.get(metric) and sqrt_tree.results.get(metric) >= log_tree.results.get(metric)):
 			return sqrt_tree
@@ -193,16 +193,16 @@ class DecisionTreeController:
 			percent_tree.runModel(self.kb.multi)
 			if percent_tree.results.get(metric) >= best_metric:
 				best_percent_model = percent_tree
-		
+
 		if best_percent_model.results.get(metric) >= best_model.results.get(metric):
 			return best_percent_model
 		else:
 			return best_model
-			
+
 	def optimizeCriterion(self, metric, best_model):
 		attributes = best_model.get_params()
 		attributes['criterion'] = "entropy" if attributes['criterion'] == 'gini' else 'gini'
-		
+
 		criterion_tree = DecisionTreeController(self.kb)
 		# print "criterion_tree: " + str(criterion_tree)
 		# print "best_model: " +  str(best_model)
@@ -210,7 +210,7 @@ class DecisionTreeController:
 		criterion_tree.runModel(self.kb.multi)
 		if(criterion_tree.results.get(metric) >= best_model.results.get(metric)):
 			# print "criterion_tree: " + str(criterion_tree)
-			return criterion_tree		
+			return criterion_tree
 		else:
 			# print "best_model: " +  str(best_model)
 			return best_model
