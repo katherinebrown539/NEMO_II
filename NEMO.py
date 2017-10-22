@@ -474,7 +474,7 @@ class NEMO:
 			ml = self.copy(ml.getID(), kb)
 			ml.kb.updateDatabaseWithModel(ml.algorithm)
 		else:
-			print "Invalid ID."
+			print ("Invalid ID.")
 
 	def menu(self):
 		#TODO
