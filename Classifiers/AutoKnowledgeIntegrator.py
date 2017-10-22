@@ -31,14 +31,11 @@ class AutoKnowledgeIntegrator:
 
     def testKI(self, k = 10, random_seed = None):
         print("In testKI...")
-        #train, holdout = train_test_split(self.data, test_size=0.1)
-        split_ind = int(0.1*len(self.data))
-        #print("split index: " + str(split_ind))
-        holdout = self.data[:split_ind]
-        train = self.data[split_ind:]
-        train.index = list(range(len(train)))
-        holdout.index = list(range(len(holdout)))
-        kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)
+        # split_ind = int(0.1*len(self.data))
+        # holdout = self.data[:split_ind]
+        # train = self.data[split_ind:]
+        # train.index = list(range(len(train)))
+        # holdout.index = list(range(len(holdout)))
         results = {}
         results['Accuracy'] = []
         results['Precision'] = []
@@ -48,8 +45,11 @@ class AutoKnowledgeIntegrator:
         results['ROC'] = []
         results['ROC_AUC'] = []
         results['Confusion_Matrix'] = []
+        kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)
         for train_index, test_index in kf.split(train):
             train, holdout = train.iloc[train_index], train.iloc[test_index]
+            train.index = list(range(len(train)))
+            holdout.index = list(range(len(holdout)))
             temp_results = self.cv_step(train, holdout, k, random_seed)
             results['Accuracy'].append(temp_results['Accuracy'])
             results['Precision'].append(temp_results['Precision'])
