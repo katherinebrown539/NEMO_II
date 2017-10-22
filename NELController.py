@@ -176,8 +176,9 @@ class NELController:
 
         new_kb = kb.copy() #WILL NEED TO FIX THIS!!
         #new_kb = kb
-        new_kb.X = x
-        new_kb.Y = y
+        new_kb.setNewXY(x,y)
+        #new_kb.X = x
+        #new_kb.Y = y
         print("Algorithm: " + algorithm)
         ml = ML_Controller.ML_Controller(new_kb, algorithm)
         #ml = AutoMLController.AutoMLController(new_kb, algorithm)
