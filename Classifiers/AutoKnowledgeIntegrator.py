@@ -78,8 +78,9 @@ class AutoKnowledgeIntegrator:
         holdout_predictions = []
         for classifier in self.level1_classifiers:
             holdout_predictions.append([])
+        i = 0
         for classifier in self.level1_classifiers:
-            predictions[i].extend(classifier.predict(x))
+            holdout_predictions[i].extend(classifier.predict(x))
             i = i+1
         predictions = pandas.DataFrame(predictions)
         predictions = predictions.transpose()
