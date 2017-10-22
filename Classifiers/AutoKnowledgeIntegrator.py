@@ -35,7 +35,7 @@ class AutoKnowledgeIntegrator:
         train = self.data.iloc[:,:split_ind]
         holdout = self.data.iloc[:, split_ind:]
         print(str(len(train)))
-        print(str(len(test)))
+        print(str(len(holdout)))
         i = 0
         for classifier in self.level1_classifiers:
             predictions.append([])
