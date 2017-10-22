@@ -103,7 +103,7 @@ class AutoKnowledgeIntegrator:
         results['Precision'] = precision_score(y, stacking_predictions)
         results['Recall'] = recall_score(y, stacking_predictions)
         results['F1'] = f1_score(y, stacking_predictions)
-        prec,rec,f,results['Support'] = precision_recall_fscore_support(precision_recall_fscore_support)
+        prec,rec,f,results['Support'] = precision_recall_fscore_support(y, stacking_predictions)
         # roc
         results['ROC'] = roc_curve(y, stacking_predictions)
         results['ROC_AUC'] = roc_auc_score(y, stacking_predictions)
