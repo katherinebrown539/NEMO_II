@@ -53,7 +53,7 @@ class AutoKnowledgeIntegrator:
             print("TRAIN:", train_index, "TEST:", test_index)
             training, testing = train.iloc[train_index], train.iloc[test_index]
             train_x_train, train_y_train = self.splitDataIntoXY(training)
-            test_x_train, test_y_train = self.splitDataIntoXY(testing)
+            train_x_test, test_y_test = self.splitDataIntoXY(testing)
             i = 0
             for classifier in self.level1_classifiers:
                 classifier.fit(train_x_train, train_y_train)
