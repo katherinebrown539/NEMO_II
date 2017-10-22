@@ -10,20 +10,20 @@ from sklearn.metrics import classification_report,confusion_matrix, accuracy_sco
 import pandas, MySQLdb, threading, sys, os, time, random
 
 class AutoKnowledgeIntegrator:
-	def __init__(self, kb, level1_classifiers, stacking_classifier=None, use_features=False):
-		self.kb = kb
-		self.level1_classifiers = level1_classifiers
-		if stacking_classifier is None or stacking_classifier == "Logistic Regression":
-			self.algorithm_name = "KI_LogisticRegression"
-			self.stacking_classifier = LogisticRegression()
-		elif stacking_classifier == "Decision Tree":
-			self.algorithm_name = "KI_DecisionTree"
-			self.stacking_classifier = DecisionTreeClassifier()
-		elif stacking_classifier == "SVM":
-			self.algorithm_name "KI_SVM"
-			self.stacking_classifier = SVC()
-		self.algorithm_id = "KI"_str(random.randint(1,101))
-		self.use_features = use_features
-		self.data = self.kb.getData()
-		print("DATA")
-		print(self.data)
+    def __init__(self, kb, level1_classifiers, stacking_classifier=None, use_features=False):
+        self.kb = kb
+        self.level1_classifiers = level1_classifiers
+        if stacking_classifier is None or stacking_classifier == "Logistic Regression":
+            self.algorithm_name = "KI_LogisticRegression"
+            self.stacking_classifier = LogisticRegression()
+        elif stacking_classifier == "Decision Tree":
+            self.algorithm_name = "KI_DecisionTree"
+            self.stacking_classifier = DecisionTreeClassifier()
+        elif stacking_classifier == "SVM":
+            self.algorithm_name "KI_SVM"
+            self.stacking_classifier = SVC()
+        self.algorithm_id = "KI"_str(random.randint(1,101))
+        self.use_features = use_features
+        self.data = self.kb.getData()
+        print("DATA")
+        print(self.data)
