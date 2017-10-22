@@ -73,6 +73,8 @@ class KnowledgeBase:
 		#close the database
 
 		f.close()
+		while(self.X.count(self.Y) > 0):
+			self.X.remove(self.Y)
 
 	#method to read schema file
 	#Preconditions
@@ -155,8 +157,6 @@ class KnowledgeBase:
 		self.multi = file_info['MULTI-CLASS'] == "True"
 		if not copy:
 			self.importData(file_info['DATA'], file_info['SCHEMA'])
-		while(self.X.count(self.Y) > 0):
-			self.X.remove(self.Y)
 
 	def copy(self):
 		self.cursor.close()
