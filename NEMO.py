@@ -521,7 +521,7 @@ class NEMO:
 			id = raw_input("Enter ID --> ")
 			self.optimizeTask(id)
 			self.startOptimization()
- 		elif choice == 'Optimize All Models':
+		elif choice == 'Optimize All Models':
 			self.optimizeAllModels()
 			self.startOptimization()
 		elif choice == 'Output All Model Results (Any current optimization task will be halted and restarted)':
