@@ -30,17 +30,49 @@ class AutoKnowledgeIntegrator:
         print(self.data)
 
     def testKI(self, k = 10, random_seed = None):
+        train, holdout = train_test_split(self.data, test_size=0.1)
+        predictions = []
+        i = 0
+        for classifier in self.level1_classifiers:
+            predictions[i] = []
+            i = i+1
+
+        #shuffle data, will do this later
+        #split training data into k folds
+        kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)#will shuffle data manually above
+        #fit first stage models on k-1 folds
+        train_x, train_y = self.splitDataIntoXY(train)
+        for train_index, test_index in kf.split(X)
+            train_x_train, train_x_test = train_x[train_index], train_x[test_index]
+            train_y_train, train_y_test = train_y[train_index], train_y[test_index]
+            i = 0
+            for classifier in self.level1_classifiers:
+                classifier.fit(train_x_train, train_y_train)
+                predictions[i].append(classifier.predict(train_x_test))
+        columns = []
+        for classifier in self.level1_classifiers:
+            columns.append(classifier.name)
+        predictions = pandas.DataFrame(predictions, columns)
+        print("PREDICTIONS:")
+        print(predictions)
+        #out-of-folds <- first stage models predict kth fold
+        #split out of folds into kp folds
+        #fit stacker on kp-1 folds and predict pth fold
+        #fit first stage models on training set without holdout
+        #X <- predict the holdout of the trained first stage models
+        #use X in second stage model
+        #cv error is error on second stage prediction on X
+
+    def splitDataIntoXY(self, data):
         x = self.kb.X
         y = self.kb.Y
         while(x.count(y) > 0):
             x.remove(y)
         print("x = " + str(x))
-        self.X = self.data[self.kb.X]
+        X = data[self.kb.X]
         print("X:")
         print(self.X)
-        self.y = self.data[[self.kb.Y]]
+        Y = data[[self.kb.Y]]
         print("Y:")
         print(self.y)
-        train, holdout = train_test_split(self.data, test_size=0.1)
-        kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)
-        #for train_index, test_index in kf.split(X)
+        return(X,Y)
