@@ -6,7 +6,7 @@ from KnowledgeBase import KnowledgeBase
 from Classifiers import ML_Controller
 from collections import deque
 from sklearn.utils import shuffle
-from sklearn.metrics import classification_report,confusion_matrix, accuracy_score, precision_score, f1_score, recall_score
+from sklearn.metrics import classification_report,confusion_matrix, accuracy_score, precision_score, f1_score, recall_score, precision_recall_fscore_support,roc_curve,roc_auc_score
 from sklearn.model_selection import train_test_split, KFold
 import pandas, MySQLdb, threading, sys, os, time, random
 
@@ -98,12 +98,12 @@ class AutoKnowledgeIntegrator:
         results = {}
         #GET RIGHT SCORES
         # accuracy
-        results['Accuracy'] = sklearn.metrics.accuracy_score(y, stacking_predictions)
+        results['Accuracy'] = accuracy_score(y, stacking_predictions)
         # precision recall f1 support
-        results['Precision'], results['Recall'], results['F1'], results['Support'] = sklearn.metrics.precision_recall_fscore_support(y, stacking_predictions)
+        results['Precision'], results['Recall'], results['F1'], results['Support'] = precision_recall_fscore_support(y, stacking_predictions)
         # roc
-        results['ROC'] = sklearn.metrics.roc_curve(y, stacking_predictions)
-        results['ROC_AUC'] = sklearn.metrics.roc_auc_score(y, stacking_predictions)
+        results['ROC'] = roc_curve(y, stacking_predictions)
+        results['ROC_AUC'] = roc_auc_score(y, stacking_predictions)
         return results
 
     def splitDataIntoXY(self, data):
