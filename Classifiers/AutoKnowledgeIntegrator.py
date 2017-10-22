@@ -27,4 +27,3 @@ class AutoKnowledgeIntegrator:
 		self.data = self.kb.getData()
 		print("DATA")
 		print(self.data)
-		
