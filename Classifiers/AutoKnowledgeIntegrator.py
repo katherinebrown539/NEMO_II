@@ -39,7 +39,7 @@ class AutoKnowledgeIntegrator:
         train.index = list(range(len(train)))
         print("INDEX:" + str(train.index.tolist()))
         print("TRAIN:")
-        print(train[list(range(5182,51816))])
+        print(train[train.index.tolist()])
 
         predictions = []
         for classifier in self.level1_classifiers:
