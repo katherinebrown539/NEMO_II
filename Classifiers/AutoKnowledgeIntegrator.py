@@ -37,7 +37,7 @@ class AutoKnowledgeIntegrator:
         holdout = self.data[:split_ind]
         train = self.data[split_ind:]
         train.index = list(range(len(train)))
-        holdout.index = list(range(len(holdout)))
+        #holdout.index = list(range(len(holdout)))
 
         predictions = []
         for classifier in self.level1_classifiers:
