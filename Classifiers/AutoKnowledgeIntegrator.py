@@ -33,6 +33,7 @@ class AutoKnowledgeIntegrator:
         print("In testKI...")
         #train, holdout = train_test_split(self.data, test_size=0.1)
         split_ind = int(0.1*len(self.data))
+        print("split index: " + str(split_ind))
         train = self.data.iloc[:,:split_ind]
         holdout = self.data.iloc[:, split_ind:]
         print(str(len(train)))
