@@ -75,7 +75,7 @@ class KnowledgeBase:
 		f.close()
 
 
-	def setNewXY(self, x, y)
+	def setNewXY(self, x, y):
 		self.X = x
 		self.Y = y
 		while(self.X.count(self.Y) > 0):
