@@ -51,20 +51,13 @@ class NELController:
         for classifier in iss_blanket['CLASSIFIERS_THAT_INFLUENCE']:
             if classifier['Class'] == 'ISS16':
                 iss_kb = classifier['Classifier'].kb
-            else:
-                print(str(i) + " . " + classifier['Class'])
                 clses.append(classifier['Classifier'])
-                i = i+1
 
         KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(iss_kb, clses, stacking_classifier='Decision Tree', use_features=False)
-        KI.testKI(k = 10, random_seed = random_seed)
-        #data = iss_kb.getData()
-        #shuffled_data = shuffle(data)
-        #splits = numpy.array_split(shuffled_data, num_folds)
-        #results = []
-        #results.append()
-        #for r in results:
-        #    print(r)
+        results.append(KI.testKI(k = 10, random_seed = random_seed))
+
+        for r in results:
+            print(r)
         #self.printModel(KI.stacking_classifier)
 
     def runORNLBlanketsInKI(self):

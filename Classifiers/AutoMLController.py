@@ -59,17 +59,21 @@ class AutoMLController:
 		#GET RIGHT SCORES
 		predictions = automl.predict(X_test)
 		# accuracy
-		results['Accuracy'] = sklearn.metrics.accuracy_score(y_test, predictions)
-		# precision recall f1 support
-		results['Precision'], results['Recall'], results['F1'], results['Support'] = sklearn.metrics.precision_recall_fscore_support(y_test, predictions)
-		# roc
-		results['ROC'] = sklearn.metrics.roc_curve(y_test, predictions)
-		results['ROC_AUC'] = sklearn.metrics.roc_auc_score(y_test, predictions)
+		results['Accuracy'] = accuracy_score(y_test, predictions)
+        # precision recall f1 support
+        results['Precision'] = precision_score(y_test, predictions)
+        results['Recall'] = recall_score(y_test, predictions)
+        results['F1'] = f1_score(y_test, predictions)
+        prec,rec,f,results['Support'] = precision_recall_fscore_support(y_test, predictions)
+        # roc
+        results['ROC'] = roc_curve(y_test, predictions)
+        results['ROC_AUC'] = roc_auc_score(y_test, predictions)
+        results['Confusion_Matrix'] = confusion_matrix(y_test, predictions)
 		# auc
 		self.results = results
 		print(results)
 		#algorithm_id, algorithm_name, data_source, accuracy, prec, recall, f1
-		kb.updateDatabaseWithResults(kb)
+		kb.updateDatabaseWithResults(self)
 		return results
 
 	def predict(self, x):

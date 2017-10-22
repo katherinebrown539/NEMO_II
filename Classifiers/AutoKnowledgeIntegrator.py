@@ -31,8 +31,8 @@ class AutoKnowledgeIntegrator:
 
     def testKI(self, k = 10, random_seed = None):
         print("In testKI...")
-        #self.data = shuffle(self.data)
-        #self.data.index = list(range(len(self.data)))
+        self.data = shuffle(self.data)
+        self.data.index = list(range(len(self.data)))
         results = {}
         results['Accuracy'] = []
         results['Precision'] = []
