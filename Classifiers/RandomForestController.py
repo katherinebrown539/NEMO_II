@@ -12,7 +12,7 @@ import numpy
 
 class RandomForestController:
 
-	def __init__(self, kb):	
+	def __init__(self, kb):
 		self.algorithm_name = "Random Forest"
 		self.algorithm_id = ""
 		random.seed()
@@ -20,35 +20,35 @@ class RandomForestController:
 			self.algorithm_id = self.algorithm_id + str(random.randint(1,9))
 		self.forest = None
 		self.kb = kb
-		
+
 	def createModel(self, x, y, attributes=None):
 		self.x = x
-		self.y = y 
+		self.y = y
 		self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(x,y)
-		
+
 		if attributes is not None:
 			self.forest = RandomForestClassifier(random_state=None)
 			self.set_params(attributes)
 		else:
 			self.forest = RandomForestClassifier(random_state=0)
-			
+
 		self.forest.fit(self.X_train, self.y_train)
-	
+
 	def createModelPreSplit(self, xtrain, xtest, ytrain, ytest, attributes=None):
 		self.X_train = xtrain
 		self.X_test = xtest
 		self.y_train = ytrain
 		self.y_test = ytest
-	
+
 		if attributes is not None:
 			self.forest = RandomForestClassifier(random_state=None)
 			self.set_params(attributes)
 		else:
 			self.forest = RandomForestClassifier(random_state=0)
-			
+
 		self.forest.fit(self.X_train, self.y_train)
-	
-	
+
+
 	def createModelFromID(self, x, y, id):
 		stmt = "select * from ModelRepository where algorithm_id = " + id
 		self.kb.executeQuery(stmt)
@@ -82,7 +82,7 @@ class RandomForestController:
 					if lst.count('.') > 0:
 						val = float(val)
 					else:
-						val = int(val)	
+						val = int(val)
 				elif key in ['boostrap', 'oob_score', 'warm_start']:
 					val = (val == "True")
 				elif key in ['class_weight']:
@@ -92,21 +92,21 @@ class RandomForestController:
 					elif lst.count('{') > 1:
 						val = list(val)
 						for i in range(0,len(val)):
-							val[i] = dict(val[i])						
+							val[i] = dict(val[i])
 			#print type(val)
- 			attributes[key] = val
+			attributes[key] = val
 			row = self.kb.fetchOne()
 		self.createModel(x,y,attributes)
-		
-	
+
+
 	def copyModel(self,x,y,id):
 		self.algorithm_id = id
 		self.createModelFromID(x,y,id)
-	
+
 	def runModel(self, multi=False, x = None, y = None,):
 		#self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.x,self.y)
 		self.forest.fit(self.X_train, self.y_train)
-		
+
 		if x is not None:
 			self.X_test = x
 			self.y_test = y
@@ -115,42 +115,42 @@ class RandomForestController:
 			av = 'binary'
 		else:
 			av = 'micro'
-		
+
 		#print "Number of test instances: " + str(len(self.X_test.index))
-		
-		
-		predictions = self.forest.predict(self.X_test)	
+
+
+		predictions = self.forest.predict(self.X_test)
 		accuracy = accuracy_score(self.y_test,predictions)
 		precision = precision_score(self.y_test,predictions, average=av)
 		recall = recall_score(self.y_test, predictions, average=av)
 		f1 = f1_score(self.y_test,predictions, average=av)
 		cm = confusion_matrix(self.y_test,predictions)
-		
+
 		self.results = {'ID': self.algorithm_id, 'Name': self.algorithm_name, 'Accuracy': accuracy, 'Precision': precision, 'Recall': recall, 'F1': f1, 'Confusion_Matrix': cm}
-		
+
 		to_return =  (self.algorithm_id, self.algorithm_name, accuracy, precision, recall, f1, cm)
 		self.kb.removeCurrentModel(self)
 		return to_return
-		
+
 	def predict(self, x):
 		return self.forest.predict(x)
-	
+
 	def fit(self,x,y):
 		self.forest.fit(x,y)
-	
+
 	def set_params(self, attr):
 		self.forest.set_params(**attr)
-		
+
 	def get_params(self):
 		return self.forest.get_params()
-		
+
 	def optimize(self, metric, method):
 		if method == 'Coordinate Ascent':
 			return self.coordinateAscent(metric)
 
 	def isModelCreated(self):
-		return self.forest is not None		
-		
+		return self.forest is not None
+
 	def coordinateAscent(self, metric):
 		best_model = self
 		bst = 0.0
@@ -179,16 +179,16 @@ class RandomForestController:
 			current_model = self.optimizeNumEstimators(metric, self)
 			curr = current_model.results.get(metric)
 		self.kb.updateDatabaseWithModel(best_model)
-		
+
 		return best_model
-	
+
 	def optimizeNumEstimators(self, metric, best_model):
 		current_attr = best_model.get_params()
 		current_num_estimators = current_attr.get('n_estimators')
 		percent = random.uniform(0,1)
 		num_inc = int((1 + percent) * current_num_estimators)
 		num_dec = int(percent * current_num_estimators)
-		
+
 		inc_forest = RandomForestController(self.kb)
 		inc_attr = current_attr
 		inc_attr['n_estimators'] = num_inc
@@ -197,15 +197,15 @@ class RandomForestController:
 		dec_attr = current_attr
 		dec_attr['n_estimators'] = num_dec
 		dec_forest.createModel(self.x,self.y, dec_attr)
-		
+
 		if(inc_forest.results.get(metric) >= best_model.results.get(metric)) and (inc_forest.results.get(metric) >= dec_forest.results.get(metric)):
 			return inc_forest
 		if(dec_forest.results.get(metric) >= best_model.results.get(metric)) and (dec_forest.results.get(metric) >= inc_forest.results.get(metric)):
 			return dec_forest
 		else:
 			return best_model
-	
-	
+
+
 	def optimizeMaxFeatures(self, metric, best_model):
 		best_model_attributes = best_model.get_params()
 		#sqrt
@@ -214,14 +214,14 @@ class RandomForestController:
 		sqrt_attr['max_features'] = 'sqrt'
 		sqrt_forest.createModel(self.x, self.y, sqrt_attr)
 		sqrt_forest.runModel(self.kb.multi)
-		
+
 		#log2
 		log_forest = RandomForestController(self.kb)
 		log_attr = best_model_attributes
 		log_attr['max_features'] = 'log2'
 		log_forest.createModel(self.x, self.y, log_attr)
 		log_forest.runModel(self.kb.multi)
-		
+
 		#test between sqrt and log2
 		if(sqrt_forest.results.get(metric) >= best_model.results.get(metric) and sqrt_forest.results.get(metric) >= log_forest.results.get(metric)):
 			return sqrt_forest
@@ -241,16 +241,16 @@ class RandomForestController:
 			percent_forest.runModel(self.kb.multi)
 			if percent_forest.results.get(metric) >= best_metric:
 				best_percent_model = percent_forest
-		
+
 		if best_percent_model.results.get(metric) >= best_model.results.get(metric):
 			return best_percent_model
 		else:
 			return best_model
-			
+
 	def optimizeCriterion(self, metric, best_model):
 		attributes = best_model.get_params()
 		attributes['criterion'] = "entropy" if attributes['criterion'] == 'gini' else 'gini'
-		
+
 		criterion_forest = RandomForestController(self.kb)
 		# print "criterion_forest: " + str(criterion_forest)
 		# print "best_model: " +  str(best_model)
@@ -258,7 +258,7 @@ class RandomForestController:
 		criterion_forest.runModel(self.kb.multi)
 		if(criterion_forest.results.get(metric) >= best_model.results.get(metric)):
 			# print "criterion_forest: " + str(criterion_forest)
-			return criterion_forest		
+			return criterion_forest
 		else:
 			# print "best_model: " +  str(best_model)
 			return best_model
