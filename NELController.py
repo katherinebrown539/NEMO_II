@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import graphviz
 from KnowledgeBase import KnowledgeBase
-from Classifiers import ML_Controller, KnowledgeIntegrator, AutoKnowledgeIntegrator, AutoMLController
+from Classifiers import ML_Controller, KnowledgeIntegrator, AutoKnowledgeIntegrator#, AutoMLController
 import NEMO
 import MySQLdb
 from collections import deque
@@ -179,8 +179,8 @@ class NELController:
         new_kb.X = x
         new_kb.Y = y
         print("Algorithm: " + algorithm)
-        #ml = ML_Controller.ML_Controller(new_kb, algorithm)
-        ml = AutoMLController.AutoMLController(new_kb, algorithm)
+        ml = ML_Controller.ML_Controller(new_kb, algorithm)
+        #ml = AutoMLController.AutoMLController(new_kb, algorithm)
         ml.createModel()
         d =  {"Classifier_Name": classifier_name, "Class": target, "Classifier": ml}
         #print d
