@@ -45,17 +45,22 @@ class NELController:
         iss_blanket = self.blankets[0]
         iss_kb = None
         clses = []
+        results = []
         num_folds = 10
         random_seed = 0
         i = 0
         for classifier in iss_blanket['CLASSIFIERS_THAT_INFLUENCE']:
             if classifier['Class'] == 'ISS16':
                 iss_kb = classifier['Classifier'].kb
-                clses.append(classifier['Classifier'])
+            clses.append(classifier['Classifier'])
 
         KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(iss_kb, clses, stacking_classifier='Decision Tree', use_features=False)
         results.append(KI.testKI(k = 10, random_seed = random_seed))
-
+        #data = iss_kb.getData()
+        #shuffled_data = shuffle(data)
+        #splits = numpy.array_split(shuffled_data, num_folds)
+        #results = []
+        #results.append()
         for r in results:
             print(r)
         #self.printModel(KI.stacking_classifier)
