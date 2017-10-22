@@ -34,8 +34,7 @@ class AutoKnowledgeIntegrator:
         predictions = []
         i = 0
         for classifier in self.level1_classifiers:
-            predictions[i] = []
-            i = i+1
+            predictions.append([])
 
         #shuffle data, will do this later
         #split training data into k folds
