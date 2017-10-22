@@ -79,6 +79,7 @@ class AutoKnowledgeIntegrator:
         print(x)
         print("Y for Holdout:")
         print(y)
+
         holdout_predictions = []
         for classifier in self.level1_classifiers:
             holdout_predictions.append([])
@@ -89,6 +90,8 @@ class AutoKnowledgeIntegrator:
         holdout_predictions = pandas.DataFrame(holdout_predictions)
         holdout_predictions = holdout_predictions.transpose()
         holdout_predictions.columns = columns
+        print("Holdout Predictions:")
+        print(holdout_predictions)
         predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         predictions_y = y
         print("PREDICTIONS_X:")
