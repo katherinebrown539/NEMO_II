@@ -20,11 +20,11 @@ class AutoKnowledgeIntegrator:
 			self.algorithm_name = "KI_DecisionTree"
 			self.stacking_classifier = DecisionTreeClassifier()
 		elif stacking_classifier == "SVM":
-			self.algorithm_name = "KI_SVM"
+			self.algorithm_name "KI_SVM"
 			self.stacking_classifier = SVC()
-		#self.keys.append(self.kb.Y)
-		self.algorithm_id = "KI"+str(random.randint(1,101))
+		self.algorithm_id = "KI"_str(random.randint(1,101))
 		self.use_features = use_features
 		self.data = self.kb.getData()
-		print("Data")
+		print("DATA")
 		print(self.data)
+		
