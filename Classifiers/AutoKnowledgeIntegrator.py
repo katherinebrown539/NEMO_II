@@ -11,20 +11,20 @@ import pandas, MySQLdb, threading, sys, os, time, random
 
 class AutoKnowledgeIntegrator:
     def __init__(self, kb, level1_classifiers, stacking_classifier=None, use_features=False):
-        self.kb = kb
+		self.kb = kb
 		self.level1_classifiers = level1_classifiers
 		if stacking_classifier is None or stacking_classifier == "Logistic Regression":
 			self.algorithm_name = "KI_LogisticRegression"
 			self.stacking_classifier = LogisticRegression()
 		elif stacking_classifier == "Decision Tree":
-            self.algorithm_name = "KI_DecisionTree"
+			self.algorithm_name = "KI_DecisionTree"
 			self.stacking_classifier = DecisionTreeClassifier()
 		elif stacking_classifier == "SVM":
-            self.algorithm_name = "KI_SVM"
+			self.algorithm_name = "KI_SVM"
 			self.stacking_classifier = SVC()
 		#self.keys.append(self.kb.Y)
 		self.algorithm_id = "KI"+str(random.randint(1,101))
 		self.use_features = use_features
-        self.data = self.kb.getData()
-        print("Data")
-        print(self.data)
+		self.data = self.kb.getData()
+		print("Data")
+		print(self.data)
