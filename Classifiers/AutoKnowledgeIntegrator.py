@@ -38,4 +38,4 @@ class AutoKnowledgeIntegrator:
         print(y)
         train, holdout = train_test_split(self.data, test_size=0.1)
         kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)
-        for train_index, test_index in kf.split(X)
+        #for train_index, test_index in kf.split(X)
