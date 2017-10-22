@@ -90,11 +90,7 @@ class AutoKnowledgeIntegrator:
         holdout_predictions = pandas.DataFrame(holdout_predictions)
         holdout_predictions = holdout_predictions.transpose()
         holdout_predictions.columns = columns
-        print("Holdout Predictions:")
-        print(holdout_predictions)
-        print("Length of X: " + str(len(x)))
-        print("Length of Predictions: " + str(len(predictions)))
-        predictions_x = pandas.concat(objs=[x,predictions], axis=1)
+        predictions_x = pandas.concat(objs=[x,holdout_predictions], axis=1)
         predictions_y = y
         print("PREDICTIONS_X:")
         print(predictions_x)
