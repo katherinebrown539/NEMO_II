@@ -73,9 +73,13 @@ class KnowledgeBase:
 		#close the database
 
 		f.close()
+
+
+	def setNewXY(self, x, y)
+		self.X = x
+		self.Y = y
 		while(self.X.count(self.Y) > 0):
 			self.X.remove(self.Y)
-
 	#method to read schema file
 	#Preconditions
 	# * schema_file - a text file containing the MySQL schema for the table
