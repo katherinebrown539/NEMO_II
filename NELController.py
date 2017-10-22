@@ -57,7 +57,7 @@ class NELController:
                 i = i+1
 
         KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(iss_kb, clses, stacking_classifier='Decision Tree', use_features=False)
-        KI.testKI(k = 10, random_seed)
+        KI.testKI(k = 10, random_seed = random_seed)
         #data = iss_kb.getData()
         #shuffled_data = shuffle(data)
         #splits = numpy.array_split(shuffled_data, num_folds)
