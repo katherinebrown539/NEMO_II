@@ -37,8 +37,12 @@ class AutoKnowledgeIntegrator:
         holdout = self.data[:split_ind]
         train = self.data[split_ind:]
         train.index = list(range(len(train)))
-        #holdout.index = list(range(len(holdout)))
+        holdout.index = list(range(len(holdout)))
 
+        return cv_step(train, holdout)
+
+
+    def cv_step(self, train, holdout):
         predictions = []
         for classifier in self.level1_classifiers:
             predictions.append([])
