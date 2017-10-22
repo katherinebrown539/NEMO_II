@@ -289,7 +289,7 @@ class NEMO:
 			print (row[2] + " = " + val)
 			row = self.kb.fetchOne()
 
-		print "\nNo Model Information to Show"
+		print ("\nNo Model Information to Show")
 		#self.startOptimization()
 
 	def printCurrentModelInformation(self):
