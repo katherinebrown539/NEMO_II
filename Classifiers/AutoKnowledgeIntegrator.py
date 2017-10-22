@@ -8,7 +8,7 @@ from collections import deque
 from sklearn.utils import shuffle
 from sklearn.metrics import classification_report,confusion_matrix, accuracy_score, precision_score, f1_score, recall_score, precision_recall_fscore_support,roc_curve,roc_auc_score
 from sklearn.model_selection import train_test_split, KFold
-import pandas, MySQLdb, threading, sys, os, time, random
+import pandas, MySQLdb, threading, sys, os, time, random, numpy
 
 class AutoKnowledgeIntegrator:
     def __init__(self, kb, level1_classifiers, stacking_classifier=None, use_features=False):
@@ -38,8 +38,38 @@ class AutoKnowledgeIntegrator:
         train = self.data[split_ind:]
         train.index = list(range(len(train)))
         holdout.index = list(range(len(holdout)))
+        kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)
+        results = {}
+        results['Accuracy'] = []
+        results['Precision'] = []
+        results['Recall'] = []
+        results['F1'] = []
+        results['Support'] = []
+        results['ROC'] = []
+        results['ROC_AUC'] = []
+        results['Confusion_Matrix'] = []
+        for train_index, test_index in kf.split(train):
+            train, holdout = train.iloc[train_index], train.iloc[test_index]
+            temp_results = self.cv_step(train, holdout, k, random_seed)
+            results['Accuracy'].append(temp_results['Accuracy'])
+            results['Precision'].append(temp_results['Precision'])
+            results['Recall'].append(temp_results['Recall'])
+            results['F1'].append(temp_results['F1'])
+            results['Support'].append(temp_results['Support'])
+            results['ROC'].append(temp_results['ROC'])
+            results['ROC_AUC'].append(temp_results['ROC_AUC'])
+            results['Confusion_Matrix'].append(temp_results['Confusion_Matrix'])
+        results['Accuracy'] = numpy.mean(results['Accuracy'])
+        results['Precision'] = numpy.mean(results['Precision'])
+        results['Recall'] = numpy.mean(results['Recall'])
+        results['F1'] = numpy.mean(results['F1'])
+        results['Support'] = numpy.mean(results['Support'])
+        results['ROC'] = numpy.mean(results['ROC'])
+        results['ROC_AUC'] = numpy.mean(results['ROC_AUC'])
 
-        return self.cv_step(train, holdout, k, random_seed)
+        print(results)
+        return results
+
 
 
     def cv_step(self, train, holdout, k, random_seed):
