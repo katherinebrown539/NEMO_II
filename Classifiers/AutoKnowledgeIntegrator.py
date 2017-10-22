@@ -30,6 +30,7 @@ class AutoKnowledgeIntegrator:
         print(self.data)
 
     def testKI(self, k = 10, random_seed = None):
+        print("KB.X = " + str(self.kb.X))
         self.X = self.data[self.kb.X]
         print("X:")
         print(self.X)
