@@ -38,7 +38,7 @@ class ML_Controller:
 		self.kb = kb
 		self.isCurrentlyOptimizing = False	#True when model is in optimization queue, false otherwise
 		self.algorithm = None
-		self.name = self.kb.name + "_" + algorithm_type
+		self.name = self.kb.name + "_" + algorithm_type + "_" + self.kb.Y
 		print (algorithm_type)
 		if algorithm_type == "Neural Network":
 			self.algorithm = NeuralNetworkController.NeuralNetworkController(self.kb)
