@@ -104,6 +104,7 @@ class AutoKnowledgeIntegrator:
         # roc
         results['ROC'] = roc_curve(y, stacking_predictions)
         results['ROC_AUC'] = roc_auc_score(y, stacking_predictions)
+        print(results)
         return results
 
     def splitDataIntoXY(self, data):
