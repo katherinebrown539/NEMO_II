@@ -31,11 +31,8 @@ class AutoKnowledgeIntegrator:
 
     def testKI(self, k = 10, random_seed = None):
         print("In testKI...")
-        # split_ind = int(0.1*len(self.data))
-        # holdout = self.data[:split_ind]
-        # train = self.data[split_ind:]
-        # train.index = list(range(len(train)))
-        # holdout.index = list(range(len(holdout)))
+        #self.data = shuffle(self.data)
+        #self.data.index = list(range(len(self.data)))
         results = {}
         results['Accuracy'] = []
         results['Precision'] = []
@@ -142,7 +139,7 @@ class AutoKnowledgeIntegrator:
         results['ROC'] = roc_curve(y, stacking_predictions)
         results['ROC_AUC'] = roc_auc_score(y, stacking_predictions)
         results['Confusion_Matrix'] = confusion_matrix(y, stacking_predictions)
-        print(results)
+        #sprint(results)
         return results
 
     def splitDataIntoXY(self, data):
