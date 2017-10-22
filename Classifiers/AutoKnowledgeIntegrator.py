@@ -87,7 +87,7 @@ class AutoKnowledgeIntegrator:
         holdout_predictions.columns = columns
         predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         predictions_y = y
-        stacking_predictions = self.stacking_classifier.predictions(predictions_x)
+        stacking_predictions = self.stacking_classifier.predict(predictions_x)
         results = {}
         #GET RIGHT SCORES
         # accuracy
