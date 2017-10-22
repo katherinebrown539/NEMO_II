@@ -70,8 +70,8 @@ class AutoKnowledgeIntegrator:
         print("x = " + str(x))
         X = data[self.kb.X]
         print("X:")
-        print(self.X)
+        print(X)
         Y = data[[self.kb.Y]]
         print("Y:")
-        print(self.y)
+        print(Y)
         return(X,Y)
