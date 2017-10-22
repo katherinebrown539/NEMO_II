@@ -101,7 +101,7 @@ class DecisionTreeController:
 		# predictions = cross_val_predict(self.tree, self.x, labels)
 		# accuracy_all = cross_val_score(self.tree, self.x, labels, cv=10)
 		# accuracy = numpy.mean(accuracy_all)
-		print "Number of test instances: " + str(len(self.X_test.index))
+		print ("Number of test instances: " + str(len(self.X_test.index)))
 
 
 		predictions = self.tree.predict(self.X_test)
