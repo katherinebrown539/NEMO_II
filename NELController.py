@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import graphviz
 from KnowledgeBase import KnowledgeBase
-from Classifiers import ML_Controller, KnowledgeIntegrator, AutoMLController
+from Classifiers import ML_Controller, KnowledgeIntegrator, AutoKnowledgeIntegrator, AutoMLController
 import NEMO
 import MySQLdb
 from collections import deque
@@ -56,15 +56,15 @@ class NELController:
                 clses.append(classifier['Classifier'])
                 i = i+1
 
-        KI = KnowledgeIntegrator.KnowledgeIntegrator(iss_kb, clses, stacking_classifier='Decision Tree', other_predictions=None, use_features=False)
-        data = iss_kb.getData()
-        shuffled_data = shuffle(data)
-        splits = numpy.array_split(shuffled_data, num_folds)
-        results = []
-        results.append(KI.testKI(splits, num_folds, random_seed))
-        for r in results:
-            print(r)
-        self.printModel(KI.stacking_classifier)
+        KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(iss_kb, clses, stacking_classifier='Decision Tree', use_features=False)
+        #data = iss_kb.getData()
+        #shuffled_data = shuffle(data)
+        #splits = numpy.array_split(shuffled_data, num_folds)
+        #results = []
+        #results.append(KI.testKI(splits, num_folds, random_seed))
+        #for r in results:
+        #    print(r)
+        #self.printModel(KI.stacking_classifier)
 
     def runORNLBlanketsInKI(self):
         lung_blanket = None
@@ -88,22 +88,22 @@ class NELController:
                     if classifier['Class'] == 'BREAST':
                             breast_kb = classifier['Classifier'].kb
                     breast_classifiers.append(classifier['Classifier'])
-        KI_Lung = KnowledgeIntegrator.KnowledgeIntegrator(lung_kb, lung_classifiers, stacking_classifier='Decision Tree', other_predictions=None, use_features=False)
-        KI_Breast = KnowledgeIntegrator.KnowledgeIntegrator(breast_kb, breast_classifiers, stacking_classifier='Decision Tree', other_predictions=None, use_features=False)
+        KI_Lung = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(lung_kb, lung_classifiers, stacking_classifier='Decision Tree', use_features=False)
+        KI_Breast = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(breast_kb, breast_classifiers, stacking_classifier='Decision Tree', use_features=False)
         #run KIs
         data = lung_kb.getData()
         shuffled_data = shuffle(data)
         splits = numpy.array_split(shuffled_data, 10)
         num_folds = 10
         random_seed = 0
-        results = []
-        results.append(KI_Lung.testKI(splits, num_folds, random_seed))
-        data = breast_kb.getData()
-        shuffled_data = shuffle(data)
-        splits = numpy.array_split(shuffled_data, 10)
-        results.append(KI_Breast.testKI(splits, num_folds, random_seed))
-        for r in results:
-            print(r)
+        # results = []
+        # results.append(KI_Lung.testKI(splits, num_folds, random_seed))
+        # data = breast_kb.getData()
+        # shuffled_data = shuffle(data)
+        # splits = numpy.array_split(shuffled_data, 10)
+        # results.append(KI_Breast.testKI(splits, num_folds, random_seed))
+        # for r in results:
+        #     print(r)
 
     def generateMarkovBlanket(self):
         #create blanket dicts
