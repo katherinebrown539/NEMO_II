@@ -34,8 +34,8 @@ class AutoKnowledgeIntegrator:
         #train, holdout = train_test_split(self.data, test_size=0.1)
         split_ind = int(0.1*len(self.data))
         print("split index: " + str(split_ind))
-        train = self.datadf[:split_ind]
-        holdout = self.data.iloc[split_ind+1:]
+        train = self.data[:split_ind]
+        holdout = self.data.[split_ind+1:]
         print(str(len(self.data)))
         print(str(len(train)))
         print(str(len(holdout)))
