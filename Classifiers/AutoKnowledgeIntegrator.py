@@ -37,7 +37,7 @@ class AutoKnowledgeIntegrator:
         holdout = self.data[:split_ind]
         train = self.data[split_ind:]
         train.index = list(range(len(train)))
-
+        holdout.index = list(range(len(holdout)))
 
         predictions = []
         for classifier in self.level1_classifiers:
@@ -66,16 +66,37 @@ class AutoKnowledgeIntegrator:
         predictions = pandas.DataFrame(predictions)
         predictions = predictions.transpose()
         predictions.columns = columns
-        predictions = pandas.concat(objs=[x,predictions, y], axis=1)
+        predictions_x = pandas.concat(objs=[x,predictions], axis=1)
+        predictions_y = y
         print("PREDICTIONS:")
         print(predictions)
 
-        #split out of folds into kp folds
-        #fit stacker on kp-1 folds and predict pth fold
-        #fit first stage models on training set without holdout
-        #X <- predict the holdout of the trained first stage models
-        #use X in second stage model
-        #cv error is error on second stage prediction on X
+        #train stacker
+        self.stacking_classifier.fit(predictions_x, predictions_y)
+        #now predict holdout
+        x, y = self.splitDataIntoXY(holdout)
+        holdout_predictions = []
+        for classifier in self.level1_classifiers:
+            holdout_predictions.append([])
+        for classifier in self.level1_classifiers:
+            predictions[i].extend(classifier.predict(x))
+            i = i+1
+        predictions = pandas.DataFrame(predictions)
+        predictions = predictions.transpose()
+        predictions.columns = columns
+        predictions_x = pandas.concat(objs=[x,predictions], axis=1)
+        predictions_y = y
+        stacking_predictions = self.stacking_classifier(predictions_x)
+        results = {}
+		#GET RIGHT SCORES
+		# accuracy
+		results['Accuracy'] = sklearn.metrics.accuracy_score(y, stacking_predictions)
+		# precision recall f1 support
+		results['Precision'], results['Recall'], results['F1'], results['Support'] = sklearn.metrics.precision_recall_fscore_support(y, stacking_predictions)
+		# roc
+		results['ROC'] = sklearn.metrics.roc_curve(y, stacking_predictions)
+		results['ROC_AUC'] = sklearn.metrics.roc_auc_score(y, stacking_predictions)
+        return results
 
     def splitDataIntoXY(self, data):
         x = self.kb.X
