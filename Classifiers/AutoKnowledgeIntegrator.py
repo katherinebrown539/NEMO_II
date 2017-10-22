@@ -26,14 +26,14 @@ class AutoKnowledgeIntegrator:
         self.algorithm_id = "KI"+str(random.randint(1,101))
         self.use_features = use_features
         self.data = self.kb.getData()
-        print("DATA")
-        print(self.data)
+        #print("DATA")
+        #print(self.data)
 
     def testKI(self, k = 10, random_seed = None):
         print("In testKI...")
         #train, holdout = train_test_split(self.data, test_size=0.1)
         split_ind = int(0.1*len(self.data))
-        print("split index: " + str(split_ind))
+        #print("split index: " + str(split_ind))
         holdout = self.data[:split_ind]
         train = self.data[split_ind:]
         train.index = list(range(len(train)))
@@ -68,8 +68,8 @@ class AutoKnowledgeIntegrator:
         predictions.columns = columns
         predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         predictions_y = y
-        print("PREDICTIONS:")
-        print(predictions)
+        #rint("PREDICTIONS:")
+        #print(predictions)
 
         #train stacker
         self.stacking_classifier.fit(predictions_x, predictions_y)
@@ -87,6 +87,8 @@ class AutoKnowledgeIntegrator:
         holdout_predictions.columns = columns
         predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         predictions_y = y
+        print("PREDICTIONS_X:")
+        print(predictions_x)
         stacking_predictions = self.stacking_classifier.predict(predictions_x)
         results = {}
         #GET RIGHT SCORES
@@ -104,11 +106,11 @@ class AutoKnowledgeIntegrator:
         y = self.kb.Y
         while(x.count(y) > 0):
             x.remove(y)
-        print("x = " + str(x))
+        #print("x = " + str(x))
         X = data[self.kb.X]
-        print("X:")
-        print(X)
+        #print("X:")
+        #print(X)
         Y = data[[self.kb.Y]]
-        print("Y:")
-        print(Y)
+        #print("Y:")
+        #print(Y)
         return(X,Y)
