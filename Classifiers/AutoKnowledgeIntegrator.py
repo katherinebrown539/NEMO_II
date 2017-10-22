@@ -37,6 +37,7 @@ class AutoKnowledgeIntegrator:
         print(str(len(train)))
         print(str(len(holdout)))
         i = 0
+        predictions = []
         for classifier in self.level1_classifiers:
             predictions.append([])
 
