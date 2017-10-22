@@ -41,7 +41,7 @@ class AutoKnowledgeIntegrator:
         kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)#will shuffle data manually above
         #fit first stage models on k-1 folds
         train_x, train_y = self.splitDataIntoXY(train)
-        for train_index, test_index in kf.split(train_x):
+        for train_index, test_index in kf.split(train):
             train_x_train, train_x_test = train_x[train_index], train_x[test_index]
             train_y_train, train_y_test = train_y[train_index], train_y[test_index]
             i = 0
