@@ -88,14 +88,14 @@ class AutoKnowledgeIntegrator:
         predictions_y = y
         stacking_predictions = self.stacking_classifier(predictions_x)
         results = {}
-		#GET RIGHT SCORES
-		# accuracy
-		results['Accuracy'] = sklearn.metrics.accuracy_score(y, stacking_predictions)
-		# precision recall f1 support
-		results['Precision'], results['Recall'], results['F1'], results['Support'] = sklearn.metrics.precision_recall_fscore_support(y, stacking_predictions)
-		# roc
-		results['ROC'] = sklearn.metrics.roc_curve(y, stacking_predictions)
-		results['ROC_AUC'] = sklearn.metrics.roc_auc_score(y, stacking_predictions)
+        #GET RIGHT SCORES
+        # accuracy
+        results['Accuracy'] = sklearn.metrics.accuracy_score(y, stacking_predictions)
+        # precision recall f1 support
+        results['Precision'], results['Recall'], results['F1'], results['Support'] = sklearn.metrics.precision_recall_fscore_support(y, stacking_predictions)
+        # roc
+        results['ROC'] = sklearn.metrics.roc_curve(y, stacking_predictions)
+        results['ROC_AUC'] = sklearn.metrics.roc_auc_score(y, stacking_predictions)
         return results
 
     def splitDataIntoXY(self, data):
