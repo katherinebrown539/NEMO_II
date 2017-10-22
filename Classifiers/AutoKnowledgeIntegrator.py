@@ -30,7 +30,7 @@ class AutoKnowledgeIntegrator:
         print(self.data)
 
     def testKI(self, k = 10, random_seed = None):
-        train, holdout = train_test_split(self.data, test_size=0.1)
+        train, holdout = train_test_split(self.data, test_size=0.1, shuffle=False)
         predictions = []
         i = 0
         for classifier in self.level1_classifiers:
