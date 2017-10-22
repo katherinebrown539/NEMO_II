@@ -57,7 +57,7 @@ class AutoKnowledgeIntegrator:
             i = 0
             for classifier in self.level1_classifiers:
                 classifier.fit(train_x_train, train_y_train)
-                predictions[i].append(classifier.predict(train_x_test))
+                predictions[i].extend(classifier.predict(train_x_test))
         columns = []
         for classifier in self.level1_classifiers:
             columns.append(classifier.name)
