@@ -406,7 +406,7 @@ class NEMO:
 		print (str(type(json_data)))
 		print (json_data)
 		print (json_data.itervalues())
-		for key,val in json_data.iteritems():
+		for key,val in json_data.items():
 			print (key + ": " + str(val))
 			kbs.append(KnowledgeBase.KnowledgeBase(config, val))
 		return kbs
