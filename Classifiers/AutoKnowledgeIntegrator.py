@@ -37,9 +37,7 @@ class AutoKnowledgeIntegrator:
         holdout = self.data[:split_ind]
         train = self.data[split_ind:]
         train.index = list(range(len(train)))
-        print("INDEX:" + str(train.index.tolist()))
-        print("TRAIN:")
-        print(train[0])
+
 
         predictions = []
         for classifier in self.level1_classifiers:
@@ -53,7 +51,7 @@ class AutoKnowledgeIntegrator:
         for train_index, test_index in kf.split(train):
 
             print("TRAIN:", train_index, "TEST:", test_index)
-            training, testing = train[train_index], train[test_index]
+            training, testing = train.iloc[train_index], train.iloc[test_index]
             train_x_train, train_y_train = self.splitDataIntoXY(training)
             test_x_train, test_y_train = self.splitDataIntoXY(testing)
             i = 0
