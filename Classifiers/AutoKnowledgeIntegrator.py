@@ -64,7 +64,7 @@ class AutoKnowledgeIntegrator:
         results['ROC'] = numpy.mean(results['ROC'])
         results['ROC_AUC'] = numpy.mean(results['ROC_AUC'])
 
-        print(results)
+        #print(results)
         return results
 
 
