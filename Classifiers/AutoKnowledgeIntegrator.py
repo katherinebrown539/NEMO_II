@@ -33,7 +33,7 @@ class AutoKnowledgeIntegrator:
         x = self.kb.X
         y = self.kb.Y
         while(x.count(y) > 0):
-			x.remove(y)
+            x.remove(y)
         print("x = " + str(x))
         self.X = self.data[self.kb.X]
         print("X:")
