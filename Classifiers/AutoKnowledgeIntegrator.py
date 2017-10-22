@@ -64,7 +64,7 @@ class AutoKnowledgeIntegrator:
             columns.append(classifier.name)
 
         predictions = pandas.DataFrame(predictions)
-        predictiosn = predictions.transpose()
+        predictions = predictions.transpose()
         predictions.columns = columns
         print("PREDICTIONS:")
         print(predictions)
