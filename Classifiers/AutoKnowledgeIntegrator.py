@@ -32,10 +32,10 @@ class AutoKnowledgeIntegrator:
     def testKI(self, k = 10, random_seed = None):
         self.X = self.data[self.kb.X]
         print("X:")
-        print(X)
+        print(self.X)
         self.y = self.data[[self.kb.Y]]
         print("Y:")
-        print(y)
+        print(self.y)
         train, holdout = train_test_split(self.data, test_size=0.1)
         kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)
         #for train_index, test_index in kf.split(X)
