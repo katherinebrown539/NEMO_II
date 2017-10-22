@@ -109,10 +109,10 @@ class AutoKnowledgeIntegrator:
         self.stacking_classifier.fit(predictions_x, predictions_y)
         #now predict holdout
         x, y = self.splitDataIntoXY(holdout)
-        print("X for Holdout:")
-        print(x)
-        print("Y for Holdout:")
-        print(y)
+        # print("X for Holdout:")
+        # print(x)
+        # print("Y for Holdout:")
+        # print(y)
 
         holdout_predictions = []
         for classifier in self.level1_classifiers:
@@ -126,8 +126,8 @@ class AutoKnowledgeIntegrator:
         holdout_predictions.columns = columns
         predictions_x = pandas.concat(objs=[x,holdout_predictions], axis=1)
         predictions_y = y
-        print("PREDICTIONS_X:")
-        print(predictions_x)
+        # print("PREDICTIONS_X:")
+        # print(predictions_x)
         stacking_predictions = self.stacking_classifier.predict(predictions_x)
         results = {}
         #GET RIGHT SCORES
