@@ -22,7 +22,7 @@ class AutoKnowledgeIntegrator:
         elif stacking_classifier == "SVM":
             self.algorithm_name = "KI_SVM"
             self.stacking_classifier = SVC()
-        self.algorithm_id = "KI"_str(random.randint(1,101))
+        self.algorithm_id = "KI"+str(random.randint(1,101))
         self.use_features = use_features
         self.data = self.kb.getData()
         print("DATA")
