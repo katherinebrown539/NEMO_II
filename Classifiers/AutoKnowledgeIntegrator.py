@@ -47,7 +47,7 @@ class AutoKnowledgeIntegrator:
         results['Confusion_Matrix'] = []
         kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)
         for train_index, test_index in kf.split(self.data):
-            train, holdout = train.iloc[train_index], train.iloc[test_index]
+            train, holdout = self.data.iloc[train_index], self.data.iloc[test_index]
             train.index = list(range(len(train)))
             holdout.index = list(range(len(holdout)))
             temp_results = self.cv_step(train, holdout, k, random_seed)
