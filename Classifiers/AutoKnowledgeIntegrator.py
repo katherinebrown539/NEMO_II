@@ -36,15 +36,10 @@ class AutoKnowledgeIntegrator:
         print("split index: " + str(split_ind))
         holdout = self.data[:split_ind]
         train = self.data[split_ind:]
-        print("TRAIN BEFORE REINDEX:")
+        train.index = list(range(len(train)))
+        print("TRAIN:")
         print(train)
-        print("HOLDOUT BEFORE REINDEX:")
-        print(holdout)
-        holdout = holdout.reindex(index=list(range(len(holdout))))
-        train = train.reindex(index=list(range(len(train))))
-        print("TRAIN AFTER REINDEX:")
-        print(train)
-        print("HOLDOUT AFTER REINDEX:")
+        print("HOLDOUT:")
         print(holdout)
         print(str(len(self.data)))
         print(str(len(train)))
