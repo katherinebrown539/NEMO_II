@@ -66,7 +66,7 @@ class AutoKnowledgeIntegrator:
         predictions = pandas.DataFrame(predictions)
         predictions = predictions.transpose()
         predictions.columns = columns
-        predictions = pandas.concat(objs=[predictions, train_y], axis=1)
+        predictions = pandas.concat(objs=[x,predictions, y], axis=1)
         print("PREDICTIONS:")
         print(predictions)
 
