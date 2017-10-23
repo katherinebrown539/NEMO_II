@@ -34,6 +34,7 @@ class NELController:
         sys.stdout = save_stdout
         for r in self.results:
             print(r)
+        self.writeToCSV()
     #will need to generalize for other data sets......
     def runBlanketsInKI(self):
         self.runTraumaBlanketsInKI()
