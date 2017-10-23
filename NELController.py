@@ -15,9 +15,12 @@ class NELController:
     def __init__(self, facts_file, config_file):
         with open(facts_file) as fd:
             json_data = json.load(fd)
-        self.results
+        self.results = []
+        save_stdout = sys.stdout
+        sys.stdout = open('trash', 'w')
         self.NEMO = NEMO.NEMO(config_file)
         self.NEMO.resetAlgorithmResults()
+        sys.stdout = save_stdout
         self.classifiers = []
         classifiers = json_data['Classifiers']
         self.createClassifiers(classifiers)
@@ -28,6 +31,8 @@ class NELController:
         self.parseConstraints(json_data['Constraints'])
         self.generateMarkovBlanket()
         self.runBlanketsInKI()
+        for r in results:
+            print(r)
     #will need to generalize for other data sets......
     def runBlanketsInKI(self):
         self.runTraumaBlanketsInKI()
@@ -89,10 +94,12 @@ class NELController:
         KI_Breast = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(breast_kb, breast_classifiers, stacking_classifier='Decision Tree', use_features=False)
         #run KIs
         results = []
-        results.append(KI_Lung.testKI(splits, num_folds, random_seed))
-        results.append(KI_Breast.testKI(splits, num_folds, random_seed))
-        for r in results:
-        #     print(r)
+        r = KI_Lung.testKI(splits, num_folds, random_seed)
+        r['Name'] = "ORNL_LUNG_KI"
+        results.append(r)
+        r = KI_Breast.testKI(splits, num_folds, random_seed)
+        r['Name'] = "ORNL_BREAST_KI"
+        results.append(r)
 
     def generateMarkovBlanket(self):
         #create blanket dicts
