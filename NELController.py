@@ -15,13 +15,13 @@ class NELController:
     def __init__(self, facts_file, config_file):
         with open(facts_file) as fd:
             json_data = json.load(fd)
-
+        self.results
         self.NEMO = NEMO.NEMO(config_file)
         self.NEMO.resetAlgorithmResults()
         self.classifiers = []
         classifiers = json_data['Classifiers']
         self.createClassifiers(classifiers)
-        self.NEMO.printAlgorithmResults()
+        #self.NEMO.printAlgorithmResults()
         #parse constraints
         self.constraints = []
         self.blankets = []
@@ -41,6 +41,8 @@ class NELController:
         graph = graphviz.Source(dot_data)
         graph.render("ModelPrintout")
 
+    def runClassifierBlankets(self):
+        pass
     def runTraumaBlanketsInKI(self):
         iss_blanket = self.blankets[0]
         iss_kb = None
@@ -55,15 +57,11 @@ class NELController:
             clses.append(classifier['Classifier'])
 
         KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(iss_kb, clses, stacking_classifier='Decision Tree', use_features=False)
-        results.append(KI.testKI(k = 10, random_seed = random_seed))
-        #data = iss_kb.getData()
-        #shuffled_data = shuffle(data)
-        #splits = numpy.array_split(shuffled_data, num_folds)
-        #results = []
-        #results.append()
-        for r in results:
-            print(r)
-        #self.printModel(KI.stacking_classifier)
+        r = KI.testKI(k = 10, random_seed = random_seed)
+        r['Name'] = "ISS16"
+        self.results.append(r)
+        #for r in results:
+        #    print(r)
 
     def runORNLBlanketsInKI(self):
         lung_blanket = None
@@ -90,18 +88,10 @@ class NELController:
         KI_Lung = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(lung_kb, lung_classifiers, stacking_classifier='Decision Tree', use_features=False)
         KI_Breast = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(breast_kb, breast_classifiers, stacking_classifier='Decision Tree', use_features=False)
         #run KIs
-        data = lung_kb.getData()
-        shuffled_data = shuffle(data)
-        splits = numpy.array_split(shuffled_data, 10)
-        num_folds = 10
-        random_seed = 0
-        # results = []
-        # results.append(KI_Lung.testKI(splits, num_folds, random_seed))
-        # data = breast_kb.getData()
-        # shuffled_data = shuffle(data)
-        # splits = numpy.array_split(shuffled_data, 10)
-        # results.append(KI_Breast.testKI(splits, num_folds, random_seed))
-        # for r in results:
+        results = []
+        results.append(KI_Lung.testKI(splits, num_folds, random_seed))
+        results.append(KI_Breast.testKI(splits, num_folds, random_seed))
+        for r in results:
         #     print(r)
 
     def generateMarkovBlanket(self):
@@ -143,6 +133,9 @@ class NELController:
             #run classifiers
             created_classifier['Classifier'].runAlgorithm()
             created_classifier['Classifier'].updateDatabaseWithResults()
+            r = created_classifier['Classifier'].results
+            r['Name'] = created_classifier['Classifier'].name
+            self.results.append(r)
 
     def parseConstraints(self, constraint_data):
         #constraint_data = json_data['Constraints']

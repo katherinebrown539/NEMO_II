@@ -12,7 +12,7 @@ import pandas, MySQLdb, threading, sys, os, time, random, numpy
 
 class AutoKnowledgeIntegrator:
     def __init__(self, kb, level1_classifiers, stacking_classifier=None, use_features=False):
-        print("Init KI")
+        #print("Init KI")
         self.kb = kb
         self.level1_classifiers = level1_classifiers
         if stacking_classifier is None or stacking_classifier == "Logistic Regression":
@@ -31,7 +31,7 @@ class AutoKnowledgeIntegrator:
         #print(self.data)
 
     def testKI(self, k = 10, random_seed = None):
-        print("In testKI...")
+        #print("In testKI...")
         self.data = shuffle(self.data)
         self.data.index = list(range(len(self.data)))
         results = {}
