@@ -31,7 +31,7 @@ class NELController:
         self.parseConstraints(json_data['Constraints'])
         self.generateMarkovBlanket()
         self.runBlanketsInKI()
-        for r in results:
+        for r in self.results:
             print(r)
     #will need to generalize for other data sets......
     def runBlanketsInKI(self):
