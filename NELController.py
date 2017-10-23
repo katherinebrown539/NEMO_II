@@ -140,7 +140,7 @@ class NELController:
             #run classifiers
             created_classifier['Classifier'].runAlgorithm()
             created_classifier['Classifier'].updateDatabaseWithResults()
-            r = created_classifier['Classifier'].results
+            r = created_classifier['Classifier'].algorithm.results
             r['Name'] = created_classifier['Classifier'].name
             self.results.append(r)
 
