@@ -101,7 +101,7 @@ class NELController:
 
     def executeBlanket(self, blanket, class_, clses_=None):
         kb = None
-        if clses is None:
+        if clses_ is None:
             clses = []
         else:
             clses = clses_
