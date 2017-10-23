@@ -69,10 +69,11 @@ class AutoKnowledgeIntegrator:
         self.results = results
         return results
 
-    def predict(self, x_, k = 10, random_seed = None):
+    def predict(self, x, k = 10, random_seed = None):
         predictions = []
         for classifier in self.level1_classifiers:
             predictions.append([])
+        x.index = list(range(len(x)))
         #k=10
         #shuffle data, will do this later
         #split training data into k folds
@@ -81,7 +82,6 @@ class AutoKnowledgeIntegrator:
         #x, y = self.splitDataIntoXY(train)
         for train_index, test_index in kf.split(x):
             #print("TRAIN:", train_index, "TEST:", test_index)
-
             i = 0
             for classifier in self.level1_classifiers:
                 #classifier.fit(train_x_train, train_y_train)
