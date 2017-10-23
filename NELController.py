@@ -48,7 +48,6 @@ class NELController:
                 #line = r['Name']+","+str(r['Accuracy'])+","+str(r['Precision'])+","+str(r['Recall'])+","+str(r['F1'])+","+str(r['Support'])+","+str(r['ROC'])+","+str(r['ROC_AUC'])
                 line = r['Name']+","+str(r['Accuracy'])+","+str(r['Precision'])+","+str(r['Recall'])+","+str(r['F1'])+"\n"
                 f.write(line)
-        #f.close()
 
     def printModel(self, model):
         from sklearn import tree
@@ -60,24 +59,28 @@ class NELController:
 
 
     def runTraumaBlanketsInKI(self):
-        iss_blanket = self.blankets[0]
-        iss_kb = None
+        blanket = blankets[0]
+        c = blanket['RIGHT_MEMBER']
+        self.executeBlanket(blanket,c)
+        #for r in results:
+        #    print(r)
+
+    def executeBlanket(self, blanket, class_):
+        kb = None
         clses = []
         results = []
         num_folds = 10
         random_seed = 0
-        i = 0
-        for classifier in iss_blanket['CLASSIFIERS_THAT_INFLUENCE']:
-            if classifier['Class'] == 'ISS16':
-                iss_kb = classifier['Classifier'].kb
+        for classifier in blanket['CLASSIFIERS_THAT_INFLUENCE']:
+            if classifier['Class'] == class_:
+                kb = classifier['Classifier'].kb
             clses.append(classifier['Classifier'])
 
-        KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(iss_kb, clses, stacking_classifier='Decision Tree', use_features=False)
+        KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(kb, clses, stacking_classifier='Decision Tree', use_features=False)
         r = KI.testKI(k = 10, random_seed = random_seed)
-        r['Name'] = "ISS16"
+        r['Name'] = KI.name
         self.results.append(r)
-        #for r in results:
-        #    print(r)
+        return KI
 
     def runORNLBlanketsInKI(self):
         lung_blanket = None

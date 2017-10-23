@@ -27,6 +27,7 @@ class AutoKnowledgeIntegrator:
         self.algorithm_id = "KI"+str(random.randint(1,101))
         self.use_features = use_features
         self.data = self.kb.getData()
+        self.name = self.kb.name + "_KI_"+stacking_classifier
         #print("DATA")
         #print(self.data)
 
