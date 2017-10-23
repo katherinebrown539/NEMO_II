@@ -93,7 +93,10 @@ class ML_Controller:
 		results = self.algorithm.runModel(self.kb.multi, x, y)
 		#self.kb.updateDatabaseWithResults(self.algorithm)
 		return results
-
+	def runModel(self, x = None, y = None):
+		results = self.algorithm.runModel(self.kb.multi, x, y)
+		#self.kb.updateDatabaseWithResults(self.algorithm)
+		return results
 	def updateDatabaseWithResults(self):
 		self.kb.updateDatabaseWithResults(self.algorithm)
 

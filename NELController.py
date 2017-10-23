@@ -66,11 +66,14 @@ class NELController:
         #Get all classifiers that classify the same thing
         for classifiers in self.classifiers:
             if classifiers['Class'] == 'ED2OR':
+                classifiers['Classifier'].runModel()
                 ed2or.append(classifiers['Classifier'])
             elif classifiers['Class'] == 'ICUAdmit':
                 icuadmit.append(classifiers['Classifier'])
+                classifiers['Classifier'].runModel()
             elif classifiers['Class'] == 'EarlyDeath':
                 earlydeath.append(classifiers['Classifier'])
+                classifiers['Classifier'].runModel()
 
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier='Decision Tree', use_features=False)
         results = ki.testKI()
@@ -232,6 +235,8 @@ class NELController:
         #print d
         return d
 
+    def runModel(self, classifier):
+        self.results.append(classifier.runModel())
     #update comment
     def parseFeatures(self, feature_string, target, all_features):
         #print("Feature String: " + feature_string)
