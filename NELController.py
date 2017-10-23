@@ -40,12 +40,13 @@ class NELController:
         self.runTraumaBlanketsInKI()
         #self.runORNLBlanketsInKI()
     def writeToCSV(self):
-        f = open(self.output_file, 'w')
+        #f = open(self.output_file, 'w')
+        with open("foo.txt", "r+") as f:
         f.writeline("Algorithm Name, Accuracy, Precision, Recall, F1, Support, ROC, ROC_AUC")
-        for r in self.results:
-            line = r['Name']+","+str(r['Accuracy'])+","+str(r['Precision'])+","+str(r['Recall'])+","+str(r['F1'])+","+str(r['Support'])+","+str(r['ROC'])+","+str(r['ROC_AUC'])
-            f.writeline(line)
-        f.close()
+            for r in self.results:
+                line = r['Name']+","+str(r['Accuracy'])+","+str(r['Precision'])+","+str(r['Recall'])+","+str(r['F1'])+","+str(r['Support'])+","+str(r['ROC'])+","+str(r['ROC_AUC'])
+                f.writeline(line)
+        #f.close()
 
     def printModel(self, model):
         from sklearn import tree
