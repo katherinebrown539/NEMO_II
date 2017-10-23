@@ -69,11 +69,11 @@ class AutoKnowledgeIntegrator:
         self.results = results
         return results
 
-    def predict(self, x):
+    def predict(self, x, k = 10, random_seed = None):
         predictions = []
         for classifier in self.level1_classifiers:
             predictions.append([])
-        k=10
+        #k=10
         #shuffle data, will do this later
         #split training data into k folds
         kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)#will shuffle data manually above
