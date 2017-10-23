@@ -41,7 +41,7 @@ class NELController:
         #self.runORNLBlanketsInKI()
     def writeToCSV(self):
         #f = open(self.output_file, 'w')
-        with open(output_file, "w") as f:
+        with open(self.output_file, "w") as f:
             #f.writeline("Algorithm Name, Accuracy, Precision, Recall, F1, Support, ROC, ROC_AUC\n")
             f.write("Algorithm Name, Accuracy, Precision, Recall, F1\n")
             for r in self.results:
