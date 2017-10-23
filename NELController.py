@@ -12,13 +12,14 @@ import copy
 from ConstraintLanguage import ConstraintLanguage
 
 class NELController:
-    def __init__(self, facts_file, config_file):
+    def __init__(self, facts_file, config_file, output_file):
         with open(facts_file) as fd:
             json_data = json.load(fd)
         self.results = []
         save_stdout = sys.stdout
         sys.stdout = open('trash', 'w')
         self.NEMO = NEMO.NEMO(config_file)
+        self.output_file = output_file
         self.NEMO.resetAlgorithmResults()
         self.classifiers = []
         classifiers = json_data['Classifiers']
@@ -37,6 +38,13 @@ class NELController:
     def runBlanketsInKI(self):
         self.runTraumaBlanketsInKI()
         #self.runORNLBlanketsInKI()
+    def writeToCSV(self):
+        f = open(output_file, 'w')
+        f.writeline("Algorithm Name, Accuracy, Precision, Recall, F1, Support, ROC, ROC_AUC")
+        for r in self.results
+            line = r['Name']+","+str(r['Accuracy'])+","+str(r['Precision'])+","+str(r['Recall'])+","+str(r['F1'])+","+str(r['Support'])+","+str(r['ROC'])+","+str(r['ROC_AUC'])
+            f.writeline(line)
+        f.close()
 
     def printModel(self, model):
         from sklearn import tree
@@ -46,8 +54,7 @@ class NELController:
         graph = graphviz.Source(dot_data)
         graph.render("ModelPrintout")
 
-    def runClassifierBlankets(self):
-        pass
+
     def runTraumaBlanketsInKI(self):
         iss_blanket = self.blankets[0]
         iss_kb = None
@@ -219,8 +226,13 @@ class NELController:
 
 
 def main():
+    output_file = None
+    if(len(sys.argv) > 1):
+        output_file = sys.argv[1]
+    else:
+        output_file = "results.csv"
     facts = "config/facts.json"
-    NELController(facts, "config/config.json")
+    NELController(facts, "config/config.json", output_file)
 
 if __name__ == '__main__':
     main()
