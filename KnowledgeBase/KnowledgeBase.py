@@ -171,7 +171,7 @@ class KnowledgeBase:
 	def executeQuery(self, query, args=None):
 		#self.connect()
 		complete = False
-		print (query)
+		#print (query)
 		#if args is not None: print args
 		while not complete:
 			try:
@@ -259,11 +259,11 @@ class KnowledgeBase:
 		#self.connect()
 		#stmt = "select * from " + self.name
 		stmt = "select " + ",".join(self.X ) + ", " + self.Y + " from " + self.name
-		print (stmt)
+		#print (stmt)
 		to_return =  pandas.read_sql_query(stmt, self.db)
-		print("self.X = " + str(self.X))
-		print("INDEX =  " + str(to_return.columns))
-		print (to_return.head(20))
+		#print("self.X = " + str(self.X))
+		#print("INDEX =  " + str(to_return.columns))
+		#print (to_return.head(20))
 		self.X = list(to_return.columns)
 		#self.disconnect()
 		return to_return
