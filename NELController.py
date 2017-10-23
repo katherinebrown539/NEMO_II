@@ -41,11 +41,13 @@ class NELController:
         #self.runORNLBlanketsInKI()
     def writeToCSV(self):
         #f = open(self.output_file, 'w')
-        with open("foo.txt", "r+") as f:
-        f.writeline("Algorithm Name, Accuracy, Precision, Recall, F1, Support, ROC, ROC_AUC")
+        with open(output_file, "w") as f:
+            #f.writeline("Algorithm Name, Accuracy, Precision, Recall, F1, Support, ROC, ROC_AUC\n")
+            f.write("Algorithm Name, Accuracy, Precision, Recall, F1\n")
             for r in self.results:
-                line = r['Name']+","+str(r['Accuracy'])+","+str(r['Precision'])+","+str(r['Recall'])+","+str(r['F1'])+","+str(r['Support'])+","+str(r['ROC'])+","+str(r['ROC_AUC'])
-                f.writeline(line)
+                #line = r['Name']+","+str(r['Accuracy'])+","+str(r['Precision'])+","+str(r['Recall'])+","+str(r['F1'])+","+str(r['Support'])+","+str(r['ROC'])+","+str(r['ROC_AUC'])
+                line = r['Name']+","+str(r['Accuracy'])+","+str(r['Precision'])+","+str(r['Recall'])+","+str(r['F1'])+"\n"
+                f.write(line)
         #f.close()
 
     def printModel(self, model):
