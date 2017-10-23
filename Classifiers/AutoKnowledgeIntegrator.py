@@ -68,6 +68,33 @@ class AutoKnowledgeIntegrator:
 
         return results
 
+    def predict(self, x):
+        predictions = []
+        for classifier in self.level1_classifiers:
+            predictions.append([])
+
+        #shuffle data, will do this later
+        #split training data into k folds
+        kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)#will shuffle data manually above
+        #fit first stage models on k-1 folds
+        x, y = self.splitDataIntoXY(train)
+        for train_index, test_index in kf.split(train):
+            #print("TRAIN:", train_index, "TEST:", test_index)
+            training, testing = train.iloc[train_index], train.iloc[test_index]
+            train_x_train, train_y_train = self.splitDataIntoXY(training)
+            train_x_test, test_y_test = self.splitDataIntoXY(testing)
+            i = 0
+            for classifier in self.level1_classifiers:
+                #classifier.fit(train_x_train, train_y_train)
+                predictions[i].extend(classifier.predict(train_x_test))
+                i = i+1
+        columns = []
+        for classifier in self.level1_classifiers:
+            columns.append(classifier.name)
+        predictions = pandas.DataFrame(predictions)
+        predictions = predictions.transpose()
+        predictions.columns = columns
+        predictions_x = pandas.concat(objs=[x,predictions], axis=1)
 
 
     def cv_step(self, train, holdout, k, random_seed):
@@ -100,6 +127,8 @@ class AutoKnowledgeIntegrator:
         predictions.columns = columns
         predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         predictions_y = y
+        stacking_predictions = self.stacking_classifier.predict(predictions_x)
+        return stacking_predictions
         #rint("PREDICTIONS:")
         #print(predictions)
 
