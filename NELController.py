@@ -80,12 +80,14 @@ class NELController:
         results['Name'] = ki.name
         self.results.append(results)
         kis.append(ki)
-        ki = kis.append(AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier='Decision Tree', use_features=False))
+        ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier='Decision Tree', use_features=False)
+        kis.append(ki)
         results = ki.testKI()
         results['Name'] = ki.name
         self.results.append(results)
         kis.append(ki)
-        ki = kis.append(AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier='Decision Tree', use_features=False))
+        ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier='Decision Tree', use_features=False)
+        kis.append(ki)
         results = ki.testKI()
         results['Name'] = ki.name
         self.results.append(results)
