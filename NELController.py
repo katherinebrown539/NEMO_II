@@ -20,7 +20,6 @@ class NELController:
         sys.stdout = open('trash', 'w')
         self.NEMO = NEMO.NEMO(config_file)
         self.NEMO.resetAlgorithmResults()
-        sys.stdout = save_stdout
         self.classifiers = []
         classifiers = json_data['Classifiers']
         self.createClassifiers(classifiers)
@@ -31,6 +30,7 @@ class NELController:
         self.parseConstraints(json_data['Constraints'])
         self.generateMarkovBlanket()
         self.runBlanketsInKI()
+        sys.stdout = save_stdout
         for r in self.results:
             print(r)
     #will need to generalize for other data sets......
