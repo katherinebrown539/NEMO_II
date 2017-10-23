@@ -74,6 +74,8 @@ class AutoKnowledgeIntegrator:
         for classifier in self.level1_classifiers:
             predictions.append([])
         x.index = list(range(len(x)))
+        print("PREDICT METHOD X")
+        print(x)
         #k=10
         #shuffle data, will do this later
         #split training data into k folds

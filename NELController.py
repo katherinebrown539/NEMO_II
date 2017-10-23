@@ -17,7 +17,7 @@ class NELController:
             json_data = json.load(fd)
         self.results = []
         save_stdout = sys.stdout
-        sys.stdout = open('trash', 'w')
+        #sys.stdout = open('trash', 'w')
         self.NEMO = NEMO.NEMO(config_file)
         self.output_file = output_file
         self.NEMO.resetAlgorithmResults()
