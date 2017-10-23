@@ -96,7 +96,8 @@ class AutoKnowledgeIntegrator:
         predictions = predictions.transpose()
         predictions.columns = columns
         predictions_x = pandas.concat(objs=[x,predictions], axis=1)
-
+        stacking_predictions = self.stacking_classifier.predict(predictions_x)
+        return stacking_predictions
 
     def cv_step(self, train, holdout, k, random_seed):
         predictions = []
@@ -128,8 +129,7 @@ class AutoKnowledgeIntegrator:
         predictions.columns = columns
         predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         predictions_y = y
-        stacking_predictions = self.stacking_classifier.predict(predictions_x)
-        return stacking_predictions
+
         #rint("PREDICTIONS:")
         #print(predictions)
 
