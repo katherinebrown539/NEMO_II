@@ -93,7 +93,7 @@ class NELController:
             if blanket['RIGHT_MEMBER'] in ['ISS16', 'NeedTC']:
                 c = blanket['RIGHT_MEMBER']
                 self.executeBlanket(blanket,c, clses_=kis)
-
+                self.executeBlanket(blanket,c, clses_=None)
     def executeBlanket(self, blanket, class_, clses_=None):
         kb = None
         if clses_ is None:
