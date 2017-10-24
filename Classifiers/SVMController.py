@@ -14,15 +14,12 @@ class SVMController:
 
 	def __init__(self, kb):
 		self.algorithm_name = "SVM"
+		self.algorithm_id = ""
 		random.seed()
 		for i in range(1,10):
 			self.algorithm_id = self.algorithm_id + str(random.randint(1,9))
 		self.svm = None
 		self.kb = kb
-		self.algorithm_id = ""
-		random.seed()
-		for i in range(1,10):
-			self.algorithm_id = self.algorithm_id + str(random.randint(1,9))
 
 	def createModel(self, x, y, attributes=None):
 		self.x = x
