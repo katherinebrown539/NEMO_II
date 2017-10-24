@@ -17,15 +17,13 @@ class NELController:
             json_data = json.load(fd)
         self.results = []
         save_stdout = sys.stdout
-        #sys.stdout = open('trash', 'w')
+        sys.stdout = open('trash', 'w')
         self.NEMO = NEMO.NEMO(config_file)
         self.output_file = output_file
         self.NEMO.resetAlgorithmResults()
         self.classifiers = []
         classifiers = json_data['Classifiers']
         self.createClassifiers(classifiers)
-        #self.NEMO.printAlgorithmResults()
-        #parse constraints
         self.constraints = []
         self.blankets = []
         self.parseConstraints(json_data['Constraints'])
@@ -56,7 +54,6 @@ class NELController:
         dot_data = tree.export_graphviz(model, out_file=None)
         graph = graphviz.Source(dot_data)
         graph.render("ModelPrintout")
-
 
     def runTraumaBlanketsInKI(self):
         kis = []
@@ -96,8 +93,6 @@ class NELController:
             if blanket['RIGHT_MEMBER'] in ['ISS16', 'NeedTC']:
                 c = blanket['RIGHT_MEMBER']
                 self.executeBlanket(blanket,c, clses_=kis)
-        #for r in results:
-        #    print(r)
 
     def executeBlanket(self, blanket, class_, clses_=None):
         kb = None
