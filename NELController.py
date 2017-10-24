@@ -147,14 +147,14 @@ class NELController:
 
         KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(kb, clses, stacking_classifier='Decision Tree', use_features=False)
         r = KI.testKI(k = 10, random_seed = random_seed)
-        if(clses_ is not None)
+        if(clses_ is not None):
             r['Name'] = KI.name + "_usingStackers"
         else:
             r['Name'] = KI.name
         self.results.append(r)
         KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(kb, clses, stacking_classifier='Logistic Regression', use_features=False)
         r = KI.testKI(k = 10, random_seed = random_seed)
-        if(clses_ is not None)
+        if(clses_ is not None):
             r['Name'] = KI.name + "_usingStackers"
         else:
             r['Name'] = KI.name
