@@ -79,6 +79,7 @@ class AutoKnowledgeIntegrator:
         #k=10
         #shuffle data, will do this later
         #split training data into k folds
+        i = 0
         for classifier in self.level1_classifiers:
             #classifier.fit(train_x_train, train_y_train)
             predictions[i].extend(classifier.predict(x))
