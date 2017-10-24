@@ -94,6 +94,42 @@ class NELController:
                 c = blanket['RIGHT_MEMBER']
                 self.executeBlanket(blanket,c, clses_=kis)
                 self.executeBlanket(blanket,c, clses_=None)
+
+    def runORNLBlanketsInKI(self):
+        lung_cls = []
+        breast_cls = []
+        lung_blanket = None
+        breast_blanket = None
+        lung_kb = None
+        breast_kb = None
+        lung_classifiers = []
+        breast_classifiers = []
+        for b in self.blankets:
+            if b['RIGHT_MEMBER'] == 'LUNG':
+                lung_blanket = b
+                for classifier in b['CLASSIFIERS_THAT_INFLUENCE']:
+                    print(classifier['Class'])
+                    if classifier['Class'] == 'LUNG':
+                        lung_kb = classifier['Classifier'].kb
+                        lung_classifiers.append(classifier['Classifier'])
+                    elif b['RIGHT_MEMBER'] == 'BREAST':
+                        breast_blanket = b
+                        for classifier in b['CLASSIFIERS_THAT_INFLUENCE']:
+                            print(classifier['Class'])
+                            if classifier['Class'] == 'BREAST':
+                                breast_kb = classifier['Classifier'].kb
+                                breast_classifiers.append(classifier['Classifier'])
+                                KI_Lung = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(lung_kb, lung_classifiers, stacking_classifier='Decision Tree', use_features=False)
+                                KI_Breast = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(breast_kb, breast_classifiers, stacking_classifier='Decision Tree', use_features=False)
+                                #run KIs
+                                results = []
+                                r = KI_Lung.testKI(splits, num_folds, random_seed)
+                                r['Name'] = "ORNL_LUNG_KI"
+                                results.append(r)
+                                r = KI_Breast.testKI(splits, num_folds, random_seed)
+                                r['Name'] = "ORNL_BREAST_KI"
+                                results.append(r)
+
     def executeBlanket(self, blanket, class_, clses_=None):
         kb = None
         if clses_ is None:
@@ -125,38 +161,6 @@ class NELController:
         self.results.append(r)
         return KI
 
-    def runORNLBlanketsInKI(self):
-        lung_blanket = None
-        breast_blanket = None
-        lung_kb = None
-        breast_kb = None
-        lung_classifiers = []
-        breast_classifiers = []
-        for b in self.blankets:
-            if b['RIGHT_MEMBER'] == 'LUNG':
-                lung_blanket = b
-                for classifier in b['CLASSIFIERS_THAT_INFLUENCE']:
-                    print(classifier['Class'])
-                    if classifier['Class'] == 'LUNG':
-                            lung_kb = classifier['Classifier'].kb
-                    lung_classifiers.append(classifier['Classifier'])
-            elif b['RIGHT_MEMBER'] == 'BREAST':
-                breast_blanket = b
-                for classifier in b['CLASSIFIERS_THAT_INFLUENCE']:
-                    print(classifier['Class'])
-                    if classifier['Class'] == 'BREAST':
-                            breast_kb = classifier['Classifier'].kb
-                    breast_classifiers.append(classifier['Classifier'])
-        KI_Lung = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(lung_kb, lung_classifiers, stacking_classifier='Decision Tree', use_features=False)
-        KI_Breast = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(breast_kb, breast_classifiers, stacking_classifier='Decision Tree', use_features=False)
-        #run KIs
-        results = []
-        r = KI_Lung.testKI(splits, num_folds, random_seed)
-        r['Name'] = "ORNL_LUNG_KI"
-        results.append(r)
-        r = KI_Breast.testKI(splits, num_folds, random_seed)
-        r['Name'] = "ORNL_BREAST_KI"
-        results.append(r)
 
     def generateMarkovBlanket(self):
         #create blanket dicts

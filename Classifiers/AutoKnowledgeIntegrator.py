@@ -76,9 +76,7 @@ class AutoKnowledgeIntegrator:
         x.index = list(range(len(x)))
         print("PREDICT METHOD X")
         print(x)
-        #k=10
-        #shuffle data, will do this later
-        #split training data into k folds
+
         i = 0
         for classifier in self.level1_classifiers:
             #classifier.fit(train_x_train, train_y_train)
@@ -91,6 +89,8 @@ class AutoKnowledgeIntegrator:
         predictions = pandas.DataFrame(predictions)
         predictions = predictions.transpose()
         predictions.columns = columns
+        print("PREDICTIONS:")
+        print(predictions)
         predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         stacking_predictions = self.stacking_classifier.predict(predictions_x)
         return stacking_predictions
