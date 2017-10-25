@@ -83,6 +83,7 @@ class AutoKnowledgeIntegrator:
         kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)#will shuffle data manually above
         #fit first stage models on k-1 folds
         #x, y = self.splitDataIntoXY(train)
+        i = 0
         for train_index, test_index in kf.split(x):
             #print("TRAIN:", train_index, "TEST:", test_index)
             for classifier in self.level1_classifiers:
