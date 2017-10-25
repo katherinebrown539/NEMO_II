@@ -98,7 +98,7 @@ class AutoKnowledgeIntegrator:
         predictions = predictions.transpose()
         predictions.columns = columns
         output = pandas.concat(objs=[x,predictions,y], axis=1)
-        output_name = KI.name + "_" + random.randint(1,100)
+        output_name = self.name + "_" + random.randint(1,100)
         predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         predictions_y = y
         self.stacking_classifier.fit(predictions_x, predictions_y)
