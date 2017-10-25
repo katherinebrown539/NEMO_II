@@ -280,6 +280,8 @@ class KnowledgeBase:
 		data = self.getData()
 		x = self.X
 		y = self.Y
+		print(len(x))
+		print(len(y))
 		while(x.count(y) > 0):
 			x.remove(y)
         #print("x = " + str(x))
