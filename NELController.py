@@ -18,7 +18,7 @@ class NELController:
             json_data = json.load(fd)
         self.results = []
         save_stdout = sys.stdout
-        sys.stdout = open('trash', 'w')
+        #sys.stdout = open('trash', 'w')
         self.NEMO = NEMO.NEMO(config_file)
         self.output_file = output_file
         self.NEMO.resetAlgorithmResults()
@@ -58,27 +58,41 @@ class NELController:
             r['Confusion_Matrix'] = []
             results.append(r)
             i = i+1
+        # kis = self.generateTraumaKI()
+        # for ki in self.kis:
+        #     r = {}
+        #     r['Classifier'] = ki
+        #     r['Name'] = ki.getName()
+        #     r['Accuracy'] = []
+        #     r['Precision'] = []
+        #     r['Recall'] = []
+        #     r['F1'] = []
+        #     r['Support'] = []
+        #     r['ROC'] = []
+        #     r['ROC_AUC'] = []
+        #     r['Confusion_Matrix'] = []
+        #     results.append(r)
         kf = KFold(n_splits=10)
         for train_index, test_index in kf.split(data_):
-            for results in results:
+            for result in results:
                 #split into test and training
                 #split into x and y
-                X,Y = results['Classifier'].kb.splitDataIntoXY()
+                X,Y = result['Classifier'].kb.splitDataIntoXY()
                 X_train, X_test = X.iloc[train_index], X.iloc[test_index]
                 y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
                 #train classifier
-                results['Classifier'].fit(X_train, y_train)
+                result['Classifier'].fit(X_train, y_train)
                 predict = results['Classifier'].predict(X_test)
-                results['Accuracy'].append(accuracy_score(y_test, predict))
+                result['Accuracy'].append(accuracy_score(y_test, predict))
                 # precision recall f1 support
-                results['Precision'].append(precision_score(y_test, predict))
-                results['Recall'].append(recall_score(y_test, predict))
-                results['F1'].append(f1_score(y_test, predict))
+                result['Precision'].append(precision_score(y_test, predict))
+                result['Recall'].append(recall_score(y_test, predict))
+                result['F1'].append(f1_score(y_test, predict))
                 prec,rec,f,sup = precision_recall_fscore_support(y_test, predict)
-                results['Support'].append(sup)# roc
-                results['ROC'].append(roc_curve(y_test, predict))
-                results['ROC_AUC'].append(roc_auc_score(y_test, predict))
-                results['Confusion_Matrix'].append(confusion_matrix(y_test, predict))
+                result['Support'].append(sup)# roc
+                result['ROC'].append(roc_curve(y_test, predict))
+                result['ROC_AUC'].append(roc_auc_score(y_test, predict))
+                result['Confusion_Matrix'].append(confusion_matrix(y_test, predict))
                 #get test error
                 #append to results for this algorithm
             results['Accuracy'] = numpy.mean(results['Accuracy'])
