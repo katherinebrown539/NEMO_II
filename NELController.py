@@ -399,7 +399,7 @@ class NELController:
             while(all_features.count(target) > 0):
                 all_features.remove(target)
             return(all_features,target)
-        else:
+        #else:
             #print("Invalid feature string")
 
 
