@@ -10,7 +10,8 @@ from sklearn.utils import shuffle
 import threading, sys, os, time, json, traceback, pandas, numpy
 import copy
 from ConstraintLanguage import ConstraintLanguage
-from sklearn.model_selection import KFold
+from sklearn.metrics import classification_report,confusion_matrix, accuracy_score, precision_score, f1_score, recall_score, precision_recall_fscore_support,roc_curve,roc_auc_score
+from sklearn.model_selection import train_test_split, KFold
 class NELController:
     def __init__(self, facts_file, config_file, output_file):
         with open(facts_file) as fd:
@@ -64,10 +65,10 @@ class NELController:
                 #split into x and y
                 X,Y = results['Classifier'].kb.splitDataIntoXY()
                 X_train, X_test = X.iloc[train_index], X.iloc[test_index]
-                y_train, y_test = y.iloc[train_index], y.iloc[test_index]
+                y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
                 #train classifier
                 results['Classifier'].fit(X_train, y_train)
-                predict = results.predict(X_test)
+                predict = results['Classifier'].predict(X_test)
                 results['Accuracy'].append(accuracy_score(y_test, predict))
                 # precision recall f1 support
                 results['Precision'].append(precision_score(y_test, predict))
@@ -173,8 +174,9 @@ class NELController:
         for blanket in self.blankets:
             if blanket['RIGHT_MEMBER'] in ['ISS16', 'NeedTC']:
                 c = blanket['RIGHT_MEMBER']
-                self.executeBlanket(blanket,c, clses_=kis)
-                self.executeBlanket(blanket,c, clses_=None)
+                kis.extend(self.executeBlanket(blanket,c, clses_=kis))
+                kis.extend(self.executeBlanket(blanket,c, clses_=None))
+        return kis
 
     def runORNLBlanketsInKI(self):
         lung_cls = []
