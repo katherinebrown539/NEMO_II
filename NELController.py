@@ -110,6 +110,9 @@ class NELController:
             i = 1
             for result in ki_res:
                 #result['Classifier'].fitLevel1Classifiers(X_train, y_train)
+                X,Y = result['Classifier'].kb.splitDataIntoXY()
+                X_train, X_test = X.iloc[train_index], X.iloc[test_index]
+                y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
                 result['Classifier'].fit(X_train, y_train)
                 predict = result['Classifier'].predict(X_test, y_test)
                 result['Accuracy'].append(accuracy_score(y_test, predict))
