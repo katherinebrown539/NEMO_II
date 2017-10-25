@@ -266,7 +266,7 @@ class KnowledgeBase:
 		#print("self.X = " + str(self.X))
 		#print("INDEX =  " + str(to_return.columns))
 		#print (to_return.head(20))
-		self.X = list(to_return.columns)
+		#self.X = list(to_return.columns)
 		#self.disconnect()
 		return to_return
 
@@ -283,14 +283,10 @@ class KnowledgeBase:
 		y = self.Y
 		while(x.count(y) > 0):
 			x.remove(y)
-		data = self.getData()
-		#print("x = " + str(x))
-		X = data[x]
-		#print("X:")
-		#print(X)
-		Y = data[[y]]
-		#print("Y:")
-		#print(Y)
+		stmt = "select " + ",".join(self.X ) + " from " + self.name
+		X =  pandas.read_sql_query(stmt, self.db)
+		stmt = "select " + self.Y + " from " + self.name
+		Y =  pandas.read_sql_query(stmt, self.db)
 		return(X,Y)
 
 	#DESTRUCTOR
