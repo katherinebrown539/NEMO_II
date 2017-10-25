@@ -33,7 +33,7 @@ class NELController:
         self.execute()
         sys.stdout = save_stdout
         # for r in self.results:
-        #     print(r)
+        #     #print(r)
         self.writeToCSV()
     #will need to generalize for other data sets......
     def runBlanketsInKI(self):
@@ -74,7 +74,7 @@ class NELController:
             r['Confusion_Matrix'] = []
             ki_res.append(r)
         kf = KFold(n_splits=10)
-        print("KI_RES = " + str(ki_res))
+        #print("KI_RES = " + str(ki_res))
         #return
         for train_index, test_index in kf.split(data_):
             for result in results:
@@ -142,13 +142,13 @@ class NELController:
                 line = r['Name']+","+str(r['Accuracy'])+","+str(r['Precision'])+","+str(r['Recall'])+","+str(r['F1'])+"\n"
                 f.write(line)
 
-    def printModel(self, model):
+    def #printModel(self, model):
         from sklearn import tree
         if model is not None:
-            print(str(type(model)))
+            #print(str(type(model)))
         dot_data = tree.export_graphviz(model, out_file=None)
         graph = graphviz.Source(dot_data)
-        graph.render("ModelPrintout")
+        graph.render("Model#printout")
 
     def runTraumaBlanketsInKI(self):
         kis = []
@@ -233,14 +233,14 @@ class NELController:
             if b['RIGHT_MEMBER'] == 'LUNG':
                 lung_blanket = b
                 for classifier in b['CLASSIFIERS_THAT_INFLUENCE']:
-                    print(classifier['Class'])
+                    #print(classifier['Class'])
                     if classifier['Class'] == 'LUNG':
                         lung_kb = classifier['Classifier'].kb
                         lung_classifiers.append(classifier['Classifier'])
                     elif b['RIGHT_MEMBER'] == 'BREAST':
                         breast_blanket = b
                         for classifier in b['CLASSIFIERS_THAT_INFLUENCE']:
-                            print(classifier['Class'])
+                            #print(classifier['Class'])
                             if classifier['Class'] == 'BREAST':
                                 breast_kb = classifier['Classifier'].kb
                                 breast_classifiers.append(classifier['Classifier'])
@@ -290,10 +290,10 @@ class NELController:
         right_members_that_exist = []
         for constraint in self.constraints:
             right_member = constraint['RIGHT_MEMBER']
-            #print("right_members_that_exist = " + str(right_members_that_exist))
-            #print("current right_member = " + str(right_member))
+            ##print("right_members_that_exist = " + str(right_members_that_exist))
+            ##print("current right_member = " + str(right_member))
             if right_member not in right_members_that_exist:
-                #print("not in")
+                ##print("not in")
                 blanket = {}
                 blanket['RIGHT_MEMBER'] = right_member
                 blanket['CLASSES_THAT_INFLUENCE'] = []
@@ -301,7 +301,7 @@ class NELController:
                 right_members_that_exist.append(right_member)
                 self.blankets.append(blanket)
         for constraint in self.constraints:
-            #print constraint
+            ##print constraint
             to_use = None
             for blanket in self.blankets:
                 if blanket['RIGHT_MEMBER'] == constraint['RIGHT_MEMBER']:
@@ -312,9 +312,9 @@ class NELController:
             for blanket in self.blankets:
                 if (classifier['Class'] in blanket['CLASSES_THAT_INFLUENCE']) or (classifier['Class'] == blanket['RIGHT_MEMBER']):
                     blanket['CLASSIFIERS_THAT_INFLUENCE'].append(classifier)
-        print ("BLANKETS:")
+        #print ("BLANKETS:")
         for b in self.blankets:
-            print (b)
+            #print (b)
 
     def createClassifiers(self, classifiers):
         for classifier in classifiers:
@@ -329,18 +329,18 @@ class NELController:
 
     def parseConstraints(self, constraint_data):
         #constraint_data = json_data['Constraints']
-        print(constraint_data)
+        #print(constraint_data)
         stuff = []
         for c in constraint_data:
             parser = ConstraintLanguage()
-            #print c
+            ##print c
             parsed = parser.parse(c['Relationship'])
-            #print parsed
+            ##print parsed
             stuff.append(parser.parse(c['Relationship']))
         self.constraints = stuff
 
     def createClassifier(self, class_dict):
-        #print (class_dict)
+        ##print (class_dict)
         classifier_name = class_dict['Classifier_Name']
         data_source = class_dict['Data_Source']
         algorithm = class_dict['Algorithm']
@@ -350,40 +350,40 @@ class NELController:
         kb = self.NEMO.getDataSourceFromName(data_source) #will need copy constructor for KnowledgeBase
         all_feats = kb.X
         all_feats.append(kb.Y)
-        #print("Got KB")
+        ##print("Got KB")
         x,y = self.parseFeatures(features, target, all_feats)
-        print(x)
-        print(y)
+        #print(x)
+        #print(y)
 
         new_kb = kb.copy() #WILL NEED TO FIX THIS!!
         #new_kb = kb
         new_kb.setNewXY(x,y)
         #new_kb.X = x
         #new_kb.Y = y
-        print("Algorithm: " + algorithm)
+        #print("Algorithm: " + algorithm)
         ml = ML_Controller.ML_Controller(new_kb, algorithm)
         #ml = AutoMLController.AutoMLController(new_kb, algorithm)
         ml.createModel()
         d =  {"Classifier_Name": classifier_name, "Class": target, "Classifier": ml}
-        #print d
+        ##print d
         return d
 
     def runModel(self, classifier):
         self.results.append(classifier.runModel())
     #update comment
     def parseFeatures(self, feature_string, target, all_features):
-        #print("Feature String: " + feature_string)
-        #print("Target: " + target)
+        ##print("Feature String: " + feature_string)
+        ##print("Target: " + target)
         if feature_string[0] == '{':
             #pre-specified features
-            #print("Case 1")
+            ##print("Case 1")
             feature_string = feature_string.strip('{}')
             features = feature_string.split(',')
-            print("Features: " + str(features))
-            print("Target: " + str(target))
+            #print("Features: " + str(features))
+            #print("Target: " + str(target))
             return(features,target)
         elif len(feature_string) >= 4 and feature_string[4] == '-':
-            #print("Case 2") #all minus case
+            ##print("Case 2") #all minus case
             feature_string = feature_string[6:]
             feature_string = feature_string.strip('{}')
             features = feature_string.split(',')
@@ -394,13 +394,13 @@ class NELController:
                     all_features.remove(f)
             return(all_features,target)
         elif feature_string == 'ALL':
-            #print("Case 3") #all features
-            #print(all_features.count(target))
+            ##print("Case 3") #all features
+            ##print(all_features.count(target))
             while(all_features.count(target) > 0):
                 all_features.remove(target)
             return(all_features,target)
         else:
-            print("Invalid feature string")
+            #print("Invalid feature string")
 
 
 def main():
