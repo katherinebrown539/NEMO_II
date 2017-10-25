@@ -117,17 +117,17 @@ class NELController:
             result['Recall'] = numpy.mean(result['Recall'])
             result['F1'] = numpy.mean(result['F1'])
             result['Support'] = numpy.mean(result['Support'])
-            #result['ROC'] = numpy.mean(result['ROC'])
             result['ROC_AUC'] = numpy.mean(result['ROC_AUC'])
-        # for result in ki_results:
-        #     result['Accuracy'] = numpy.mean(result['Accuracy'])
-        #     result['Precision'] = numpy.mean(result['Precision'])
-        #     result['Recall'] = numpy.mean(result['Recall'])
-        #     result['F1'] = numpy.mean(result['F1'])
-        #     result['Support'] = numpy.mean(result['Support'])
-        #     result['ROC'] = numpy.mean(result['ROC'])
-        #     result['ROC_AUC'] = numpy.mean(result['ROC_AUC'])
-        #     self.results.append(result)
+            
+        for result in ki_results:
+            result['Accuracy'] = numpy.mean(result['Accuracy'])
+            result['Precision'] = numpy.mean(result['Precision'])
+            result['Recall'] = numpy.mean(result['Recall'])
+            result['F1'] = numpy.mean(result['F1'])
+            result['Support'] = numpy.mean(result['Support'])
+            result['ROC'] = numpy.mean(result['ROC'])
+            result['ROC_AUC'] = numpy.mean(result['ROC_AUC'])
+            self.results.append(result)
         self.results = results
 
     def writeToCSV(self):

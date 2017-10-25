@@ -211,6 +211,9 @@ class AutoKnowledgeIntegrator:
         while(x.count(y) > 0):
             x.remove(y)
         #print("x = " + str(x))
+        columns = x
+        columns.append(y)
+        data.columns = columns
         X = data[x]
         #print("X:")
         #print(X)
