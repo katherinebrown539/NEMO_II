@@ -118,7 +118,7 @@ class NELController:
             result['F1'] = numpy.mean(result['F1'])
             result['Support'] = numpy.mean(result['Support'])
             result['ROC_AUC'] = numpy.mean(result['ROC_AUC'])
-            
+
         for result in ki_results:
             result['Accuracy'] = numpy.mean(result['Accuracy'])
             result['Precision'] = numpy.mean(result['Precision'])
@@ -214,8 +214,8 @@ class NELController:
         for blanket in self.blankets:
             if blanket['RIGHT_MEMBER'] in ['ISS16', 'NeedTC']:
                 c = blanket['RIGHT_MEMBER']
-                kis.extend(self.executeBlanket(blanket,c, clses_=kis))
-                kis.extend(self.executeBlanket(blanket,c, clses_=None))
+                kis.extend(self.executeBlanket(blanket,c, clses_=kis, exec_=False))
+                kis.extend(self.executeBlanket(blanket,c, clses_=None, exec_=False))
         return kis
 
     def runORNLBlanketsInKI(self):
