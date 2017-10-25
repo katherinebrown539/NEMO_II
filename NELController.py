@@ -41,6 +41,7 @@ class NELController:
         #self.runORNLBlanketsInKI()
 
     def execute(self):
+        print("in execute")
         results = []
         i = 0
         data_ = self.classifiers[0].get('Classifier').kb.getData()
@@ -59,6 +60,7 @@ class NELController:
             results.append(r)
             i = i+1
         kis = self.generateTraumaKI()
+        print("Generated KIs")
         ki_res = []
         for ki in kis:
             r = {}
@@ -77,7 +79,10 @@ class NELController:
         #print("KI_RES = " + str(ki_res))
         #return
         for train_index, test_index in kf.split(data_):
+            print("About to train level 1 models")
+            i = 1
             for result in results:
+
                 #split into test and training
                 #split into x and y
                 X,Y = result['Classifier'].kb.splitDataIntoXY()
@@ -98,21 +103,22 @@ class NELController:
                 result['Confusion_Matrix'].append(confusion_matrix(y_test, predict))
                 #get test error
                 #append to results for this algorithm
+                print("Trained model" + str(i))
 
-                for result in ki_res:
-                    result['Classifier'].fitLevel1Classifiers(X_train, y_train)
-                    result['Classifier'].fit(X_train, y_train)
-                    predict = result['Classifier'].predict(X_test)
-                    result['Accuracy'].append(accuracy_score(y_test, predict))
-                    # precision recall f1 support
-                    result['Precision'].append(precision_score(y_test, predict))
-                    result['Recall'].append(recall_score(y_test, predict))
-                    result['F1'].append(f1_score(y_test, predict))
-                    prec,rec,f,sup = precision_recall_fscore_support(y_test, predict)
-                    result['Support'].append(sup)# roc
-                    result['ROC'].append(roc_curve(y_test, predict))
-                    result['ROC_AUC'].append(roc_auc_score(y_test, predict))
-                    result['Confusion_Matrix'].append(confusion_matrix(y_test, predict))
+            for result in ki_res:
+                result['Classifier'].fitLevel1Classifiers(X_train, y_train)
+                result['Classifier'].fit(X_train, y_train)
+                predict = result['Classifier'].predict(X_test)
+                result['Accuracy'].append(accuracy_score(y_test, predict))
+                # precision recall f1 support
+                result['Precision'].append(precision_score(y_test, predict))
+                result['Recall'].append(recall_score(y_test, predict))
+                result['F1'].append(f1_score(y_test, predict))
+                prec,rec,f,sup = precision_recall_fscore_support(y_test, predict)
+                result['Support'].append(sup)# roc
+                result['ROC'].append(roc_curve(y_test, predict))
+                result['ROC_AUC'].append(roc_auc_score(y_test, predict))
+                result['Confusion_Matrix'].append(confusion_matrix(y_test, predict))
         for result in results:
             result['Accuracy'] = numpy.mean(result['Accuracy'])
             result['Precision'] = numpy.mean(result['Precision'])
