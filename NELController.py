@@ -44,6 +44,7 @@ class NELController:
         print("in execute")
         results = []
         i = 0
+        j = 1
         data_ = self.classifiers[0].get('Classifier').kb.getData()
         for classifier in self.classifiers:
             r = {}
@@ -79,7 +80,7 @@ class NELController:
         #print("KI_RES = " + str(ki_res))
         #return
         for train_index, test_index in kf.split(data_):
-            print("About to train level 1 models")
+            print("About to train level 1 models for iteration #" + j)
             i = 1
             for result in results:
 
@@ -106,7 +107,7 @@ class NELController:
                 print("Trained model" + str(i))
                 i = i+1
 
-            i = 0
+            i = 1
             for result in ki_res:
                 result['Classifier'].fitLevel1Classifiers(X_train, y_train)
                 result['Classifier'].fit(X_train, y_train)
@@ -131,7 +132,7 @@ class NELController:
             result['Support'] = numpy.mean(result['Support'])
             result['ROC_AUC'] = numpy.mean(result['ROC_AUC'])
 
-        for result in ki_results:
+        for result in ki_res:
             result['Accuracy'] = numpy.mean(result['Accuracy'])
             result['Precision'] = numpy.mean(result['Precision'])
             result['Recall'] = numpy.mean(result['Recall'])
@@ -141,7 +142,7 @@ class NELController:
             result['ROC_AUC'] = numpy.mean(result['ROC_AUC'])
             self.results.append(result)
         self.results = results
-
+        j = j+1
     def writeToCSV(self):
         #f = open(self.output_file, 'w')
         with open(self.output_file, "w") as f:
@@ -222,11 +223,11 @@ class NELController:
         kis.append(ki)
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier='Decision Tree', use_features=False)
         kis.append(ki)
-
+        stakced = kis
         for blanket in self.blankets:
             if blanket['RIGHT_MEMBER'] in ['ISS16', 'NeedTC']:
                 c = blanket['RIGHT_MEMBER']
-                #kis.extend(self.executeBlanket(blanket,c, clses_=kis, exec_=False))
+                #kis.extend(self.executeBlanket(blanket,c, clses_=stacked, exec_=False))
                 kis.extend(self.executeBlanket(blanket,c, clses_=None, exec_=False))
         return kis
 
