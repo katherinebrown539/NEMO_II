@@ -278,6 +278,7 @@ class KnowledgeBase:
 
 	def splitDataIntoXY(self):
 		data = self.getData()
+		print(data.head())
 		x = self.X
 		print(x)
 		y = self.Y
