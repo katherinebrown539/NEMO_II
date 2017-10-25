@@ -142,13 +142,13 @@ class NELController:
                 line = r['Name']+","+str(r['Accuracy'])+","+str(r['Precision'])+","+str(r['Recall'])+","+str(r['F1'])+"\n"
                 f.write(line)
 
-    def printModel(self, model):
-        from sklearn import tree
-        if model is not None:
-            #print(str(type(model)))
-        dot_data = tree.export_graphviz(model, out_file=None)
-        graph = graphviz.Source(dot_data)
-        graph.render("Model#printout")
+    # def printModel(self, model):
+    #     from sklearn import tree
+    #     if model is not None:
+    #         #print(str(type(model)))
+    #     dot_data = tree.export_graphviz(model, out_file=None)
+    #     graph = graphviz.Source(dot_data)
+    #     graph.render("Model#printout")
 
     def runTraumaBlanketsInKI(self):
         kis = []

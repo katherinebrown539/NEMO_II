@@ -12,7 +12,7 @@ import pandas, MySQLdb, threading, sys, os, time, random, numpy
 
 class AutoKnowledgeIntegrator:
     def __init__(self, kb, level1_classifiers, stacking_classifier=None, use_features=False):
-        #print("Init KI")
+        ##print("Init KI")
         self.kb = kb
         self.level1_classifiers = level1_classifiers
         if stacking_classifier is None or stacking_classifier == "Logistic Regression":
@@ -28,11 +28,11 @@ class AutoKnowledgeIntegrator:
         self.use_features = use_features
         self.data = self.kb.getData()
         self.name = self.kb.name + "_" + self.kb.Y + "_KI_"+stacking_classifier
-        #print("DATA")
-        #print(self.data)
+        ##print("DATA")
+        ##print(self.data)
 
     def testKI(self, k = 10, random_seed = None):
-        #print("In testKI...")
+        ##print("In testKI...")
         self.data = shuffle(self.data)
         self.data.index = list(range(len(self.data)))
         results = {}
@@ -65,7 +65,7 @@ class AutoKnowledgeIntegrator:
         results['Support'] = numpy.mean(results['Support'])
         results['ROC'] = numpy.mean(results['ROC'])
         results['ROC_AUC'] = numpy.mean(results['ROC_AUC'])
-        print(results)
+        #print(results)
         self.results = results
         return results
 
@@ -106,8 +106,8 @@ class AutoKnowledgeIntegrator:
         for classifier in self.level1_classifiers:
             predictions.append([])
         x.index = list(range(len(x)))
-        print("PREDICT METHOD X")
-        print(x)
+        #print("PREDICT METHOD X")
+        #print(x)
 
         i = 0
         for classifier in self.level1_classifiers:
@@ -121,8 +121,8 @@ class AutoKnowledgeIntegrator:
         predictions = pandas.DataFrame(predictions)
         predictions = predictions.transpose()
         predictions.columns = columns
-        print("PREDICTIONS:")
-        print(predictions)
+        #print("PREDICTIONS:")
+        #print(predictions)
         predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         stacking_predictions = self.stacking_classifier.predict(predictions_x)
         return stacking_predictions
@@ -138,7 +138,7 @@ class AutoKnowledgeIntegrator:
         #fit first stage models on k-1 folds
         x, y = self.splitDataIntoXY(train)
         for train_index, test_index in kf.split(train):
-            #print("TRAIN:", train_index, "TEST:", test_index)
+            ##print("TRAIN:", train_index, "TEST:", test_index)
             training, testing = train.iloc[train_index], train.iloc[test_index]
             train_x_train, train_y_train = self.splitDataIntoXY(training)
             train_x_test, test_y_test = self.splitDataIntoXY(testing)
@@ -159,16 +159,16 @@ class AutoKnowledgeIntegrator:
         predictions_y = y
 
         #rint("PREDICTIONS:")
-        #print(predictions)
+        ##print(predictions)
 
         #train stacker
         self.stacking_classifier.fit(predictions_x, predictions_y)
         #now predict holdout
         x, y = self.splitDataIntoXY(holdout)
-        # print("X for Holdout:")
-        # print(x)
-        # print("Y for Holdout:")
-        # print(y)
+        # #print("X for Holdout:")
+        # #print(x)
+        # #print("Y for Holdout:")
+        # #print(y)
 
         holdout_predictions = []
         for classifier in self.level1_classifiers:
@@ -182,8 +182,8 @@ class AutoKnowledgeIntegrator:
         holdout_predictions.columns = columns
         predictions_x = pandas.concat(objs=[x,holdout_predictions], axis=1)
         predictions_y = y
-        # print("PREDICTIONS_X:")
-        # print(predictions_x)
+        # #print("PREDICTIONS_X:")
+        # #print(predictions_x)
         stacking_predictions = self.stacking_classifier.predict(predictions_x)
         results = {}
         #GET RIGHT SCORES
@@ -198,7 +198,7 @@ class AutoKnowledgeIntegrator:
         results['ROC'] = roc_curve(y, stacking_predictions)
         results['ROC_AUC'] = roc_auc_score(y, stacking_predictions)
         results['Confusion_Matrix'] = confusion_matrix(y, stacking_predictions)
-        #sprint(results)
+        #s#print(results)
         return results
 
     def splitDataIntoXY(self, data):
@@ -206,15 +206,15 @@ class AutoKnowledgeIntegrator:
         y = self.kb.Y
         while(x.count(y) > 0):
             x.remove(y)
-        #print("x = " + str(x))
+        ##print("x = " + str(x))
         columns = x
         columns.append(y)
-        print(columns)
+        #print(columns)
         data.columns = columns
         X = data[x]
-        #print("X:")
-        #print(X)
+        ##print("X:")
+        ##print(X)
         Y = data[[y]]
-        #print("Y:")
-        #print(Y)
+        ##print("Y:")
+        ##print(Y)
         return(X,Y)
