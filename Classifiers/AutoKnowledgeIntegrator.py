@@ -123,6 +123,10 @@ class AutoKnowledgeIntegrator:
         predictions.columns = columns
         #print("PREDICTIONS:")
         #print(predictions)
+        output = pandas.concat(objs=[x,predictions,y], axis=1)
+        output_name = KI.name + "_" + random.randint(1,100)
+        #output->csv
+        output.to_csv("data/"+output_name)
         predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         stacking_predictions = self.stacking_classifier.predict(predictions_x)
         return stacking_predictions
