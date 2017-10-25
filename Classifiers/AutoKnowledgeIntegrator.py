@@ -97,13 +97,12 @@ class AutoKnowledgeIntegrator:
         predictions = pandas.DataFrame(predictions)
         predictions = predictions.transpose()
         predictions.columns = columns
-        output = pandas.concat(objs=[x,predictions,y], axis=1)
-        output_name = self.name + "_" + random.randint(1,100)
+
         predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         predictions_y = y
         self.stacking_classifier.fit(predictions_x, predictions_y)
 
-    def predict(self, x, k = 10, random_seed = None):
+    def predict(self, x, y = None k = 10, random_seed = None):
         predictions = []
         for classifier in self.level1_classifiers:
             predictions.append([])
@@ -125,8 +124,11 @@ class AutoKnowledgeIntegrator:
         predictions.columns = columns
         #print("PREDICTIONS:")
         #print(predictions)
+        if y is not None:
+            output = pandas.concat(objs=[x,predictions,y], axis=1)
+            output_name = self.name + "_" + str(random.randint(1,100)) + ".csv"
+            output.to_csv("test_data/"+output_name)
 
-        output.to_csv("data/"+output_name)
         predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         stacking_predictions = self.stacking_classifier.predict(predictions_x)
         return stacking_predictions
