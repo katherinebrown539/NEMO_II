@@ -213,6 +213,7 @@ class AutoKnowledgeIntegrator:
         #print("x = " + str(x))
         columns = x
         columns.append(y)
+        print(columns)
         data.columns = columns
         X = data[x]
         #print("X:")
