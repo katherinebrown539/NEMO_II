@@ -109,7 +109,7 @@ class NELController:
 
             i = 1
             for result in ki_res:
-                #result['Classifier'].fitLevel1Classifiers(X_train, y_train)
+                result['Classifier'].fitLevel1Classifiers(X_train, y_train)
                 X,Y = result['Classifier'].kb.splitDataIntoXY()
                 X_train, X_test = X.iloc[train_index], X.iloc[test_index]
                 y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
