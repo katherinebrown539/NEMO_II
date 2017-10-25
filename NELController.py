@@ -82,7 +82,7 @@ class NELController:
                 y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
                 #train classifier
                 result['Classifier'].fit(X_train, y_train)
-                predict = results['Classifier'].predict(X_test)
+                predict = result['Classifier'].predict(X_test)
                 result['Accuracy'].append(accuracy_score(y_test, predict))
                 # precision recall f1 support
                 result['Precision'].append(precision_score(y_test, predict))
@@ -339,7 +339,7 @@ class NELController:
         print("Algorithm: " + algorithm)
         ml = ML_Controller.ML_Controller(new_kb, algorithm)
         #ml = AutoMLController.AutoMLController(new_kb, algorithm)
-        ml.createModel()
+        #ml.createModel()
         d =  {"Classifier_Name": classifier_name, "Class": target, "Classifier": ml}
         #print d
         return d
