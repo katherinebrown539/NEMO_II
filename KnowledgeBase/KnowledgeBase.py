@@ -283,12 +283,14 @@ class KnowledgeBase:
 		while(x.count(y) > 0):
 			x.remove(y)
         #print("x = " + str(x))
-		X = data.iloc[x]
+		X = data[x]
 		print("X:")
 		print(X)
 		Y = data[[y]]
 		print("Y:")
 		print(Y)
+		X.index = list(range(len(X)))
+		Y.index = list(range(len(Y)))
 		return(X,Y)
 
 	#DESTRUCTOR
