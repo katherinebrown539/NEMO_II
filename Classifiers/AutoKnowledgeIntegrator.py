@@ -84,12 +84,10 @@ class AutoKnowledgeIntegrator:
         #fit first stage models on k-1 folds
         #x, y = self.splitDataIntoXY(train)
         i = 0
-        for train_index, test_index in kf.split(x):
-            #print("TRAIN:", train_index, "TEST:", test_index)
-            for classifier in self.level1_classifiers:
-                #classifier.fit(train_x_train, train_y_train)
-                predictions[i].extend(classifier.predict(x))
-                i = i+1
+        for classifier in self.level1_classifiers:
+            #classifier.fit(train_x_train, train_y_train)
+            predictions[i].extend(classifier.predict(x))
+            i = i+1
 
         columns = []
         for classifier in self.level1_classifiers:
