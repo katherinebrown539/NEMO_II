@@ -96,13 +96,13 @@ class NELController:
                 #get test error
                 #append to results for this algorithm
         for result in results:
-            results['Accuracy'] = numpy.mean(results['Accuracy'])
-            results['Precision'] = numpy.mean(results['Precision'])
-            results['Recall'] = numpy.mean(results['Recall'])
-            results['F1'] = numpy.mean(results['F1'])
-            results['Support'] = numpy.mean(results['Support'])
-            results['ROC'] = numpy.mean(results['ROC'])
-            results['ROC_AUC'] = numpy.mean(results['ROC_AUC'])
+            result['Accuracy'] = numpy.mean(results['Accuracy'])
+            result['Precision'] = numpy.mean(results['Precision'])
+            result['Recall'] = numpy.mean(results['Recall'])
+            result['F1'] = numpy.mean(results['F1'])
+            result['Support'] = numpy.mean(results['Support'])
+            result['ROC'] = numpy.mean(results['ROC'])
+            result['ROC_AUC'] = numpy.mean(results['ROC_AUC'])
         self.results = results
 
     def writeToCSV(self):
