@@ -279,7 +279,7 @@ class KnowledgeBase:
 		self.db.close()
 
 	def splitDataIntoXY(self):
-		x = self.X
+        x = self.X
         y = self.Y
         while(x.count(y) > 0):
             x.remove(y)
