@@ -297,11 +297,11 @@ class NELController:
             created_classifier = self.createClassifier(classifier)
             self.classifiers.append(created_classifier)
             #run classifiers
-            created_classifier['Classifier'].runAlgorithm()
-            created_classifier['Classifier'].updateDatabaseWithResults()
-            r = created_classifier['Classifier'].algorithm.results
-            r['Name'] = created_classifier['Classifier'].name
-            self.results.append(r)
+            # created_classifier['Classifier'].runAlgorithm()
+            # created_classifier['Classifier'].updateDatabaseWithResults()
+            # r = created_classifier['Classifier'].algorithm.results
+            # r['Name'] = created_classifier['Classifier'].name
+            # self.results.append(r)
 
     def parseConstraints(self, constraint_data):
         #constraint_data = json_data['Constraints']
