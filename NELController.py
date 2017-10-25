@@ -104,7 +104,9 @@ class NELController:
                 #get test error
                 #append to results for this algorithm
                 print("Trained model" + str(i))
+                i = i+1
 
+            i = 0
             for result in ki_res:
                 result['Classifier'].fitLevel1Classifiers(X_train, y_train)
                 result['Classifier'].fit(X_train, y_train)
@@ -119,6 +121,8 @@ class NELController:
                 result['ROC'].append(roc_curve(y_test, predict))
                 result['ROC_AUC'].append(roc_auc_score(y_test, predict))
                 result['Confusion_Matrix'].append(confusion_matrix(y_test, predict))
+                print("Trained model" + str(i))
+                i = i+1
         for result in results:
             result['Accuracy'] = numpy.mean(result['Accuracy'])
             result['Precision'] = numpy.mean(result['Precision'])
