@@ -283,10 +283,10 @@ class KnowledgeBase:
 		while(x.count(y) > 0):
 			x.remove(y)
         #print("x = " + str(x))
-		X = data.iloc[X]
+		X = data.iloc[x]
 		print("X:")
 		print(X)
-		Y = data[[Y]]
+		Y = data[[y]]
 		print("Y:")
 		print(Y)
 		return(X,Y)
