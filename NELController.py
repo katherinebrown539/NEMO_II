@@ -63,7 +63,7 @@ class NELController:
         for ki in kis:
             r = {}
             r['Classifier'] = ki
-            r['Name'] = ki.getName()
+            r['Name'] = ki.name
             r['Accuracy'] = []
             r['Precision'] = []
             r['Recall'] = []
