@@ -74,6 +74,8 @@ class NELController:
             r['Confusion_Matrix'] = []
             ki_res.append(r)
         kf = KFold(n_splits=10)
+        print(ki_res)
+        return
         for train_index, test_index in kf.split(data_):
             for result in results:
                 #split into test and training
