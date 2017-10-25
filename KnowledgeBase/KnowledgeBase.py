@@ -284,11 +284,11 @@ class KnowledgeBase:
 			x.remove(y)
         #print("x = " + str(x))
 		X = data.iloc[X]
-        print("X:")
-        print(X)
+		print("X:")
+		print(X)
 		Y = data[[Y]]
-        print("Y:")
-        print(Y)
+		print("Y:")
+		print(Y)
 		return(X,Y)
 
 	#DESTRUCTOR
