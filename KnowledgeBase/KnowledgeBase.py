@@ -256,6 +256,8 @@ class KnowledgeBase:
 		self.executeQuery(stmt)
 
 	def getData(self):
+		while(self.X.count(self.Y) > 0):
+			self.X.remove(self.Y)
 		#self.connect()
 		#stmt = "select * from " + self.name
 		stmt = "select " + ",".join(self.X ) + ", " + self.Y + " from " + self.name
@@ -283,11 +285,8 @@ class KnowledgeBase:
 		print(x)
 		y = self.Y
 		print(y)
-		print(len(x))
-		print(len(y))
 
-		while(x.count(y) > 0):
-			x.remove(y)
+
         #print("x = " + str(x))
 		X = data[x]
 		print("X:")
