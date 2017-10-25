@@ -279,15 +279,15 @@ class KnowledgeBase:
 		self.db.close()
 
 	def splitDataIntoXY(self):
-		data = self.getData()
-		print(data.head())
+		while(self.X.count(self.Y) > 0):
+			self.X.remove(self.Y)
 		x = self.X
 		print(x)
 		y = self.Y
 		print(y)
+		data = self.getData()
+		print(data.head())
 
-
-        #print("x = " + str(x))
 		X = data[x]
 		print("X:")
 		print(X)
