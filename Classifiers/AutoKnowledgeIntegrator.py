@@ -211,10 +211,10 @@ class AutoKnowledgeIntegrator:
         while(x.count(y) > 0):
             x.remove(y)
         #print("x = " + str(x))
-        X = data[self.kb.X]
+        X = data[x]
         #print("X:")
         #print(X)
-        Y = data[[self.kb.Y]]
+        Y = data[[y]]
         #print("Y:")
         #print(Y)
         return(X,Y)
