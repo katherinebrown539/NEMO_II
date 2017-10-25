@@ -47,7 +47,7 @@ class NELController:
         for classifier in self.classifiers:
             r = {}
             r['Classifier'] = classifier['Classifier']
-            r['Name'] = classifier['Classifier'].getName()
+            r['Name'] = classifier['Classifier'].getName()+"_"+classifier['Classifier'].kb.name
             r['Accuracy'] = []
             r['Precision'] = []
             r['Recall'] = []
@@ -58,21 +58,21 @@ class NELController:
             r['Confusion_Matrix'] = []
             results.append(r)
             i = i+1
-        # kis = self.generateTraumaKI()
-        #ki_res = []
-        # for ki in kis:
-        #     r = {}
-        #     r['Classifier'] = ki
-        #     r['Name'] = ki.getName()
-        #     r['Accuracy'] = []
-        #     r['Precision'] = []
-        #     r['Recall'] = []
-        #     r['F1'] = []
-        #     r['Support'] = []
-        #     r['ROC'] = []
-        #     r['ROC_AUC'] = []
-        #     r['Confusion_Matrix'] = []
-        #     ki_res.append(r)
+        kis = self.generateTraumaKI()
+        ki_res = []
+        for ki in kis:
+            r = {}
+            r['Classifier'] = ki
+            r['Name'] = ki.getName()
+            r['Accuracy'] = []
+            r['Precision'] = []
+            r['Recall'] = []
+            r['F1'] = []
+            r['Support'] = []
+            r['ROC'] = []
+            r['ROC_AUC'] = []
+            r['Confusion_Matrix'] = []
+            ki_res.append(r)
         kf = KFold(n_splits=10)
         for train_index, test_index in kf.split(data_):
             for result in results:
@@ -97,20 +97,20 @@ class NELController:
                 #get test error
                 #append to results for this algorithm
 
-                # for result in ki_res:
-                #     result['Classifier'].fitLevel1Classifiers(X_train, y_train)
-                #     result['Classifier'].fit(X_train, y_train)
-                #     predict = result['Classifier'].predict(X_test)
-                #     result['Accuracy'].append(accuracy_score(y_test, predict))
-                #     # precision recall f1 support
-                #     result['Precision'].append(precision_score(y_test, predict))
-                #     result['Recall'].append(recall_score(y_test, predict))
-                #     result['F1'].append(f1_score(y_test, predict))
-                #     prec,rec,f,sup = precision_recall_fscore_support(y_test, predict)
-                #     result['Support'].append(sup)# roc
-                #     result['ROC'].append(roc_curve(y_test, predict))
-                #     result['ROC_AUC'].append(roc_auc_score(y_test, predict))
-                #     result['Confusion_Matrix'].append(confusion_matrix(y_test, predict))
+                for result in ki_res:
+                    result['Classifier'].fitLevel1Classifiers(X_train, y_train)
+                    result['Classifier'].fit(X_train, y_train)
+                    predict = result['Classifier'].predict(X_test)
+                    result['Accuracy'].append(accuracy_score(y_test, predict))
+                    # precision recall f1 support
+                    result['Precision'].append(precision_score(y_test, predict))
+                    result['Recall'].append(recall_score(y_test, predict))
+                    result['F1'].append(f1_score(y_test, predict))
+                    prec,rec,f,sup = precision_recall_fscore_support(y_test, predict)
+                    result['Support'].append(sup)# roc
+                    result['ROC'].append(roc_curve(y_test, predict))
+                    result['ROC_AUC'].append(roc_auc_score(y_test, predict))
+                    result['Confusion_Matrix'].append(confusion_matrix(y_test, predict))
         for result in results:
             result['Accuracy'] = numpy.mean(result['Accuracy'])
             result['Precision'] = numpy.mean(result['Precision'])
