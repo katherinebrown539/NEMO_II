@@ -92,7 +92,9 @@ class AutoKnowledgeIntegrator:
         columns = []
         for classifier in self.level1_classifiers:
             columns.append(classifier.name)
-
+        #output->csv
+        output = pandas.concat(objs=[x,predictions,y], axis=1)
+        output_name = KI.name + "_" + random.randint(1,100)
         #out-of-folds <- first stage models predict kth fold
         predictions = pandas.DataFrame(predictions)
         predictions = predictions.transpose()
@@ -123,9 +125,7 @@ class AutoKnowledgeIntegrator:
         predictions.columns = columns
         #print("PREDICTIONS:")
         #print(predictions)
-        output = pandas.concat(objs=[x,predictions,y], axis=1)
-        output_name = KI.name + "_" + random.randint(1,100)
-        #output->csv
+
         output.to_csv("data/"+output_name)
         predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         stacking_predictions = self.stacking_classifier.predict(predictions_x)
