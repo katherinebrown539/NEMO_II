@@ -95,6 +95,7 @@ class NELController:
                 result['Confusion_Matrix'].append(confusion_matrix(y_test, predict))
                 #get test error
                 #append to results for this algorithm
+        for result in results:
             results['Accuracy'] = numpy.mean(results['Accuracy'])
             results['Precision'] = numpy.mean(results['Precision'])
             results['Recall'] = numpy.mean(results['Recall'])
@@ -102,7 +103,7 @@ class NELController:
             results['Support'] = numpy.mean(results['Support'])
             results['ROC'] = numpy.mean(results['ROC'])
             results['ROC_AUC'] = numpy.mean(results['ROC_AUC'])
-            self.results = results
+        self.results = results
 
     def writeToCSV(self):
         #f = open(self.output_file, 'w')
