@@ -62,7 +62,7 @@ class NELController:
             for results in results:
                 #split into test and training
                 #split into x and y
-                X,Y = results['Classifier'].kb.splitIntoXY()
+                X,Y = results['Classifier'].kb.splitDataIntoXY()
                 X_train, X_test = X[train_index], X[test_index]
                 y_train, y_test = y[train_index], y[test_index]
                 #train classifier
