@@ -44,16 +44,17 @@ class NELController:
         i = 0
         data_ = self.classifiers[0].get('Classifier').kb.getData()
         for classifier in self.classifiers:
-            results[i] = {}
-            results['Classifier'] = classifier
-            results['Accuracy'] = []
-            results['Precision'] = []
-            results['Recall'] = []
-            results['F1'] = []
-            results['Support'] = []
-            results['ROC'] = []
-            results['ROC_AUC'] = []
-            results['Confusion_Matrix'] = []
+            r = {}
+            r['Classifier'] = classifier
+            r['Accuracy'] = []
+            r['Precision'] = []
+            r['Recall'] = []
+            r['F1'] = []
+            r['Support'] = []
+            r['ROC'] = []
+            r['ROC_AUC'] = []
+            r['Confusion_Matrix'] = []
+            results.append(r)
             i = i+1
         for train_index, test_index in kf.split(data_):
             for results in results:
@@ -143,6 +144,8 @@ class NELController:
                 c = blanket['RIGHT_MEMBER']
                 self.executeBlanket(blanket,c, clses_=kis)
                 self.executeBlanket(blanket,c, clses_=None)
+
+    
 
     def runORNLBlanketsInKI(self):
         lung_cls = []
