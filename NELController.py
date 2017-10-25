@@ -339,7 +339,7 @@ class NELController:
         print("Algorithm: " + algorithm)
         ml = ML_Controller.ML_Controller(new_kb, algorithm)
         #ml = AutoMLController.AutoMLController(new_kb, algorithm)
-        #ml.createModel()
+        ml.createModel()
         d =  {"Classifier_Name": classifier_name, "Class": target, "Classifier": ml}
         #print d
         return d
