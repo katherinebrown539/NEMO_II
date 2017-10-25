@@ -102,7 +102,7 @@ class AutoKnowledgeIntegrator:
         predictions_y = y
         self.stacking_classifier.fit(predictions_x, predictions_y)
 
-    def predict(self, x, y = None k = 10, random_seed = None):
+    def predict(self, x, y = None, k = 10, random_seed = None):
         predictions = []
         for classifier in self.level1_classifiers:
             predictions.append([])
