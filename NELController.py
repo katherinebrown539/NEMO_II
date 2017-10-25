@@ -56,6 +56,7 @@ class NELController:
             r['Confusion_Matrix'] = []
             results.append(r)
             i = i+1
+        kf = KFold(n_splits=10)
         for train_index, test_index in kf.split(data_):
             for results in results:
                 #split into test and training
@@ -145,7 +146,33 @@ class NELController:
                 self.executeBlanket(blanket,c, clses_=kis)
                 self.executeBlanket(blanket,c, clses_=None)
 
-    
+    def generateTraumaKI(self):
+        kis = []
+        ed2or = []
+        icuadmit = []
+        earlydeath = []
+        #Get all classifiers that classify the same thing
+        for classifiers in self.classifiers:
+            if classifiers['Class'] == 'ED2OR':
+                #classifiers['Classifier'].runModel()
+                ed2or.append(classifiers['Classifier'])
+            elif classifiers['Class'] == 'ICUAdmit':
+                #classifiers['Classifier'].runModel()
+                icuadmit.append(classifiers['Classifier'])
+            elif classifiers['Class'] == 'EarlyDeath':
+                #classifiers['Classifier'].runModel()
+                earlydeath.append(classifiers['Classifier'])
+        ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier='Decision Tree', use_features=False)
+        kis.append(ki)
+        ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier='Decision Tree', use_features=False)
+        kis.append(ki)
+        ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier='Decision Tree', use_features=False)
+        kis.append(ki)
+        for blanket in self.blankets:
+            if blanket['RIGHT_MEMBER'] in ['ISS16', 'NeedTC']:
+                c = blanket['RIGHT_MEMBER']
+                self.executeBlanket(blanket,c, clses_=kis)
+                self.executeBlanket(blanket,c, clses_=None)
 
     def runORNLBlanketsInKI(self):
         lung_cls = []
