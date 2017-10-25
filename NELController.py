@@ -109,7 +109,7 @@ class NELController:
 
             i = 1
             for result in ki_res:
-                result['Classifier'].fitLevel1Classifiers(X_train, y_train)
+                #result['Classifier'].fitLevel1Classifiers(X_train, y_train)
                 result['Classifier'].fit(X_train, y_train)
                 predict = result['Classifier'].predict(X_test)
                 result['Accuracy'].append(accuracy_score(y_test, predict))
