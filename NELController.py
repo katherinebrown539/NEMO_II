@@ -10,7 +10,7 @@ from sklearn.utils import shuffle
 import threading, sys, os, time, json, traceback, pandas, numpy
 import copy
 from ConstraintLanguage import ConstraintLanguage
-
+from sklearn.model_selection import KFold
 class NELController:
     def __init__(self, facts_file, config_file, output_file):
         with open(facts_file) as fd:
@@ -28,15 +28,64 @@ class NELController:
         self.blankets = []
         self.parseConstraints(json_data['Constraints'])
         self.generateMarkovBlanket()
-        self.runBlanketsInKI()
+        #self.runBlanketsInKI()
+        self.execute()
         sys.stdout = save_stdout
-        for r in self.results:
-            print(r)
+        # for r in self.results:
+        #     print(r)
         self.writeToCSV()
     #will need to generalize for other data sets......
     def runBlanketsInKI(self):
         self.runTraumaBlanketsInKI()
         #self.runORNLBlanketsInKI()
+
+    def execute(self):
+        results = []
+        i = 0
+        data_ = self.classifiers[0].kb.getData()
+        for classifier in self.classifiers:
+            results[i] = {}
+            results['Classifier'] = classifier
+            results['Accuracy'] = []
+            results['Precision'] = []
+            results['Recall'] = []
+            results['F1'] = []
+            results['Support'] = []
+            results['ROC'] = []
+            results['ROC_AUC'] = []
+            results['Confusion_Matrix'] = []
+            i = i+1
+        for train_index, test_index in kf.split(data_):
+            for results in results:
+                #split into test and training
+                #split into x and y
+                X,Y = results['Classifier'].splitIntoXY()
+                X_train, X_test = X[train_index], X[test_index]
+                y_train, y_test = y[train_index], y[test_index]
+                #train classifier
+                results['Classifier'].fit(X_train, y_train)
+                predict = results.predict(X_test)
+                results['Accuracy'].append(accuracy_score(y_test, predict))
+                # precision recall f1 support
+                results['Precision'].append(precision_score(y_test, predict))
+                results['Recall'].append(recall_score(y_test, predict))
+                results['F1'].append(f1_score(y_test, predict))
+                prec,rec,f,sup = precision_recall_fscore_support(y_test, predict)
+                results['Support'].append(sup)# roc
+                results['ROC'].append(roc_curve(y_test, predict))
+                results['ROC_AUC'].append(roc_auc_score(y_test, predict))
+                results['Confusion_Matrix'].append(confusion_matrix(y_test, predict))
+                #get test error
+                #append to results for this algorithm
+            results['Accuracy'] = numpy.mean(results['Accuracy'])
+            results['Precision'] = numpy.mean(results['Precision'])
+            results['Recall'] = numpy.mean(results['Recall'])
+            results['F1'] = numpy.mean(results['F1'])
+            results['Support'] = numpy.mean(results['Support'])
+            results['ROC'] = numpy.mean(results['ROC'])
+            results['ROC_AUC'] = numpy.mean(results['ROC_AUC'])
+            self.results = results
+
     def writeToCSV(self):
         #f = open(self.output_file, 'w')
         with open(self.output_file, "w") as f:

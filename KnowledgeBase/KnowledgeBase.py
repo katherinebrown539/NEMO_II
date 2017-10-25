@@ -276,6 +276,21 @@ class KnowledgeBase:
 		self.db.commit()
 		self.db.close()
 
+	def splitDataIntoXY(self):
+		data = self.getData()
+        x = self.kb.X
+        y = self.kb.Y
+        while(x.count(y) > 0):
+            x.remove(y)
+        #print("x = " + str(x))
+        X = data[self.kb.X]
+        #print("X:")
+        #print(X)
+        Y = data[[self.kb.Y]]
+        #print("Y:")
+        #print(Y)
+        return(X,Y)
+
 	#DESTRUCTOR
 	#commits all changes to database and closes the connection
 	def __del__(self):
