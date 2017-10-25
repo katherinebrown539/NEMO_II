@@ -279,18 +279,18 @@ class KnowledgeBase:
 		self.db.close()
 
 	def splitDataIntoXY(self):
-        x = self.X
-        y = self.Y
-        while(x.count(y) > 0):
-            x.remove(y)
-        #print("x = " + str(x))
-        X = data[self.kb.X]
-        #print("X:")
-        #print(X)
-        Y = data[[self.kb.Y]]
-        #print("Y:")
-        #print(Y)
-        return(X,Y)
+		x = self.X
+		y = self.Y
+		while(x.count(y) > 0):
+			x.remove(y)
+		#print("x = " + str(x))
+		X = data[self.kb.X]
+		#print("X:")
+		#print(X)
+		Y = data[[self.kb.Y]]
+		#print("Y:")
+		#print(Y)
+		return(X,Y)
 
 	#DESTRUCTOR
 	#commits all changes to database and closes the connection
