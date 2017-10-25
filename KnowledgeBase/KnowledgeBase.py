@@ -282,13 +282,15 @@ class KnowledgeBase:
 		y = self.Y
 		print(len(x))
 		print(len(y))
+		if(len(self.Y) > 1):
+			y = self.Y[0]
 		while(x.count(y) > 0):
 			x.remove(y)
         #print("x = " + str(x))
 		X = data[x]
 		print("X:")
 		print(X)
-		Y = data[[y[0]]]
+		Y = data[[y]]
 		print("Y:")
 		print(Y)
 		X.index = list(range(len(X)))
