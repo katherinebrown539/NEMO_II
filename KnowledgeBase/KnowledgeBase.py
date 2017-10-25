@@ -288,7 +288,7 @@ class KnowledgeBase:
 		X = data[x]
 		print("X:")
 		print(X)
-		Y = data[[y]]
+		Y = data[[y[0]]]
 		print("Y:")
 		print(Y)
 		X.index = list(range(len(X)))
