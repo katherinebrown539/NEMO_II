@@ -80,7 +80,7 @@ class NELController:
         #print("KI_RES = " + str(ki_res))
         #return
         for train_index, test_index in kf.split(data_):
-            print("About to train level 1 models for iteration #" + j)
+            print("About to train level 1 models for iteration #" + str(j))
             i = 1
             for result in results:
 
@@ -124,6 +124,7 @@ class NELController:
                 result['Confusion_Matrix'].append(confusion_matrix(y_test, predict))
                 print("Trained model" + str(i))
                 i = i+1
+            j = j+1
         for result in results:
             result['Accuracy'] = numpy.mean(result['Accuracy'])
             result['Precision'] = numpy.mean(result['Precision'])
@@ -140,9 +141,9 @@ class NELController:
             result['Support'] = numpy.mean(result['Support'])
             result['ROC'] = numpy.mean(result['ROC'])
             result['ROC_AUC'] = numpy.mean(result['ROC_AUC'])
-            self.results.append(result)
+            results.append(result)
         self.results = results
-        j = j+1
+
     def writeToCSV(self):
         #f = open(self.output_file, 'w')
         with open(self.output_file, "w") as f:
