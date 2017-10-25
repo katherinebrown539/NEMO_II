@@ -290,7 +290,9 @@ class KnowledgeBase:
 		print("X:")
 		print(X)
 		Y = data[y]
-		Y = Y[0]
+		y = list(Y.columns.values)
+		y = y[0]
+		Y = Y[y]
 		print("Y:")
 		print(Y)
 		X.index = list(range(len(X)))
