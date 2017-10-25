@@ -47,7 +47,7 @@ class NELController:
         for classifier in self.classifiers:
             r = {}
             r['Classifier'] = classifier['Classifier']
-            r['Name'] = classifier['Classifier'].getName()+"_"+classifier['Classifier'].kb.name
+            r['Name'] = classifier['Classifier'].getName()+"_"+classifier['Classifier'].kb.Y
             r['Accuracy'] = []
             r['Precision'] = []
             r['Recall'] = []
