@@ -142,7 +142,7 @@ class NELController:
                 line = r['Name']+","+str(r['Accuracy'])+","+str(r['Precision'])+","+str(r['Recall'])+","+str(r['F1'])+"\n"
                 f.write(line)
 
-    def #printModel(self, model):
+    def printModel(self, model):
         from sklearn import tree
         if model is not None:
             #print(str(type(model)))
