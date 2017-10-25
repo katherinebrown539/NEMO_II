@@ -278,17 +278,17 @@ class KnowledgeBase:
 
 	def splitDataIntoXY(self):
 		data = self.getData()
-		x = self.kb.X
-		y = self.kb.Y
+		x = self.X
+		y = self.Y
 		while(x.count(y) > 0):
 			x.remove(y)
         #print("x = " + str(x))
-		X = data[self.kb.X]
-        #print("X:")
-        #print(X)
-		Y = data[[self.kb.Y]]
-        #print("Y:")
-        #print(Y)
+		X = data.iloc[X]
+        print("X:")
+        print(X)
+		Y = data[[Y]]
+        print("Y:")
+        print(Y)
 		return(X,Y)
 
 	#DESTRUCTOR
