@@ -125,6 +125,7 @@ class AutoKnowledgeIntegrator:
         #print("PREDICTIONS:")
         #print(predictions)
         if y is not None:
+            print("Y" + str(y))
             output = pandas.concat(objs=[x,predictions,y], axis=1)
             output_name = self.name + "_" + str(random.randint(1,100)) + ".csv"
             output.to_csv("test_data/"+output_name)
