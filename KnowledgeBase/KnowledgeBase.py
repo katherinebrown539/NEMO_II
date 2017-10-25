@@ -283,11 +283,12 @@ class KnowledgeBase:
 		y = self.Y
 		while(x.count(y) > 0):
 			x.remove(y)
+		data = self.getData()
 		#print("x = " + str(x))
-		X = data[self.kb.X]
+		X = data[x]
 		#print("X:")
 		#print(X)
-		Y = data[[self.kb.Y]]
+		Y = data[[y]]
 		#print("Y:")
 		#print(Y)
 		return(X,Y)
