@@ -42,7 +42,7 @@ class NELController:
     def execute(self):
         results = []
         i = 0
-        data_ = self.classifiers[0].kb.getData()
+        data_ = self.classifiers[0].get('Classifier').kb.getData()
         for classifier in self.classifiers:
             results[i] = {}
             results['Classifier'] = classifier
