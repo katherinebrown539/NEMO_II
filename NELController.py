@@ -84,6 +84,7 @@ class NELController:
             print("About to train level 1 models for iteration #" + str(j))
             i = 1
             for result in results:
+                print(result['Classifier'].name)
                 X,Y = result['Classifier'].kb.splitDataIntoXY()
                 self.updateResult(result, X,Y, train_index, test_index)
                 print("Trained model" + str(i))
@@ -104,9 +105,6 @@ class NELController:
                 print("Trained model" + str(i))
                 i = i+1
             j = j+1
-
-
-
 
         for result in results:
             result['Accuracy'] = numpy.mean(result['Accuracy'])
