@@ -40,7 +40,7 @@ class NELControllerv2:
         data_ = self.classifiers[0].get('Classifier').kb.getData()
         j = 1
         for train_index, test_index in kf.split(data_):
-            print("Beginning iteration ": str(j))
+            print("Beginning iteration :"+ str(j))
             i = 1
             for classifier in self.classifiers:
                 print(classifier['Classifier'].name)
