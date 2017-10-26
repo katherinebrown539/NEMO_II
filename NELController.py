@@ -152,12 +152,12 @@ class NELController:
         result['Confusion_Matrix'].append(confusion_matrix(y_test, predict))
         if result['Classifier'].name == "TRAUMA_TRIAGE_ISS16_KI_Decision_TREE":
             self.printModel(result['Classifier'].ki.stacking_classifier,"TRAUMA_TRIAGE_ISS16_KI_Decision Tree")
-        if result['Classifier'].name == "Decision Tree_ISS16:
+        if result['Classifier'].name == "Decision Tree_ISS16":
             self.printModel(result['Classifier'].ki.stacking_classifier, "Decision Tree_ISS16")
 
     def printModel(self, model, name):
         from sklearn import tree
-        if model is not None:
+        #if model is not None:
             #print(str(type(model)))
         dot_data = tree.export_graphviz(model, out_file=None)
         graph = graphviz.Source(dot_data)
