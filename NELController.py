@@ -135,8 +135,8 @@ class NELController:
         X_train, X_test = X.iloc[train_index], X.iloc[test_index]
         y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
         #train classifier
-        result['Classifier'].get('Clasifier').fit(X_train, y_train)
-        predict = result['Classifier'].get('Classifier').predict(X_test)
+        result['Classifier'].fit(X_train, y_train)
+        predict = result['Classifier'].predict(X_test)
         result['Accuracy'].append(accuracy_score(y_test, predict))
         # precision recall f1 support
         result['Precision'].append(precision_score(y_test, predict))
@@ -147,7 +147,7 @@ class NELController:
         result['ROC'].append(roc_curve(y_test, predict))
         result['ROC_AUC'].append(roc_auc_score(y_test, predict))
         result['Confusion_Matrix'].append(confusion_matrix(y_test, predict))
-    
+
     # def printModel(self, model):
     #     from sklearn import tree
     #     if model is not None:
