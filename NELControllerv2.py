@@ -45,7 +45,7 @@ class NELControllerv2:
             for classifier in self.classifiers:
                 print(classifier['Classifier'].name)
                 X,Y = classifier['Classifier'].kb.splitDataIntoXY()
-                self.updateResult(result, X,Y, train_index, test_index)
+                classifier = self.updateResult(classifier, X,Y, train_index, test_index)
                 print("Trained model" + str(i))
                 i = i+1
         self.results = []
@@ -58,6 +58,7 @@ class NELControllerv2:
             result['Support'] = numpy.mean(result['Support'])
             result['ROC_AUC'] = numpy.mean(result['ROC_AUC'])
             self.results(result)
+            return classifier
 
     def updateResult(self, classifier, X,Y,train_index,test_index):
         X,Y = classifier['Classifier'].kb.splitDataIntoXY()
