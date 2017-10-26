@@ -29,11 +29,8 @@ class NELControllerv2:
         self.blankets = []
         self.parseConstraints(json_data['Constraints'])
         self.generateMarkovBlanket()
-        #self.runBlanketsInKI()
         self.execute()
         sys.stdout = save_stdout
-        # for r in self.results:
-        #     #print(r)
         self.writeToCSV()
     #will need to generalize for other data sets......
 
@@ -51,6 +48,16 @@ class NELControllerv2:
                 self.updateResult(result, X,Y, train_index, test_index)
                 print("Trained model" + str(i))
                 i = i+1
+        self.results = []
+        for classifier in classifiers:
+            result = classifier['Results']
+            result['Accuracy'] = numpy.mean(result['Accuracy'])
+            result['Precision'] = numpy.mean(result['Precision'])
+            result['Recall'] = numpy.mean(result['Recall'])
+            result['F1'] = numpy.mean(result['F1'])
+            result['Support'] = numpy.mean(result['Support'])
+            result['ROC_AUC'] = numpy.mean(result['ROC_AUC'])
+            self.results(result)
 
     def updateResult(self, classifier, X,Y,train_index,test_index):
         X,Y = classifier['Classifier'].kb.splitDataIntoXY()
