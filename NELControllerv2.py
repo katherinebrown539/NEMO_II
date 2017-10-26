@@ -70,7 +70,7 @@ class NELControllerv2:
         classifier['Results'].get('Accuracy').append(accuracy_score(y_test, predict))
         classifier['Results'].get('Precision').append(precision_score(y_test, predict))
         classifier['Results'].get('Recall').append(recall_score(y_test, predict))
-        classifer['Results'].get('F1').append(f1_score(y_test, predict))
+        classifier['Results'].get('F1').append(f1_score(y_test, predict))
         prec,rec,f,sup = precision_recall_fscore_support(y_test, predict)
         classifier['Results'].get('Support').append(sup)
         classifier['Results'].get('ROC').append(roc_curve(y_test, predict))
