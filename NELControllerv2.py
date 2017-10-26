@@ -57,6 +57,7 @@ class NELControllerv2:
             kis = self.generateTraumaKI()
             for ki in self.kis:
                 #find the updated KI
+                print(ki)
                 for ki_ in kis:
                     if(ki['Classifier_Name'] == ki_.name):
                         #add it to the set of all KIs
