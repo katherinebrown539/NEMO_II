@@ -88,7 +88,7 @@ class NELController:
                 self.updateResult(result, X,Y, train_index, test_index)
                 print("Trained model" + str(i))
                 i = i+1
-                classifiers.append({"Classifier_Name": results['Classifier'].name, "Class": results['Classifier'].kb.Y, "Classifier": results['Classifier']})
+                classifiers.append({"Classifier_Name": result['Classifier'].name, "Class": result['Classifier'].kb.Y, "Classifier": result['Classifier']})
             i = 1
             self.classifiers = classifiers
             #rebuild trauma ki
@@ -97,7 +97,7 @@ class NELController:
                 #replace ki in result
                 for ki in kis:
                     if ki.name == results['Classifier'].name:
-                        print ki.name
+                        print(ki.name)
                         results['Classifier'] = ki
                 X,Y = result['Classifier'].kb.splitDataIntoXY()
                 self.updateResult(result, X,Y, train_index, test_index)
