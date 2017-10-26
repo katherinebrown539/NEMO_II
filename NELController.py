@@ -86,6 +86,7 @@ class NELController:
             print("About to train level 1 models for iteration #" + str(j))
             i = 1
             for result in results:
+                X,Y = result['Classifier'].kb.splitDataIntoXY()
                 self.updateResult(result, X,Y, train_index, test_index)
                 print("Trained model" + str(i))
                 i = i+1
@@ -129,7 +130,24 @@ class NELController:
                 line = r['Name']+","+str(r['Accuracy'])+","+str(r['Precision'])+","+str(r['Recall'])+","+str(r['F1'])+"\n"
                 f.write(line)
 
-    def updateResult(self, result, X,Y, train_index, test_index):
+    def updateResultBase(self, result, X,Y, train_index, test_index):
+        X,Y = result['Classifier'].kb.splitDataIntoXY()
+        X_train, X_test = X.iloc[train_index], X.iloc[test_index]
+        y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
+        #train classifier
+        result['Classifier'].get('Clasifier').fit(X_train, y_train)
+        predict = result['Classifier'].get('Classifier').predict(X_test)
+        result['Accuracy'].append(accuracy_score(y_test, predict))
+        # precision recall f1 support
+        result['Precision'].append(precision_score(y_test, predict))
+        result['Recall'].append(recall_score(y_test, predict))
+        result['F1'].append(f1_score(y_test, predict))
+        prec,rec,f,sup = precision_recall_fscore_support(y_test, predict)
+        result['Support'].append(sup)# roc
+        result['ROC'].append(roc_curve(y_test, predict))
+        result['ROC_AUC'].append(roc_auc_score(y_test, predict))
+        result['Confusion_Matrix'].append(confusion_matrix(y_test, predict))
+    def updateResultKI(self, result, X,Y, train_index, test_index):
         X,Y = result['Classifier'].kb.splitDataIntoXY()
         X_train, X_test = X.iloc[train_index], X.iloc[test_index]
         y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
@@ -194,13 +212,15 @@ class NELController:
                 #self.executeBlanket(blanket,c, clses_=kis)
                 self.executeBlanket(blanket,c, clses_=None)
 
-    def generateTraumaKI(self):
+    def generateTraumaKI(self, classifiers = None):
         kis = []
         ed2or = []
         icuadmit = []
         earlydeath = []
         #Get all classifiers that classify the same thing
-        for classifiers in self.classifiers:
+        if classifiers is None:
+            classifiers = self.classifiers
+        for classifiers in classifiers:
             if classifiers['Class'] == 'ED2OR':
                 #classifiers['Classifier'].runModel()
                 ed2or.append(classifiers['Classifier'])
