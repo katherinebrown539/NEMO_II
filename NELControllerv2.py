@@ -80,7 +80,7 @@ class NELControllerv2:
         if classifier['Classifier'].name == "TRAUMA_TRIAGE_ISS16_KI_Decision Tree":
             self.printModel(classifier['Classifier'].stacking_classifier,"TRAUMA_TRIAGE_ISS16_KI_Decision Tree")
         if classifier['Classifier'].name == "TRAUMA_TRIAGE_Decision Tree_ISS16":
-            self.printModel(classifier['Classifier'].tree, "TRAUMA_TRIAGE_Decision Tree_ISS16")
+            self.printModel(classifier['Classifier'].algorithm.tree, "TRAUMA_TRIAGE_Decision Tree_ISS16")
 
     def printModel(self, model, name):
         from sklearn import tree
@@ -126,6 +126,73 @@ class NELControllerv2:
             for blanket in self.blankets:
                 if (classifier['Class'] in blanket['CLASSES_THAT_INFLUENCE']) or (classifier['Class'] == blanket['RIGHT_MEMBER']):
                     blanket['CLASSIFIERS_THAT_INFLUENCE'].append(classifier)
+
+
+    def generateTraumaKI(self, classifiers = None):
+        kis = []
+        ed2or = []
+        icuadmit = []
+        earlydeath = []
+        #Get all classifiers that classify the same thing
+        if classifiers is None:
+            classifiers = self.classifiers
+        for classifiers in classifiers:
+            if classifiers['Class'] == 'ED2OR':
+                #classifiers['Classifier'].runModel()
+                ed2or.append(classifiers['Classifier'])
+            elif classifiers['Class'] == 'ICUAdmit':
+                #classifiers['Classifier'].runModel()
+                icuadmit.append(classifiers['Classifier'])
+            elif classifiers['Class'] == 'EarlyDeath':
+                #classifiers['Classifier'].runModel()
+                earlydeath.append(classifiers['Classifier'])
+        ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier='Decision Tree', use_features=False)
+        kis.append(ki)
+
+        ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier='Decision Tree', use_features=False)
+        kis.append(ki)
+
+        ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier='Decision Tree', use_features=False)
+
+        kis.append(ki)
+        stacked = kis
+        blanket_kis = []
+        for blanket in self.blankets:
+            if blanket['RIGHT_MEMBER'] in ['ISS16', 'NeedTC']:
+                c = blanket['RIGHT_MEMBER']
+                #blanket_kis.extend(self.executeBlanket(blanket,c, clses_=stacked, exec_=False))
+                blanket_kis.extend(self.executeBlanket(blanket,c, clses_=None, exec_=False))
+        kis.extend(blanket_kis)
+        return kis
+
+    def executeBlanket(self, blanket, class_, clses_=None, exec_=True):
+        kis = []
+        kb = None
+        if clses_ is None:
+            clses = []
+        else:
+            clses = clses_
+        results = []
+        num_folds = 10
+        random_seed = 0
+        for classifier in blanket['CLASSIFIERS_THAT_INFLUENCE']:
+            if classifier['Class'] == class_:
+                kb = classifier['Classifier'].kb
+            if clses_ is None:
+                clses.append(classifier['Classifier'])
+
+        KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(kb, clses, stacking_classifier='Decision Tree', use_features=False)
+        kis.append(KI)
+        KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(kb, clses, stacking_classifier='Logistic Regression', use_features=False)
+        kis.append(KI)
+        for KI in kis:
+            if(clses_ is not None):
+                KI.name = KI.name + "_usingStackers"
+            if exec_:
+                r = KI.testKI(k = 10, random_seed = random_seed)
+                self.results.append(r)
+        return kis
+
 
 
     def createClassifiers(self, classifiers):
