@@ -92,7 +92,7 @@ class NELController:
             i = 1
             self.classifiers = classifiers
             #rebuild trauma ki
-            kis = self.generateTraumaKI()
+            kis = self.generateTraumaKI(train_index, test_index)
             for result in ki_res:
                 #replace ki in result
                 for ki in kis:
@@ -245,7 +245,7 @@ class NELController:
         for blanket in self.blankets:
             if blanket['RIGHT_MEMBER'] in ['ISS16', 'NeedTC']:
                 c = blanket['RIGHT_MEMBER']
-                #blanket_kis.extend(self.executeBlanket(blanket,c, clses_=stacked, exec_=False))
+                blanket_kis.extend(self.executeBlanket(blanket,c, clses_=stacked, exec_=False))
                 blanket_kis.extend(self.executeBlanket(blanket,c, clses_=None, exec_=False))
         # for k in blanket_kis:
         #     k.fit(x,y)
