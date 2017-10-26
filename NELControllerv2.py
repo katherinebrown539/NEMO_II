@@ -77,7 +77,6 @@ class NELControllerv2:
             result['Support'] = numpy.mean(result['Support'])
             result['ROC_AUC'] = numpy.mean(result['ROC_AUC'])
             self.results.append(result)
-            return classifier
 
     def generateKIs(self, kis):
         self.kis = []
