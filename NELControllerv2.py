@@ -68,6 +68,7 @@ class NELControllerv2:
             j = j+1
         self.results = []
         for classifier in self.classifiers:
+            print(classifier['Classifier_Name'])
             result = classifier['Results']
             result['Accuracy'] = numpy.mean(result['Accuracy'])
             result['Precision'] = numpy.mean(result['Precision'])
