@@ -139,11 +139,7 @@ class NELController:
         X,Y = result['Classifier'].kb.splitDataIntoXY()
         X_train, X_test = X.iloc[train_index], X.iloc[test_index]
         y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
-        #train classifier
-        # print("In update result")
-        # print(result['Classifier'].name)
-        # print("X: " + str(list(X_train.columns.values)))
-        # print("Y: " + str(list(y_train.columns.values)))
+
         result['Classifier'].fit(X_train, y_train)
         predict = result['Classifier'].predict(X_test)
         result['Accuracy'].append(accuracy_score(y_test, predict))
@@ -157,9 +153,9 @@ class NELController:
         result['ROC_AUC'].append(roc_auc_score(y_test, predict))
         result['Confusion_Matrix'].append(confusion_matrix(y_test, predict))
         if result['Classifier'].name == "TRAUMA_TRIAGE_ISS16_KI_Decision Tree":
-            self.printModel(result['Classifier'].ki.stacking_classifier,"TRAUMA_TRIAGE_ISS16_KI_Decision Tree")
+            self.printModel(result['Classifier'].stacking_classifier,"TRAUMA_TRIAGE_ISS16_KI_Decision Tree")
         if result['Classifier'].name == "Decision Tree_ISS16":
-            self.printModel(result['Classifier'].ki.stacking_classifier, "TRAUMA_TRIAGE_Decision Tree_ISS16")
+            self.printModel(result['Classifier'].stacking_classifier, "TRAUMA_TRIAGE_Decision Tree_ISS16")
 
     def printModel(self, model, name):
         from sklearn import tree
