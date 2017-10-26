@@ -39,10 +39,10 @@ class NELControllerv2:
         kf = KFold(n_splits=10)
         data_ = self.classifiers[0].get('Classifier').kb.getData()
         j = 1
-        #kis = self.generateTraumaKI()
+        kis = self.generateTraumaKI()
 
         for train_index, test_index in kf.split(data_):
-            print("Beginning iteration :"+ str(j))
+            print("Beginning iteration: "+ str(j))
             i = 1
             for classifier in self.classifiers:
                 print(classifier['Classifier'].name)
@@ -54,8 +54,19 @@ class NELControllerv2:
                 classifier = self.updateResult(classifier,predict, y_test)
                 print("Trained model" + str(i))
                 i = i+1
+            kis = self.generateTraumaKI()
+            for ki in self.kis:
+                #find the updated KI
+                for ki_ in kis:
+                    if(ki['Classifier_Name'] == ki_.name):
+                        #add it to the set of all KIs
+                        print("Training: " + ki_.name)
+                        ki['Classifier'] = ki_
+                #run CV step
+                #update results
+            j = j+1
         self.results = []
-        for classifier in classifiers:
+        for classifier in self.classifiers:
             result = classifier['Results']
             result['Accuracy'] = numpy.mean(result['Accuracy'])
             result['Precision'] = numpy.mean(result['Precision'])
@@ -63,7 +74,7 @@ class NELControllerv2:
             result['F1'] = numpy.mean(result['F1'])
             result['Support'] = numpy.mean(result['Support'])
             result['ROC_AUC'] = numpy.mean(result['ROC_AUC'])
-            self.results(result)
+            self.results.append(result)
             return classifier
 
     def generateKIs(self, kis):
