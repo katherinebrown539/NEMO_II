@@ -78,9 +78,9 @@ class NELControllerv2:
         classifier['Results'].get('Confusion_Matrix').append(confusion_matrix(y_test, predict))
 
         if classifier['Classifier'].name == "TRAUMA_TRIAGE_ISS16_KI_Decision Tree":
-            self.printModel(result['Classifier'].ki.stacking_classifier,"TRAUMA_TRIAGE_ISS16_KI_Decision Tree")
+            self.printModel(classifier['Classifier'].stacking_classifier,"TRAUMA_TRIAGE_ISS16_KI_Decision Tree")
         if classifier['Classifier'].name == "TRAUMA_TRIAGE_Decision Tree_ISS16":
-            self.printModel(result['Classifier'].ki.stacking_classifier, "TRAUMA_TRIAGE_Decision Tree_ISS16")
+            self.printModel(result['Classifier'].tree, "TRAUMA_TRIAGE_Decision Tree_ISS16")
 
     def printModel(self, model, name):
         from sklearn import tree
