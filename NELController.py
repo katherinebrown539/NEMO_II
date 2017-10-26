@@ -60,7 +60,7 @@ class NELController:
             r['Confusion_Matrix'] = []
             results.append(r)
             i = i+1
-        kis = self.generateTraumaKI()
+        #kis = self.generateTraumaKI()
         print("Generated KIs")
         ki_res = []
         for ki in kis:
@@ -83,7 +83,6 @@ class NELController:
             print("About to train level 1 models for iteration #" + str(j))
             i = 1
             for result in results:
-
                 #split into test and training
                 #split into x and y
                 X,Y = result['Classifier'].kb.splitDataIntoXY()
@@ -108,8 +107,12 @@ class NELController:
                 i = i+1
 
             i = 1
+            #rebuild trauma ki with fitting
+            #kis = self.rebuild
             for result in ki_res:
-                #result['Classifier'].fitLevel1Classifiers(X_train, y_train)
+
+                #replace ki in result
+                for b in
                 X,Y = result['Classifier'].kb.splitDataIntoXY()
                 X_train, X_test = X.iloc[train_index], X.iloc[test_index]
                 y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
@@ -228,11 +231,15 @@ class NELController:
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier='Decision Tree', use_features=False)
         kis.append(ki)
         stacked = kis
+        blanket_kis = []
         for blanket in self.blankets:
             if blanket['RIGHT_MEMBER'] in ['ISS16', 'NeedTC']:
                 c = blanket['RIGHT_MEMBER']
-                #kis.extend(self.executeBlanket(blanket,c, clses_=stacked, exec_=False))
-                kis.extend(self.executeBlanket(blanket,c, clses_=None, exec_=False))
+                blanket_kis.extend(self.executeBlanket(blanket,c, clses_=stacked, exec_=False))
+                blanket_kis.extend(self.executeBlanket(blanket,c, clses_=None, exec_=False))
+        # for k in blanket_kis:
+        #     k.fit(x,y)
+        kis.extend(blanket_kis)
         return kis
 
     def runORNLBlanketsInKI(self):

@@ -76,11 +76,12 @@ class AutoKnowledgeIntegrator:
     def fit(self, x, y, k = 10, random_seed= None):
         predictions = []
         for classifier in self.level1_classifiers:
+            print("Fitting " + classifier.name)
+            classifier.fit(x,y)
             predictions.append([])
         x.index = list(range(len(x)))
         #shuffle data, will do this later
         #split training data into k folds
-        kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)#will shuffle data manually above
         #fit first stage models on k-1 folds
         #x, y = self.splitDataIntoXY(train)
         i = 0
