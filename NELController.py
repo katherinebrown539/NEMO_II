@@ -80,9 +80,7 @@ class NELController:
         #print("KI_RES = " + str(ki_res))
         #return
         for train_index, test_index in kf.split(data_):
-            ed2or = []
-            icu = []
-            earlydeath = []
+            classifiers = []
             print("About to train level 1 models for iteration #" + str(j))
             i = 1
             for result in results:
@@ -90,12 +88,17 @@ class NELController:
                 self.updateResult(result, X,Y, train_index, test_index)
                 print("Trained model" + str(i))
                 i = i+1
-
+                classifiers.append({"Classifier_Name": results['Classifier'].name, "Class": results['Classifier'].kb.Y, "Classifier": results['Classifier']})
             i = 1
-            #rebuild trauma ki with fitting
-            #kis = self.rebuild
+            self.classifiers = classifiers
+            #rebuild trauma ki
+            kis = self.generateTraumaKI()
             for result in ki_res:
                 #replace ki in result
+                for ki in kis:
+                    if ki.name == results['Classifier'].name:
+                        print ki.name
+                        results['Classifier'] = ki
                 X,Y = result['Classifier'].kb.splitDataIntoXY()
                 self.updateResult(result, X,Y, train_index, test_index)
                 print("Trained model" + str(i))
