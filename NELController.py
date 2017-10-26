@@ -96,9 +96,9 @@ class NELController:
             for result in ki_res:
                 #replace ki in result
                 for ki in kis:
-                    if ki.name == results['Classifier'].name:
+                    if ki.name == result['Classifier'].name:
                         print(ki.name)
-                        results['Classifier'] = ki
+                        result['Classifier'] = ki
                 X,Y = result['Classifier'].kb.splitDataIntoXY()
                 self.updateResult(result, X,Y, train_index, test_index)
                 print("Trained model" + str(i))
@@ -199,7 +199,7 @@ class NELController:
                 #self.executeBlanket(blanket,c, clses_=kis)
                 self.executeBlanket(blanket,c, clses_=None)
 
-    def generateTraumaKI(self, classifiers = None):
+    def generateTraumaKI(self, classifiers = None, train_index = None, test_index = None):
         kis = []
         ed2or = []
         icuadmit = []
@@ -218,10 +218,27 @@ class NELController:
                 #classifiers['Classifier'].runModel()
                 earlydeath.append(classifiers['Classifier'])
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier='Decision Tree', use_features=False)
+        if train_index is None or test_index is None:
+            X,Y = ki.kb.splitDataIntoXY()
+            X_train, X_test = X.iloc[train_index], X.iloc[test_index]
+            y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
+            ki.fit(X_train, y_train)
+            ki.fit()
         kis.append(ki)
+
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier='Decision Tree', use_features=False)
+        if train_index is None or test_index is None:
+            X,Y = ki.kb.splitDataIntoXY()
+            X_train, X_test = X.iloc[train_index], X.iloc[test_index]
+            y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
+            ki.fit(X_train, y_train)
         kis.append(ki)
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier='Decision Tree', use_features=False)
+        if train_index is None or test_index is None:
+            X,Y = ki.kb.splitDataIntoXY()
+            X_train, X_test = X.iloc[train_index], X.iloc[test_index]
+            y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
+            ki.fit(X_train, y_train)
         kis.append(ki)
         stacked = kis
         blanket_kis = []
