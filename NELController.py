@@ -92,7 +92,7 @@ class NELController:
             i = 1
             self.classifiers = classifiers
             #rebuild trauma ki
-            kis = self.generateTraumaKI(train_index, test_index)
+            kis = self.generateTraumaKI(train_index=train_index, test_index=test_index)
             for result in ki_res:
                 #replace ki in result
                 for ki in kis:
