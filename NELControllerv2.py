@@ -80,7 +80,7 @@ class NELControllerv2:
         if classifier['Classifier'].name == "TRAUMA_TRIAGE_ISS16_KI_Decision Tree":
             self.printModel(classifier['Classifier'].stacking_classifier,"TRAUMA_TRIAGE_ISS16_KI_Decision Tree")
         if classifier['Classifier'].name == "TRAUMA_TRIAGE_Decision Tree_ISS16":
-            self.printModel(result['Classifier'].tree, "TRAUMA_TRIAGE_Decision Tree_ISS16")
+            self.printModel(classifier['Classifier'].tree, "TRAUMA_TRIAGE_Decision Tree_ISS16")
 
     def printModel(self, model, name):
         from sklearn import tree
