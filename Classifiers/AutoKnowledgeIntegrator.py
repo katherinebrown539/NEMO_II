@@ -99,9 +99,10 @@ class AutoKnowledgeIntegrator:
 
         predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         predictions_y = y
-        print(self.name)
-        print("X: " + str(list(predictions_x.columns.values)))
-        print("Y: " + str(list(predictions_y.columns.values)))
+        # print("in fit itself")
+        # print(self.name)
+        # print("X: " + str(list(predictions_x.columns.values)))
+        # print("Y: " + str(list(predictions_y.columns.values)))
         self.stacking_classifier.fit(predictions_x, predictions_y)
 
     def predict(self, x, y = None, k = 10, random_seed = None):

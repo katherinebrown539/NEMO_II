@@ -92,7 +92,7 @@ class NELController:
             i = 1
             self.classifiers = classifiers
             #rebuild trauma ki
-            kis = self.generateTraumaKI(train_index=train_index, test_index=test_index)
+            kis = self.generateTraumaKI()
             for result in ki_res:
                 #replace ki in result
                 for ki in kis:
@@ -104,6 +104,10 @@ class NELController:
                 print("Trained model" + str(i))
                 i = i+1
             j = j+1
+
+
+
+
         for result in results:
             result['Accuracy'] = numpy.mean(result['Accuracy'])
             result['Precision'] = numpy.mean(result['Precision'])
@@ -138,9 +142,10 @@ class NELController:
         X_train, X_test = X.iloc[train_index], X.iloc[test_index]
         y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
         #train classifier
-        print(result['Classifier'].name)
-        print("X: " + str(list(X_train.columns.values)))
-        print("Y: " + str(list(y_train.columns.values)))
+        # print("In update result")
+        # print(result['Classifier'].name)
+        # print("X: " + str(list(X_train.columns.values)))
+        # print("Y: " + str(list(y_train.columns.values)))
         result['Classifier'].fit(X_train, y_train)
         predict = result['Classifier'].predict(X_test)
         result['Accuracy'].append(accuracy_score(y_test, predict))
@@ -153,15 +158,13 @@ class NELController:
         result['ROC'].append(roc_curve(y_test, predict))
         result['ROC_AUC'].append(roc_auc_score(y_test, predict))
         result['Confusion_Matrix'].append(confusion_matrix(y_test, predict))
-        if result['Classifier'].name == "TRAUMA_TRIAGE_ISS16_KI_Decision_TREE":
+        if result['Classifier'].name == "TRAUMA_TRIAGE_ISS16_KI_Decision Tree":
             self.printModel(result['Classifier'].ki.stacking_classifier,"TRAUMA_TRIAGE_ISS16_KI_Decision Tree")
         if result['Classifier'].name == "Decision Tree_ISS16":
-            self.printModel(result['Classifier'].ki.stacking_classifier, "Decision Tree_ISS16")
+            self.printModel(result['Classifier'].ki.stacking_classifier, "TRAUMA_TRIAGE_Decision Tree_ISS16")
 
     def printModel(self, model, name):
         from sklearn import tree
-        #if model is not None:
-            #print(str(type(model)))
         dot_data = tree.export_graphviz(model, out_file=None)
         graph = graphviz.Source(dot_data)
         graph.render(name)
