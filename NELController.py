@@ -99,25 +99,8 @@ class NELController:
                     if ki.name == result['Classifier'].name:
                         print(ki.name)
                         result['Classifier'] = ki
-                X,Y = result['Classifier'].kb.splitDataIntoXY()
-                X_train, X_test = X.iloc[train_index], X.iloc[test_index]
-                y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
-                train_ = pandas.concat(objs=[X_train,y_train], axis=1)
-                holdout_ = pandas.concat(objs=[X_test,y_test], axis=1)
-                res = result['Classifier'].cv_step(train_, holdout_, k=10, random_seed=None)
-                #train classifier
-                #result['Classifier'].fit(X_train, y_train)
-                #predict = result['Classifier'].predict(X_test)
-                result['Accuracy'].append(res['Accuracy'])
-                # precision recall f1 support
-                result['Precision'].append(res['Precision'])
-                result['Recall'].append(res['Recall'])
-                result['F1'].append(res['F1'])
-                #prec,rec,f,sup = precision_recall_fscore_support(y_test, predict)
-                result['Support'].append(res['Support'])# roc
-                #result['ROC'].append(res['ROC'])
-                result['ROC_AUC'].append(res['ROC_AUC'])
-                result['Confusion_Matrix'].append(res['Confusion_Matrix'])
+                 X,Y = result['Classifier'].kb.splitDataIntoXY()
+                self.updateResult(result, X,Y, train_index, test_index)
                 print("Trained model" + str(i))
                 i = i+1
             j = j+1
