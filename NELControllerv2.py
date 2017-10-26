@@ -40,7 +40,7 @@ class NELControllerv2:
         data_ = self.classifiers[0].get('Classifier').kb.getData()
         j = 1
         kis = self.generateTraumaKI()
-
+        self.generateKIs(kis)
         for train_index, test_index in kf.split(data_):
             print("Beginning iteration: "+ str(j))
             i = 1

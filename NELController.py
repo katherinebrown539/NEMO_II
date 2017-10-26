@@ -203,7 +203,7 @@ class NELController:
                 #self.executeBlanket(blanket,c, clses_=kis)
                 self.executeBlanket(blanket,c, clses_=None)
 
-    def generateTraumaKI(self, classifiers = None, train_index = None, test_index = None):
+    def generateTraumaKI(self, classifiers = None):
         kis = []
         ed2or = []
         icuadmit = []
@@ -222,26 +222,13 @@ class NELController:
                 #classifiers['Classifier'].runModel()
                 earlydeath.append(classifiers['Classifier'])
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier='Decision Tree', use_features=False)
-        if train_index is not None or test_index is not None:
-            X,Y = ki.kb.splitDataIntoXY()
-            X_train, X_test = X.iloc[train_index], X.iloc[test_index]
-            y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
-            ki.fit(X_train, y_train)
         kis.append(ki)
 
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier='Decision Tree', use_features=False)
-        if train_index is not None or test_index is not None:
-            X,Y = ki.kb.splitDataIntoXY()
-            X_train, X_test = X.iloc[train_index], X.iloc[test_index]
-            y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
-            ki.fit(X_train, y_train)
         kis.append(ki)
+
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier='Decision Tree', use_features=False)
-        if train_index is not None or test_index is not None:
-            X,Y = ki.kb.splitDataIntoXY()
-            X_train, X_test = X.iloc[train_index], X.iloc[test_index]
-            y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
-            ki.fit(X_train, y_train)
+
         kis.append(ki)
         stacked = kis
         blanket_kis = []
@@ -253,6 +240,34 @@ class NELController:
         # for k in blanket_kis:
         #     k.fit(x,y)
         kis.extend(blanket_kis)
+        return kis
+
+    def executeBlanket(self, blanket, class_, clses_=None, exec_=True):
+        kis = []
+        kb = None
+        if clses_ is None:
+            clses = []
+        else:
+            clses = clses_
+        results = []
+        num_folds = 10
+        random_seed = 0
+        for classifier in blanket['CLASSIFIERS_THAT_INFLUENCE']:
+            if classifier['Class'] == class_:
+                kb = classifier['Classifier'].kb
+            if clses_ is None:
+                clses.append(classifier['Classifier'])
+
+        KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(kb, clses, stacking_classifier='Decision Tree', use_features=False)
+        kis.append(KI)
+        KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(kb, clses, stacking_classifier='Logistic Regression', use_features=False)
+        kis.append(KI)
+        for KI in kis:
+            if(clses_ is not None):
+                KI.name = KI.name + "_usingStackers"
+            if exec_:
+                r = KI.testKI(k = 10, random_seed = random_seed)
+                self.results.append(r)
         return kis
 
     def runORNLBlanketsInKI(self):
@@ -290,33 +305,7 @@ class NELController:
                                 r['Name'] = "ORNL_BREAST_KI"
                                 results.append(r)
 
-    def executeBlanket(self, blanket, class_, clses_=None, exec_=True):
-        kis = []
-        kb = None
-        if clses_ is None:
-            clses = []
-        else:
-            clses = clses_
-        results = []
-        num_folds = 10
-        random_seed = 0
-        for classifier in blanket['CLASSIFIERS_THAT_INFLUENCE']:
-            if classifier['Class'] == class_:
-                kb = classifier['Classifier'].kb
-            if clses_ is None:
-                clses.append(classifier['Classifier'])
 
-        KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(kb, clses, stacking_classifier='Decision Tree', use_features=False)
-        kis.append(KI)
-        KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(kb, clses, stacking_classifier='Logistic Regression', use_features=False)
-        kis.append(KI)
-        for KI in kis:
-            if(clses_ is not None):
-                KI.name = KI.name + "_usingStackers"
-            if exec_:
-                r = KI.testKI(k = 10, random_seed = random_seed)
-                self.results.append(r)
-        return kis
 
     def generateMarkovBlanket(self):
         #create blanket dicts
