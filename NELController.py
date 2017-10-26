@@ -104,7 +104,7 @@ class NELController:
                 y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
                 train_ = pandas.concat(objs=[X_train,y_train], axis=1)
                 holdout_ = pandas.concat(objs=[X_test,y_test], axis=1)
-                res = result['Classifier'].cv_step(train, holdout, k=10, random_seed=None)
+                res = result['Classifier'].cv_step(train_, holdout_, k=10, random_seed=None)
                 #train classifier
                 #result['Classifier'].fit(X_train, y_train)
                 #predict = result['Classifier'].predict(X_test)
