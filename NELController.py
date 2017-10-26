@@ -223,7 +223,6 @@ class NELController:
             X_train, X_test = X.iloc[train_index], X.iloc[test_index]
             y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
             ki.fit(X_train, y_train)
-            ki.fit()
         kis.append(ki)
 
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier='Decision Tree', use_features=False)
