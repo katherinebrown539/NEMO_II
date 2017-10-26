@@ -82,6 +82,7 @@ class NELControllerv2:
         self.kis = []
         for ki in kis:
             r = {}
+            r['Name'] = ki.name
             r['Accuracy'] = []
             r['Precision'] = []
             r['Recall'] = []
@@ -94,7 +95,6 @@ class NELControllerv2:
             self.kis.append(d)
 
     def updateResult(self, classifier,predict, y_test):
-
         classifier['Results'].get('Accuracy').append(accuracy_score(y_test, predict))
         classifier['Results'].get('Precision').append(precision_score(y_test, predict))
         classifier['Results'].get('Recall').append(recall_score(y_test, predict))
@@ -267,6 +267,7 @@ class NELControllerv2:
         #ml = AutoMLController.AutoMLController(new_kb, algorithm)
         ml.createModel()
         r = {}
+        r['Name'] = ml.name
         r['Accuracy'] = []
         r['Precision'] = []
         r['Recall'] = []
