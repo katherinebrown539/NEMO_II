@@ -99,7 +99,7 @@ class NELController:
                     if ki.name == result['Classifier'].name:
                         print(ki.name)
                         result['Classifier'] = ki
-                 X,Y = result['Classifier'].kb.splitDataIntoXY()
+                X,Y = result['Classifier'].kb.splitDataIntoXY()
                 self.updateResult(result, X,Y, train_index, test_index)
                 print("Trained model" + str(i))
                 i = i+1
@@ -151,15 +151,17 @@ class NELController:
         result['ROC_AUC'].append(roc_auc_score(y_test, predict))
         result['Confusion_Matrix'].append(confusion_matrix(y_test, predict))
         if result['Classifier'].name == "TRAUMA_TRIAGE_ISS16_KI_Decision_TREE":
-            self.printModel(result['Classifier'].ki.stacking_classifier)
+            self.printModel(result['Classifier'].ki.stacking_classifier,"TRAUMA_TRIAGE_ISS16_KI_Decision Tree")
+        if result['Classifier'].name == "Decision Tree_ISS16:
+            self.printModel(result['Classifier'].ki.stacking_classifier, "Decision Tree_ISS16")
 
-    def printModel(self, model):
+    def printModel(self, model, name):
         from sklearn import tree
         if model is not None:
             #print(str(type(model)))
         dot_data = tree.export_graphviz(model, out_file=None)
         graph = graphviz.Source(dot_data)
-        graph.render("Model#printout")
+        graph.render(name)
 
     def runTraumaBlanketsInKI(self):
         kis = []
