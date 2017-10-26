@@ -45,7 +45,12 @@ class NELControllerv2:
             for classifier in self.classifiers:
                 print(classifier['Classifier'].name)
                 X,Y = classifier['Classifier'].kb.splitDataIntoXY()
-                classifier = self.updateResult(classifier, X,Y, train_index, test_index)
+                X,Y = classifier['Classifier'].kb.splitDataIntoXY()
+                X_train, X_test = X.iloc[train_index], X.iloc[test_index]
+                y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
+                classifier['Classifier'].fit(X_train, y_train)
+                predict = classifier['Classifier'].predict(X_test)
+                classifier = self.updateResult(classifier,predict, y_test)
                 print("Trained model" + str(i))
                 i = i+1
         self.results = []
@@ -60,13 +65,9 @@ class NELControllerv2:
             self.results(result)
             return classifier
 
-    def updateResult(self, classifier, X,Y,train_index,test_index):
-        X,Y = classifier['Classifier'].kb.splitDataIntoXY()
-        X_train, X_test = X.iloc[train_index], X.iloc[test_index]
-        y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
 
-        classifier['Classifier'].fit(X_train, y_train)
-        predict = classifier['Classifier'].predict(X_test)
+    def updateResult(self, classifier,predict, y_test):
+
         classifier['Results'].get('Accuracy').append(accuracy_score(y_test, predict))
         classifier['Results'].get('Precision').append(precision_score(y_test, predict))
         classifier['Results'].get('Recall').append(recall_score(y_test, predict))
