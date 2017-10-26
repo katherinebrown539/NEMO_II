@@ -218,7 +218,7 @@ class NELController:
                 #classifiers['Classifier'].runModel()
                 earlydeath.append(classifiers['Classifier'])
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier='Decision Tree', use_features=False)
-        if train_index is None or test_index is None:
+        if train_index is not None or test_index is not None:
             X,Y = ki.kb.splitDataIntoXY()
             X_train, X_test = X.iloc[train_index], X.iloc[test_index]
             y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
@@ -227,14 +227,14 @@ class NELController:
         kis.append(ki)
 
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier='Decision Tree', use_features=False)
-        if train_index is None or test_index is None:
+        if train_index is not None or test_index is not None:
             X,Y = ki.kb.splitDataIntoXY()
             X_train, X_test = X.iloc[train_index], X.iloc[test_index]
             y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
             ki.fit(X_train, y_train)
         kis.append(ki)
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier='Decision Tree', use_features=False)
-        if train_index is None or test_index is None:
+        if train_index is not None or test_index is not None:
             X,Y = ki.kb.splitDataIntoXY()
             X_train, X_test = X.iloc[train_index], X.iloc[test_index]
             y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
