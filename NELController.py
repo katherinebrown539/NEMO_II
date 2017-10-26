@@ -80,29 +80,13 @@ class NELController:
         #print("KI_RES = " + str(ki_res))
         #return
         for train_index, test_index in kf.split(data_):
+            ed2or = []
+            icu = []
+            earlydeath = []
             print("About to train level 1 models for iteration #" + str(j))
             i = 1
             for result in results:
-                #split into test and training
-                #split into x and y
-                X,Y = result['Classifier'].kb.splitDataIntoXY()
-                X_train, X_test = X.iloc[train_index], X.iloc[test_index]
-                y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
-                #train classifier
-                result['Classifier'].fit(X_train, y_train)
-                predict = result['Classifier'].predict(X_test)
-                result['Accuracy'].append(accuracy_score(y_test, predict))
-                # precision recall f1 support
-                result['Precision'].append(precision_score(y_test, predict))
-                result['Recall'].append(recall_score(y_test, predict))
-                result['F1'].append(f1_score(y_test, predict))
-                prec,rec,f,sup = precision_recall_fscore_support(y_test, predict)
-                result['Support'].append(sup)# roc
-                result['ROC'].append(roc_curve(y_test, predict))
-                result['ROC_AUC'].append(roc_auc_score(y_test, predict))
-                result['Confusion_Matrix'].append(confusion_matrix(y_test, predict))
-                #get test error
-                #append to results for this algorithm
+                self.updateResult(result, X,Y, train_index, test_index)
                 print("Trained model" + str(i))
                 i = i+1
 
@@ -110,23 +94,9 @@ class NELController:
             #rebuild trauma ki with fitting
             #kis = self.rebuild
             for result in ki_res:
-
                 #replace ki in result
                 X,Y = result['Classifier'].kb.splitDataIntoXY()
-                X_train, X_test = X.iloc[train_index], X.iloc[test_index]
-                y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
-                result['Classifier'].fit(X_train, y_train)
-                predict = result['Classifier'].predict(X_test, y_test)
-                result['Accuracy'].append(accuracy_score(y_test, predict))
-                # precision recall f1 support
-                result['Precision'].append(precision_score(y_test, predict))
-                result['Recall'].append(recall_score(y_test, predict))
-                result['F1'].append(f1_score(y_test, predict))
-                prec,rec,f,sup = precision_recall_fscore_support(y_test, predict)
-                result['Support'].append(sup)# roc
-                result['ROC'].append(roc_curve(y_test, predict))
-                result['ROC_AUC'].append(roc_auc_score(y_test, predict))
-                result['Confusion_Matrix'].append(confusion_matrix(y_test, predict))
+                self.updateResult(result, X,Y, train_index, test_index)
                 print("Trained model" + str(i))
                 i = i+1
             j = j+1
@@ -159,6 +129,23 @@ class NELController:
                 line = r['Name']+","+str(r['Accuracy'])+","+str(r['Precision'])+","+str(r['Recall'])+","+str(r['F1'])+"\n"
                 f.write(line)
 
+    def updateResult(self, result, X,Y, train_index, test_index):
+        X,Y = result['Classifier'].kb.splitDataIntoXY()
+        X_train, X_test = X.iloc[train_index], X.iloc[test_index]
+        y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
+        #train classifier
+        result['Classifier'].fit(X_train, y_train)
+        predict = result['Classifier'].predict(X_test)
+        result['Accuracy'].append(accuracy_score(y_test, predict))
+        # precision recall f1 support
+        result['Precision'].append(precision_score(y_test, predict))
+        result['Recall'].append(recall_score(y_test, predict))
+        result['F1'].append(f1_score(y_test, predict))
+        prec,rec,f,sup = precision_recall_fscore_support(y_test, predict)
+        result['Support'].append(sup)# roc
+        result['ROC'].append(roc_curve(y_test, predict))
+        result['ROC_AUC'].append(roc_auc_score(y_test, predict))
+        result['Confusion_Matrix'].append(confusion_matrix(y_test, predict))
     # def printModel(self, model):
     #     from sklearn import tree
     #     if model is not None:
@@ -234,7 +221,7 @@ class NELController:
         for blanket in self.blankets:
             if blanket['RIGHT_MEMBER'] in ['ISS16', 'NeedTC']:
                 c = blanket['RIGHT_MEMBER']
-                blanket_kis.extend(self.executeBlanket(blanket,c, clses_=stacked, exec_=False))
+                #blanket_kis.extend(self.executeBlanket(blanket,c, clses_=stacked, exec_=False))
                 blanket_kis.extend(self.executeBlanket(blanket,c, clses_=None, exec_=False))
         # for k in blanket_kis:
         #     k.fit(x,y)
@@ -303,7 +290,6 @@ class NELController:
                 r = KI.testKI(k = 10, random_seed = random_seed)
                 self.results.append(r)
         return kis
-
 
     def generateMarkovBlanket(self):
         #create blanket dicts

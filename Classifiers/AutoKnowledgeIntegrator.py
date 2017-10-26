@@ -76,8 +76,6 @@ class AutoKnowledgeIntegrator:
     def fit(self, x, y, k = 10, random_seed= None):
         predictions = []
         for classifier in self.level1_classifiers:
-            print("Fitting " + classifier.name)
-            classifier.fit(x,y)
             predictions.append([])
         x.index = list(range(len(x)))
         #shuffle data, will do this later
