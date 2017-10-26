@@ -225,7 +225,7 @@ def main():
     else:
         output_file = "results.csv"
     facts = "config/facts.json"
-    NELController(facts, "config/config.json", output_file)
+    NELControllerv2(facts, "config/config.json", output_file)
 
 if __name__ == '__main__':
     main()
