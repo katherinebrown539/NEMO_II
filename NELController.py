@@ -138,6 +138,9 @@ class NELController:
         X_train, X_test = X.iloc[train_index], X.iloc[test_index]
         y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
         #train classifier
+        print(result['Classifier'].name)
+        print("X: " + str(list(X_train.columns.values)))
+        print("Y: " + str(list(y_train.columns.values)))
         result['Classifier'].fit(X_train, y_train)
         predict = result['Classifier'].predict(X_test)
         result['Accuracy'].append(accuracy_score(y_test, predict))

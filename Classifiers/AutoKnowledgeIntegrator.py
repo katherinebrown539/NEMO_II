@@ -99,6 +99,9 @@ class AutoKnowledgeIntegrator:
 
         predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         predictions_y = y
+        print(self.name)
+        print("X: " + str(list(predictions_x.columns.values)))
+        print("Y: " + str(list(predictions_y.columns.values)))
         self.stacking_classifier.fit(predictions_x, predictions_y)
 
     def predict(self, x, y = None, k = 10, random_seed = None):
@@ -146,6 +149,7 @@ class AutoKnowledgeIntegrator:
         for train_index, test_index in kf.split(train):
             ##print("TRAIN:", train_index, "TEST:", test_index)
             training, testing = train.iloc[train_index], train.iloc[test_index]
+            print(list(training.columns))
             train_x_train, train_y_train = self.splitDataIntoXY(training)
             train_x_test, test_y_test = self.splitDataIntoXY(testing)
             i = 0
