@@ -150,14 +150,16 @@ class NELController:
         result['ROC'].append(roc_curve(y_test, predict))
         result['ROC_AUC'].append(roc_auc_score(y_test, predict))
         result['Confusion_Matrix'].append(confusion_matrix(y_test, predict))
+        if result['Classifier'].name == "TRAUMA_TRIAGE_ISS16_KI_Decision_TREE":
+            self.printModel(result['Classifier'].ki.stacking_classifier)
 
-    # def printModel(self, model):
-    #     from sklearn import tree
-    #     if model is not None:
-    #         #print(str(type(model)))
-    #     dot_data = tree.export_graphviz(model, out_file=None)
-    #     graph = graphviz.Source(dot_data)
-    #     graph.render("Model#printout")
+    def printModel(self, model):
+        from sklearn import tree
+        if model is not None:
+            #print(str(type(model)))
+        dot_data = tree.export_graphviz(model, out_file=None)
+        graph = graphviz.Source(dot_data)
+        graph.render("Model#printout")
 
     def runTraumaBlanketsInKI(self):
         kis = []
