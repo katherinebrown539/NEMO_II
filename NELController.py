@@ -60,7 +60,7 @@ class NELController:
             r['Confusion_Matrix'] = []
             results.append(r)
             i = i+1
-        #kis = self.generateTraumaKI()
+        kis = self.generateTraumaKI()
         print("Generated KIs")
         ki_res = []
         for ki in kis:
@@ -112,7 +112,6 @@ class NELController:
             for result in ki_res:
 
                 #replace ki in result
-                for b in
                 X,Y = result['Classifier'].kb.splitDataIntoXY()
                 X_train, X_test = X.iloc[train_index], X.iloc[test_index]
                 y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
