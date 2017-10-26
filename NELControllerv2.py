@@ -91,7 +91,7 @@ class NELControllerv2:
             r['ROC_AUC'] = []
             r['Confusion_Matrix'] = []
             d =  {"Classifier_Name": ki.name, "Class": ki.kb.Y, "Classifier": ki, "Results": r}
-            self.kis.append(ki)
+            self.kis.append(d)
 
     def updateResult(self, classifier,predict, y_test):
 
