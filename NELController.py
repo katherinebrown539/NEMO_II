@@ -29,8 +29,8 @@ class NELController:
         self.blankets = []
         self.parseConstraints(json_data['Constraints'])
         self.generateMarkovBlanket()
-        #self.runBlanketsInKI()
-        self.execute()
+        self.runBlanketsInKI()
+        #self.execute()
         sys.stdout = save_stdout
         # for r in self.results:
         #     #print(r)
@@ -222,13 +222,18 @@ class NELController:
                 #classifiers['Classifier'].runModel()
                 earlydeath.append(classifiers['Classifier'])
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier='Decision Tree', use_features=False)
+        r = ki.testKI(k = 10, random_seed = random_seed)
+        self.results(r)
         kis.append(ki)
 
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier='Decision Tree', use_features=False)
+        r = ki.testKI(k = 10, random_seed = random_seed)
+        self.results(r)
         kis.append(ki)
 
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier='Decision Tree', use_features=False)
-
+        r = ki.testKI(k = 10, random_seed = random_seed)
+        self.results(r)
         kis.append(ki)
         stacked = kis
         blanket_kis = []
@@ -236,7 +241,7 @@ class NELController:
             if blanket['RIGHT_MEMBER'] in ['ISS16', 'NeedTC']:
                 c = blanket['RIGHT_MEMBER']
                 #blanket_kis.extend(self.executeBlanket(blanket,c, clses_=stacked, exec_=False))
-                blanket_kis.extend(self.executeBlanket(blanket,c, clses_=None, exec_=False))
+                blanket_kis.extend(self.executeBlanket(blanket,c, clses_=None, exec_=True))
         # for k in blanket_kis:
         #     k.fit(x,y)
         kis.extend(blanket_kis)
