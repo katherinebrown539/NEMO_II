@@ -219,12 +219,13 @@ class AutoKnowledgeIntegrator:
         y = self.kb.Y
         while(x.count(y) > 0):
             x.remove(y)
-        print("x = " + str(x))
         columns = x
         columns.append(y)
         #print(columns)
         data.columns = columns
-        X = data[[x]]
+        while(x.count(y) > 0):
+            x.remove(y)
+        X = data[x]
         print("X:")
         print(X)
         Y = data[[y]]
