@@ -16,7 +16,6 @@ class NELController:
     def __init__(self, facts_file, config_file, output_file):
         with open(facts_file) as fd:
             json_data = json.load(fd)
-        self.results = []
         save_stdout = sys.stdout
         #sys.stdout = open('trash', 'w')
         self.NEMO = NEMO.NEMO(config_file)
@@ -25,6 +24,9 @@ class NELController:
         self.classifiers = []
         classifiers = json_data['Classifiers']
         self.createClassifiers(classifiers)
+        self.results = []
+        for classifier in self.classifiers:
+            self.runModel(classifier['Classifier'])
         self.constraints = []
         self.blankets = []
         self.parseConstraints(json_data['Constraints'])
@@ -397,7 +399,44 @@ class NELController:
         return d
 
     def runModel(self, classifier):
-        self.results.append(classifier.runModel())
+        accs = []
+        precs = []
+        recs = []
+        f1s = []
+        sups = []
+        rocs = []
+        aucs = []
+        cms = []
+        kf = KFold(n_splits=10)
+        X,Y = classifier.kb.splitDataIntoXY()
+
+        for train_index, test_index in kf.splits():
+            X_train, X_test = X.iloc[train_index], X.iloc[test_index]
+            y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
+
+            classifier.fit(X_train, y_train)
+            predict = classifier.predict(X_test)
+            accs.append(accuracy_score(y_test, predict))
+            # precision recall f1 support
+            precs.append(precision_score(y_test, predict))
+            recs.append(recall_score(y_test, predict))
+            f1s.append(f1_score(y_test, predict))
+            prec,rec,f,sup = precision_recall_fscore_support(y_test, predict)
+            sups.append(sup)# roc
+            rocs.append(roc_curve(y_test, predict))
+            aucs.append(roc_auc_score(y_test, predict))
+            cms.append(confusion_matrix(y_test, predict))
+        r = {}
+        r['Name'] = classifier.name
+        r['Accuracy'] = numpy.mean(accs)
+        r['Precision'] = numpy.mean(precs)
+        r['F1'] = numpy.means(f1s)
+        r['Support'] = numpy.mean(sups)
+        r['ROC'] = rocs
+        r['ROC_AUC'] = numpy.mean(aucs)
+        r['Confusion'] = cms
+        self.results.append(r)
+
     #update comment
     def parseFeatures(self, feature_string, target, all_features):
         ##print("Feature String: " + feature_string)
