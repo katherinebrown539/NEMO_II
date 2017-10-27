@@ -224,7 +224,7 @@ class AutoKnowledgeIntegrator:
         columns.append(y)
         #print(columns)
         data.columns = columns
-        X = data[x]
+        X = data[[x]]
         print("X:")
         print(X)
         Y = data[[y]]
