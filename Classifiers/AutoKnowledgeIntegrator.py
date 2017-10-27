@@ -173,6 +173,9 @@ class AutoKnowledgeIntegrator:
 
         #rint("PREDICTIONS:")
         ##print(predictions)
+        if self.name = "TRAUMA_TRIAGE_ISS16_KI_Decision Tree":
+            pandas.concat(objs=[predictions_x, predictions_y], axis=1).to_csv("test_data/iss16_ki_train.csv")
+
 
         #train stacker
         self.stacking_classifier.fit(predictions_x, predictions_y)
@@ -195,6 +198,8 @@ class AutoKnowledgeIntegrator:
         holdout_predictions.columns = columns
         predictions_x = pandas.concat(objs=[x,holdout_predictions], axis=1)
         predictions_y = y
+        if self.name = "TRAUMA_TRIAGE_ISS16_KI_Decision Tree":
+            pandas.concat(objs=[predictions_x, predictions_y], axis=1).to_csv("test_data/iss16_ki_test.csv")
         # #print("PREDICTIONS_X:")
         # #print(predictions_x)
         stacking_predictions = self.stacking_classifier.predict(predictions_x)
