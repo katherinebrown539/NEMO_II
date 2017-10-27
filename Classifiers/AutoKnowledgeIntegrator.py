@@ -144,7 +144,7 @@ class AutoKnowledgeIntegrator:
         val = random.randint(0,100)
         #shuffle data, will do this later
         #split training data into k folds
-        kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)#will shuffle data manually above
+        kf = KFold(n_splits=k, random_state=random_seed, shuffle=True)#will shuffle data manually above
         #fit first stage models on k-1 folds
         x, y = self.splitDataIntoXY(train)
         # print("X_cols = " + str(list(x.columns.values)))

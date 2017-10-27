@@ -36,7 +36,7 @@ class NELControllerv2:
 
     def execute(self):
         print("in execute")
-        kf = KFold(n_splits=10, shuffle=False)
+        kf = KFold(n_splits=10, shuffle=True)
         data_ = self.classifiers[0].get('Classifier').kb.getData()
         j = 1
         kis = self.generateTraumaKI()
