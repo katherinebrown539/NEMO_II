@@ -62,6 +62,14 @@ class NELControllerv2:
                     if(ki['Classifier_Name'] == ki_.name):
                         print("Training: " + ki_.name)
                         ki['Classifier'] = ki_
+                    #run CV step
+                    train = pandas.dataframe(objs[X_train, y_train], axis=1)
+                    holdout = pandas.dataframe(objs[X_test, y_test], axis=1)
+                    train.index = list(range(len(train)))
+                    holdout.index = list(range(len(holdout)))
+                    tmp_res = ki['Classifier_Name'].cv_step(train, holdout, k=10, random_seed=None)
+                    #update results
+                    ki['Results'] = self.updateKIRes(tmp_res, ki['Results'])
 
             j = j+1
         self.results = []
@@ -75,6 +83,28 @@ class NELControllerv2:
             result['Support'] = numpy.mean(result['Support'])
             result['ROC_AUC'] = numpy.mean(result['ROC_AUC'])
             self.results.append(result)
+        for classifier in self.kis:
+            print(classifier['Classifier_Name'])
+            result = classifier['Results']
+            result['Accuracy'] = numpy.mean(result['Accuracy'])
+            result['Precision'] = numpy.mean(result['Precision'])
+            result['Recall'] = numpy.mean(result['Recall'])
+            result['F1'] = numpy.mean(result['F1'])
+            result['Support'] = numpy.mean(result['Support'])
+            result['ROC_AUC'] = numpy.mean(result['ROC_AUC'])
+            self.results.append(result)
+
+    def updateKIRes(self, tmp_res, cls_res):
+        cls_res['Accuracy'].append(tmp['Accuracy'])
+        cls_res['Recall'].append(tmp['Recall'])
+        cls_res['F1'].append(tmp['F1'])
+        cls_res['Precision'].append(tmp['Precision'])
+        cls_res['Recall'].append(tmp['Recall'])
+        cls_res['Support'].append(tmp['Support'])
+        cls_res['ROC'].append(tmp['ROC'])
+        cls_res['ROC_AUC'].append(tmp['ROC_AUC'])
+        cls_res['Confusion_Matrix'].append(tmp['Confusion_Matrix'])
+        return cls_res
 
     def generateKIs(self, kis):
         self.kis = []
