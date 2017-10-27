@@ -54,17 +54,15 @@ class NELControllerv2:
                 classifier = self.updateResult(classifier,predict, y_test)
                 print("Trained model" + str(i))
                 i = i+1
-            # kis = self.generateTraumaKI()
+            kis = self.generateTraumaKI()
             for ki in self.kis:
             #     #find the updated KI
                 print(ki['Classifier_Name'])
-            #     for ki_ in kis:
-            #         if(ki['Classifier_Name'] == ki_.name):
-            #             #add it to the set of all KIs
-            #             print("Training: " + ki_.name)
-            #             ki['Classifier'] = ki_
-            #     #run CV step
-            #     #update results
+                for ki_ in kis:
+                    if(ki['Classifier_Name'] == ki_.name):
+                        print("Training: " + ki_.name)
+                            ki['Classifier'] = ki_
+            
             j = j+1
         self.results = []
         for classifier in self.classifiers:
