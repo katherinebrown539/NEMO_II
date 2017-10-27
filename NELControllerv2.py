@@ -74,7 +74,7 @@ class NELControllerv2:
                     holdout.index = list(range(len(holdout)))
                     tmp_res = ki['Classifier'].cv_step(train, holdout, k=10, random_seed=None)
                     #update results
-                    ki['Results'] = self.updateKIRes(tmp=tmp_res, ki['Results'])
+                    ki['Results'] = self.updateKIRes(tmp_res, ki['Results'])
 
             j = j+1
         self.results = []
