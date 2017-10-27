@@ -63,6 +63,9 @@ class NELControllerv2:
                         print("Training: " + ki_.name)
                         ki['Classifier'] = ki_
                     #run CV step
+                    X,Y = classifier['Classifier'].kb.splitDataIntoXY()
+                    X_train, X_test = X.iloc[train_index], X.iloc[test_index]
+                    y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
                     train = pandas.concat(objs=[X_train, y_train], axis=1)
                     holdout = pandas.concat(objs=[X_test, y_test], axis=1)
                     #print("Train: " + str(train))
