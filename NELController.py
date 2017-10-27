@@ -31,7 +31,7 @@ class NELController:
         self.blankets = []
         self.parseConstraints(json_data['Constraints'])
         self.generateMarkovBlanket()
-        #self.runBlanketsInKI()
+        self.runBlanketsInKI()
         #self.execute()
         sys.stdout = save_stdout
         # for r in self.results:
