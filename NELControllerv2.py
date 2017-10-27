@@ -221,7 +221,7 @@ class NELControllerv2:
         for blanket in self.blankets:
             if blanket['RIGHT_MEMBER'] in ['ISS16', 'NeedTC']:
                 c = blanket['RIGHT_MEMBER']
-                #blanket_kis.extend(self.executeBlanket(blanket,c, clses_=stacked, exec_=False))
+                blanket_kis.extend(self.executeBlanket(blanket,c, clses_=stacked, exec_=False))
                 blanket_kis.extend(self.executeBlanket(blanket,c, clses_=None, exec_=False))
         kis.extend(blanket_kis)
         return kis
