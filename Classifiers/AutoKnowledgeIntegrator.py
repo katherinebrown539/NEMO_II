@@ -226,9 +226,9 @@ class AutoKnowledgeIntegrator:
         while(x.count(y) > 0):
             x.remove(y)
         X = data[x]
-        print("X:")
-        print(X)
+        # print("X:")
+        # print(X)
         Y = data[[y]]
-        print("Y:")
-        print(Y)
+        # print("Y:")
+        # print(Y)
         return(X,Y)
