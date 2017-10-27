@@ -430,7 +430,7 @@ class NELController:
         r['Name'] = classifier.name
         r['Accuracy'] = numpy.mean(accs)
         r['Precision'] = numpy.mean(precs)
-        r['F1'] = numpy.means(f1s)
+        r['F1'] = numpy.mean(f1s)
         r['Support'] = numpy.mean(sups)
         r['ROC'] = rocs
         r['ROC_AUC'] = numpy.mean(aucs)
