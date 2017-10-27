@@ -63,11 +63,13 @@ class NELControllerv2:
                         print("Training: " + ki_.name)
                         ki['Classifier'] = ki_
                     #run CV step
-                    train = pandas.concat(objs[X_train, y_train], axis=1)
-                    holdout = pandas.concat(objs[X_test, y_test], axis=1)
+                    train = pandas.concat(objs=[X_train, y_train], axis=1)
+                    holdout = pandas.concat(objs=[X_test, y_test], axis=1)
+                    print("Train: " + str(train))
+                    print("Holdout: " + str(holdout))
                     train.index = list(range(len(train)))
                     holdout.index = list(range(len(holdout)))
-                    tmp_res = ki['Classifier_Name'].cv_step(train, holdout, k=10, random_seed=None)
+                    tmp_res = ki['Classifier'].cv_step(train, holdout, k=10, random_seed=None)
                     #update results
                     ki['Results'] = self.updateKIRes(tmp_res, ki['Results'])
 
