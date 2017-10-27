@@ -128,7 +128,7 @@ class AutoKnowledgeIntegrator:
         #print("PREDICTIONS:")
         #print(predictions)
         if y is not None:
-            print("Y" + str(y))
+            #print("Y" + str(y))
             output = pandas.concat(objs=[x,predictions,y], axis=1)
             output_name = self.name + "_" + str(random.randint(1,100)) + ".csv"
             output.to_csv("test_data/"+output_name)
@@ -152,7 +152,7 @@ class AutoKnowledgeIntegrator:
         for train_index, test_index in kf.split(train):
             ##print("TRAIN:", train_index, "TEST:", test_index)
             training, testing = train.iloc[train_index], train.iloc[test_index]
-            print(list(training.columns))
+            #print(list(training.columns))
             train_x_train, train_y_train = self.splitDataIntoXY(training)
             train_x_test, test_y_test = self.splitDataIntoXY(testing)
             i = 0
