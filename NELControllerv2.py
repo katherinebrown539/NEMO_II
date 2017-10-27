@@ -61,8 +61,8 @@ class NELControllerv2:
                 for ki_ in kis:
                     if(ki['Classifier_Name'] == ki_.name):
                         print("Training: " + ki_.name)
-                            ki['Classifier'] = ki_
-            
+                        ki['Classifier'] = ki_
+
             j = j+1
         self.results = []
         for classifier in self.classifiers:
