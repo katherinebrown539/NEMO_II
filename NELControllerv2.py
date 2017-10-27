@@ -65,13 +65,13 @@ class NELControllerv2:
                     #run CV step
                     train = pandas.concat(objs=[X_train, y_train], axis=1)
                     holdout = pandas.concat(objs=[X_test, y_test], axis=1)
-                    print("Train: " + str(train))
-                    print("Holdout: " + str(holdout))
+                    #print("Train: " + str(train))
+                    #print("Holdout: " + str(holdout))
                     train.index = list(range(len(train)))
                     holdout.index = list(range(len(holdout)))
                     tmp_res = ki['Classifier'].cv_step(train, holdout, k=10, random_seed=None)
                     #update results
-                    ki['Results'] = self.updateKIRes(tmp_res, ki['Results'])
+                    ki['Results'] = self.updateKIRes(tmp=tmp_res, ki['Results'])
 
             j = j+1
         self.results = []
@@ -97,15 +97,15 @@ class NELControllerv2:
             self.results.append(result)
 
     def updateKIRes(self, tmp_res, cls_res):
-        cls_res['Accuracy'].append(tmp['Accuracy'])
-        cls_res['Recall'].append(tmp['Recall'])
-        cls_res['F1'].append(tmp['F1'])
-        cls_res['Precision'].append(tmp['Precision'])
-        cls_res['Recall'].append(tmp['Recall'])
-        cls_res['Support'].append(tmp['Support'])
-        cls_res['ROC'].append(tmp['ROC'])
-        cls_res['ROC_AUC'].append(tmp['ROC_AUC'])
-        cls_res['Confusion_Matrix'].append(tmp['Confusion_Matrix'])
+        cls_res['Accuracy'].append(tmp_res['Accuracy'])
+        cls_res['Recall'].append(tmp_res['Recall'])
+        cls_res['F1'].append(tmp_res['F1'])
+        cls_res['Precision'].append(tmp_res['Precision'])
+        cls_res['Recall'].append(tmp_res['Recall'])
+        cls_res['Support'].append(tmp_res['Support'])
+        cls_res['ROC'].append(tmp_res['ROC'])
+        cls_res['ROC_AUC'].append(tmp_res['ROC_AUC'])
+        cls_res['Confusion_Matrix'].append(tmp_res['Confusion_Matrix'])
         return cls_res
 
     def generateKIs(self, kis):
