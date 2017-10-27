@@ -410,7 +410,7 @@ class NELController:
         kf = KFold(n_splits=10)
         X,Y = classifier.kb.splitDataIntoXY()
 
-        for train_index, test_index in kf.splits():
+        for train_index, test_index in kf.split(X):
             X_train, X_test = X.iloc[train_index], X.iloc[test_index]
             y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
 
