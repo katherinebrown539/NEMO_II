@@ -32,7 +32,7 @@ class AutoKnowledgeIntegrator:
         ##print(self.data)
 
     def testKI(self, k = 10, random_seed = None):
-        ##print("In testKI...")
+        print("Evaluating " + self.name)
         self.data = shuffle(self.data)
         self.data.index = list(range(len(self.data)))
         results = {}
@@ -44,8 +44,10 @@ class AutoKnowledgeIntegrator:
         results['ROC'] = []
         results['ROC_AUC'] = []
         results['Confusion_Matrix'] = []
+        j = 1
         kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)
         for train_index, test_index in kf.split(self.data):
+            print("Iteration: " + str(j))
             train, holdout = self.data.iloc[train_index], self.data.iloc[test_index]
             train.index = list(range(len(train)))
             holdout.index = list(range(len(holdout)))
@@ -69,7 +71,7 @@ class AutoKnowledgeIntegrator:
         self.results = results
         return results
 
-    def cv_step(self, train, holdout, train_index, k, random_seed):
+    def cv_step(self, train, holdout, train_index_, k, random_seed):
         predictions = []
         for classifier in self.level1_classifiers:
             predictions.append([])
@@ -89,8 +91,9 @@ class AutoKnowledgeIntegrator:
             train_x_test, test_y_test = self.splitDataIntoXY(testing)
             i = 0
             for classifier in self.level1_classifiers:
+                print("Training sub-classifier: " + classifier.name)
                 x_cls, y_cls = classifier.kb.splitDataIntoXY()
-                #y_cls = y_cls.iloc[train_index] #reducing all y to training y
+                y_cls = y_cls.iloc[train_index_] #reducing all y to training y
                 y_cls_train,y_cls_test = y_cls.iloc[train_index], y_cls.iloc[test_index]
                 classifier.fit(train_x_train, y_cls_train)
                 predictions[i].extend(classifier.predict(train_x_test))
