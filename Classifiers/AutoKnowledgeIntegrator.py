@@ -49,7 +49,7 @@ class AutoKnowledgeIntegrator:
             train, holdout = self.data.iloc[train_index], self.data.iloc[test_index]
             train.index = list(range(len(train)))
             holdout.index = list(range(len(holdout)))
-            temp_results = self.cv_step(train, holdout, k, random_seed)
+            temp_results = self.cv_step(train, holdout, train_index k, random_seed)
             results['Accuracy'].append(temp_results['Accuracy'])
             results['Precision'].append(temp_results['Precision'])
             results['Recall'].append(temp_results['Recall'])
@@ -137,7 +137,7 @@ class AutoKnowledgeIntegrator:
         stacking_predictions = self.stacking_classifier.predict(predictions_x)
         return stacking_predictions
 
-    def cv_step(self, train, holdout, k, random_seed):
+    def cv_step(self, train, holdout, train_index, k, random_seed):
         predictions = []
         for classifier in self.level1_classifiers:
             predictions.append([])
@@ -158,7 +158,8 @@ class AutoKnowledgeIntegrator:
             i = 0
             for classifier in self.level1_classifiers:
                 x_cls, y_cls = classifier.kb.splitDataIntoXY()
-                y_cls_train,y_cls_test = y_cls[train_index], y_cls[test_index]
+                y_cls = y_cls.iloc[train_index] #reducing all y to training y
+                y_cls_train,y_cls_test = y_cls.iloc[train_index], y_cls.iloc[test_index]
                 classifier.fit(train_x_train, y_cls_train)
                 predictions[i].extend(classifier.predict(train_x_test))
                 i = i+1
