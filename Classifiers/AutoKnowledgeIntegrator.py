@@ -47,8 +47,8 @@ class AutoKnowledgeIntegrator:
         kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)
         for train_index, test_index in kf.split(self.data):
             train, holdout = self.data.iloc[train_index], self.data.iloc[test_index]
-            train.index = list(range(len(train)))
-            holdout.index = list(range(len(holdout)))
+            #train.index = list(range(len(train)))
+            #holdout.index = list(range(len(holdout)))
             temp_results = self.cv_step(train, holdout, train_index, k, random_seed)
             results['Accuracy'].append(temp_results['Accuracy'])
             results['Precision'].append(temp_results['Precision'])
@@ -68,74 +68,6 @@ class AutoKnowledgeIntegrator:
         #print(results)
         self.results = results
         return results
-
-    def fitLevel1Classifiers(self,x,y):
-        for classifier in self.level1_classifiers:
-            classifier.fit(x,y)
-
-    def fit(self, x, y, k = 10, random_seed= None):
-        predictions = []
-        for classifier in self.level1_classifiers:
-            predictions.append([])
-        x.index = list(range(len(x)))
-        #shuffle data, will do this later
-        #split training data into k folds
-        #fit first stage models on k-1 folds
-        #x, y = self.splitDataIntoXY(train)
-        i = 0
-        for classifier in self.level1_classifiers:
-            #classifier.fit(train_x_train, train_y_train)
-            predictions[i].extend(classifier.predict(x))
-            i = i+1
-
-        columns = []
-        for classifier in self.level1_classifiers:
-            columns.append(classifier.name)
-        #output->csv
-        #out-of-folds <- first stage models predict kth fold
-        predictions = pandas.DataFrame(predictions)
-        predictions = predictions.transpose()
-        predictions.columns = columns
-
-        predictions_x = pandas.concat(objs=[x,predictions], axis=1)
-        predictions_y = y
-        # print("in fit itself")
-        # print(self.name)
-        # print("X: " + str(list(predictions_x.columns.values)))
-        # print("Y: " + str(list(predictions_y.columns.values)))
-        self.stacking_classifier.fit(predictions_x, predictions_y)
-
-    def predict(self, x, y = None, k = 10, random_seed = None):
-        predictions = []
-        for classifier in self.level1_classifiers:
-            predictions.append([])
-        x.index = list(range(len(x)))
-        #print("PREDICT METHOD X")
-        #print(x)
-
-        i = 0
-        for classifier in self.level1_classifiers:
-            #classifier.fit(train_x_train, train_y_train)
-            predictions[i].extend(classifier.predict(x))
-            i = i+1
-
-        columns = []
-        for classifier in self.level1_classifiers:
-            columns.append(classifier.name)
-        predictions = pandas.DataFrame(predictions)
-        predictions = predictions.transpose()
-        predictions.columns = columns
-        #print("PREDICTIONS:")
-        #print(predictions)
-        if y is not None:
-            #print("Y" + str(y))
-            output = pandas.concat(objs=[x,predictions,y], axis=1)
-            output_name = self.name + "_" + str(random.randint(1,100)) + ".csv"
-            output.to_csv("test_data/"+output_name)
-
-        predictions_x = pandas.concat(objs=[x,predictions], axis=1)
-        stacking_predictions = self.stacking_classifier.predict(predictions_x)
-        return stacking_predictions
 
     def cv_step(self, train, holdout, train_index, k, random_seed):
         predictions = []
@@ -221,6 +153,77 @@ class AutoKnowledgeIntegrator:
         results['Confusion_Matrix'] = confusion_matrix(y, stacking_predictions)
         #s#print(results)
         return results
+
+
+    def fitLevel1Classifiers(self,x,y):
+        for classifier in self.level1_classifiers:
+            classifier.fit(x,y)
+
+    def fit(self, x, y, k = 10, random_seed= None):
+        predictions = []
+        for classifier in self.level1_classifiers:
+            predictions.append([])
+        x.index = list(range(len(x)))
+        #shuffle data, will do this later
+        #split training data into k folds
+        #fit first stage models on k-1 folds
+        #x, y = self.splitDataIntoXY(train)
+        i = 0
+        for classifier in self.level1_classifiers:
+            #classifier.fit(train_x_train, train_y_train)
+            predictions[i].extend(classifier.predict(x))
+            i = i+1
+
+        columns = []
+        for classifier in self.level1_classifiers:
+            columns.append(classifier.name)
+        #output->csv
+        #out-of-folds <- first stage models predict kth fold
+        predictions = pandas.DataFrame(predictions)
+        predictions = predictions.transpose()
+        predictions.columns = columns
+
+        predictions_x = pandas.concat(objs=[x,predictions], axis=1)
+        predictions_y = y
+        # print("in fit itself")
+        # print(self.name)
+        # print("X: " + str(list(predictions_x.columns.values)))
+        # print("Y: " + str(list(predictions_y.columns.values)))
+        self.stacking_classifier.fit(predictions_x, predictions_y)
+
+    def predict(self, x, y = None, k = 10, random_seed = None):
+        predictions = []
+        for classifier in self.level1_classifiers:
+            predictions.append([])
+        x.index = list(range(len(x)))
+        #print("PREDICT METHOD X")
+        #print(x)
+
+        i = 0
+        for classifier in self.level1_classifiers:
+            #classifier.fit(train_x_train, train_y_train)
+            predictions[i].extend(classifier.predict(x))
+            i = i+1
+
+        columns = []
+        for classifier in self.level1_classifiers:
+            columns.append(classifier.name)
+        predictions = pandas.DataFrame(predictions)
+        predictions = predictions.transpose()
+        predictions.columns = columns
+        #print("PREDICTIONS:")
+        #print(predictions)
+        if y is not None:
+            #print("Y" + str(y))
+            output = pandas.concat(objs=[x,predictions,y], axis=1)
+            output_name = self.name + "_" + str(random.randint(1,100)) + ".csv"
+            output.to_csv("test_data/"+output_name)
+
+        predictions_x = pandas.concat(objs=[x,predictions], axis=1)
+        stacking_predictions = self.stacking_classifier.predict(predictions_x)
+        return stacking_predictions
+
+
 
     def splitDataIntoXY(self, data):
         x = self.kb.X
