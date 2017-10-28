@@ -225,16 +225,19 @@ class NELController:
                 earlydeath.append(classifiers['Classifier'])
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier='Decision Tree', use_features=False)
         r = ki.testKI(k = 10, random_seed = random_seed)
+        r['Name'] = ki.name
         self.results(r)
         kis.append(ki)
 
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier='Decision Tree', use_features=False)
         r = ki.testKI(k = 10, random_seed = random_seed)
+        r['Name'] = ki.name
         self.results(r)
         kis.append(ki)
 
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier='Decision Tree', use_features=False)
         r = ki.testKI(k = 10, random_seed = random_seed)
+        r['Name'] = ki.name
         self.results(r)
         kis.append(ki)
         stacked = kis
@@ -274,6 +277,7 @@ class NELController:
                 KI.name = KI.name + "_usingStackers"
             if exec_:
                 r = KI.testKI(k = 10, random_seed = random_seed)
+                r['Name'] = KI.name
                 self.results.append(r)
         return kis
 
