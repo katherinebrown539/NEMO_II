@@ -49,7 +49,7 @@ class AutoKnowledgeIntegrator:
             train, holdout = self.data.iloc[train_index], self.data.iloc[test_index]
             train.index = list(range(len(train)))
             holdout.index = list(range(len(holdout)))
-            temp_results = self.cv_step(train, holdout, train_index k, random_seed)
+            temp_results = self.cv_step(train, holdout, train_index, k, random_seed)
             results['Accuracy'].append(temp_results['Accuracy'])
             results['Precision'].append(temp_results['Precision'])
             results['Recall'].append(temp_results['Recall'])
