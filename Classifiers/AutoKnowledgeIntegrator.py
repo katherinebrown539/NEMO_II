@@ -90,7 +90,7 @@ class AutoKnowledgeIntegrator:
             i = 0
             for classifier in self.level1_classifiers:
                 x_cls, y_cls = classifier.kb.splitDataIntoXY()
-                y_cls = y_cls.iloc[train_index] #reducing all y to training y
+                #y_cls = y_cls.iloc[train_index] #reducing all y to training y
                 y_cls_train,y_cls_test = y_cls.iloc[train_index], y_cls.iloc[test_index]
                 classifier.fit(train_x_train, y_cls_train)
                 predictions[i].extend(classifier.predict(train_x_test))
