@@ -25,8 +25,11 @@ class NELController:
         classifiers = json_data['Classifiers']
         self.createClassifiers(classifiers)
         self.results = []
+        j = 1
         for classifier in self.classifiers:
+            print("Model #"+ str(j))
             self.runModel(classifier['Classifier'])
+            j = j+1
         self.constraints = []
         self.blankets = []
         self.parseConstraints(json_data['Constraints'])
@@ -166,6 +169,7 @@ class NELController:
         graph.render(name)
 
     def runTraumaBlanketsInKI(self):
+        print("Beginning processing KnowledgeIntegrators")
         kis = []
         ed2or = []
         icuadmit = []
