@@ -157,7 +157,9 @@ class AutoKnowledgeIntegrator:
             train_x_test, test_y_test = self.splitDataIntoXY(testing)
             i = 0
             for classifier in self.level1_classifiers:
-                #classifier.fit(train_x_train, train_y_train)
+                x_cls, y_cls = classifier.kb.splitDataIntoXY()
+                y_cls_train,y_cls_test = y_cls[train_index], y_cls[test_index]
+                classifier.fit(train_x_train, y_cls_train)
                 predictions[i].extend(classifier.predict(train_x_test))
                 i = i+1
         columns = []
