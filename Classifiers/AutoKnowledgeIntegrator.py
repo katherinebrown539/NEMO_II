@@ -47,8 +47,8 @@ class AutoKnowledgeIntegrator:
         kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)
         for train_index, test_index in kf.split(self.data):
             train, holdout = self.data.iloc[train_index], self.data.iloc[test_index]
-            #train.index = list(range(len(train)))
-            #holdout.index = list(range(len(holdout)))
+            train.index = list(range(len(train)))
+            holdout.index = list(range(len(holdout)))
             temp_results = self.cv_step(train, holdout, train_index, k, random_seed)
             results['Accuracy'].append(temp_results['Accuracy'])
             results['Precision'].append(temp_results['Precision'])
