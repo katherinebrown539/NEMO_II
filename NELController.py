@@ -26,15 +26,15 @@ class NELController:
         self.createClassifiers(classifiers)
         self.results = []
         j = 1
-        for classifier in self.classifiers:
-            print("Model #"+ str(j))
-            self.runModel(classifier['Classifier'])
-            j = j+1
+        # for classifier in self.classifiers:
+        #     print("Model #"+ str(j))
+        #     self.runModel(classifier['Classifier'])
+        #     j = j+1
         self.constraints = []
         self.blankets = []
         self.parseConstraints(json_data['Constraints'])
         self.generateMarkovBlanket()
-        #self.runBlanketsInKI()
+        self.runBlanketsInKI()
         #self.execute()
         sys.stdout = save_stdout
         # for r in self.results:
