@@ -44,6 +44,7 @@ class AutoKnowledgeIntegrator:
         results['ROC'] = []
         results['ROC_AUC'] = []
         results['Confusion_Matrix'] = []
+        id_ = random.randint(0,100)
         j = 1
         kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)
         for train_index, test_index in kf.split(self.data):
@@ -51,7 +52,8 @@ class AutoKnowledgeIntegrator:
             train, holdout = self.data.iloc[train_index], self.data.iloc[test_index]
             train.index = list(range(len(train)))
             holdout.index = list(range(len(holdout)))
-            temp_results = self.cv_step(train, holdout, train_index, k, random_seed)
+            train.to_csv("test_data/"+ki.name+"_train_"+str(id_))
+            temp_results = self.cv_step(train, holdout, train_index, k, random_seed, id_)
             results['Accuracy'].append(temp_results['Accuracy'])
             results['Precision'].append(temp_results['Precision'])
             results['Recall'].append(temp_results['Recall'])
@@ -60,6 +62,7 @@ class AutoKnowledgeIntegrator:
             results['ROC'].append(temp_results['ROC'])
             results['ROC_AUC'].append(temp_results['ROC_AUC'])
             results['Confusion_Matrix'].append(temp_results['Confusion_Matrix'])
+            j = j+1
         results['Accuracy'] = numpy.mean(results['Accuracy'])
         results['Precision'] = numpy.mean(results['Precision'])
         results['Recall'] = numpy.mean(results['Recall'])
@@ -71,7 +74,7 @@ class AutoKnowledgeIntegrator:
         self.results = results
         return results
 
-    def cv_step(self, train, holdout, train_index_, k, random_seed):
+    def cv_step(self, train, holdout, train_index_, k, random_seed, id = None):
         predictions = []
         for classifier in self.level1_classifiers:
             predictions.append([])
@@ -94,6 +97,7 @@ class AutoKnowledgeIntegrator:
                 print("Training sub-classifier: " + classifier.name)
                 x_cls, y_cls = classifier.kb.splitDataIntoXY()
                 y_cls = y_cls.iloc[train_index_] #reducing all y to training y
+                pandas.concat(objs=[x_cls,y_cls], axis=1).to_csv("test_data/"+classifier.name+"_train_"+str(id_))
                 y_cls_train,y_cls_test = y_cls.iloc[train_index], y_cls.iloc[test_index]
                 classifier.fit(train_x_train, y_cls_train)
                 predictions[i].extend(classifier.predict(train_x_test))
