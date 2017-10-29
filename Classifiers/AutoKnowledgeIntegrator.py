@@ -74,7 +74,7 @@ class AutoKnowledgeIntegrator:
         self.results = results
         return results
 
-    def cv_step(self, train, holdout, train_index_, k, random_seed, id = None):
+    def cv_step(self, train, holdout, train_index_, k, random_seed, id_ = None):
         predictions = []
         for classifier in self.level1_classifiers:
             predictions.append([])
