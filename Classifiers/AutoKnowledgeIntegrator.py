@@ -52,7 +52,7 @@ class AutoKnowledgeIntegrator:
             train, holdout = self.data.iloc[train_index], self.data.iloc[test_index]
             train.index = list(range(len(train)))
             holdout.index = list(range(len(holdout)))
-            train.to_csv("test_data/"+self.name+"_train_"+str(id_))
+            train.to_csv("test_data/"+self.name+"_train_"+str(id_)+".csv")
             temp_results = self.cv_step(train, holdout, train_index, k, random_seed, id_)
             results['Accuracy'].append(temp_results['Accuracy'])
             results['Precision'].append(temp_results['Precision'])
@@ -97,7 +97,7 @@ class AutoKnowledgeIntegrator:
                 print("Training sub-classifier: " + classifier.name)
                 x_cls, y_cls = classifier.kb.splitDataIntoXY()
                 y_cls = y_cls.iloc[train_index_] #reducing all y to training y
-                pandas.concat(objs=[x_cls,y_cls], axis=1).to_csv("test_data/"+classifier.name+"_train_"+str(id_))
+                pandas.concat(objs=[x_cls,y_cls], axis=1).to_csv("test_data/"+classifier.name+"_train_"+str(id_))+".csv"
                 y_cls_train,y_cls_test = y_cls.iloc[train_index], y_cls.iloc[test_index]
                 classifier.fit(train_x_train, y_cls_train)
                 predictions[i].extend(classifier.predict(train_x_test))

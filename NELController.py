@@ -206,7 +206,7 @@ class NELController:
         for blanket in self.blankets:
             if blanket['RIGHT_MEMBER'] in ['ISS16', 'NeedTC']:
                 c = blanket['RIGHT_MEMBER']
-                #self.executeBlanket(blanket,c, clses_=kis)
+                self.executeBlanket(blanket,c, clses_=kis)
                 self.executeBlanket(blanket,c, clses_=None)
 
     def generateTraumaKI(self, classifiers = None):
