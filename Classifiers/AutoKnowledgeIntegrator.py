@@ -9,6 +9,7 @@ from sklearn.utils import shuffle
 from sklearn.metrics import classification_report,confusion_matrix, accuracy_score, precision_score, f1_score, recall_score, precision_recall_fscore_support,roc_curve,roc_auc_score
 from sklearn.model_selection import train_test_split, KFold
 import pandas, MySQLdb, threading, sys, os, time, random, numpy
+#comment for git
 
 class AutoKnowledgeIntegrator:
     def __init__(self, kb, level1_classifiers, stacking_classifier=None, use_features=False):
