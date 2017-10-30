@@ -54,8 +54,8 @@ class AutoKnowledgeIntegrator:
             train, holdout = self.data.iloc[train_index], self.data.iloc[test_index]
             train.index = list(range(len(train)))
             holdout.index = list(range(len(holdout)))
-            print("Training length: " + str(len(train)))
-            print("Holdout length: " + str(len(holdout)))
+            # print("Training length: " + str(len(train)))
+            # print("Holdout length: " + str(len(holdout)))
             #train.to_csv("test_data/"+self.name+"_train_"+str(id_)+".csv")
             temp_results = self.cv_step(train, holdout, train_index, k, random_seed, id_)
             results['Accuracy'].append(temp_results['Accuracy'])
@@ -98,12 +98,12 @@ class AutoKnowledgeIntegrator:
             train_x_test, test_y_test = self.splitDataIntoXY(testing)
             i = 0
             for classifier in self.level1_classifiers:
-                print("Training sub-classifier: " + classifier.name)
+                #print("Training sub-classifier: " + classifier.name)
                 x_cls, y_cls = classifier.kb.splitDataIntoXY()
                 #x_cls = x_cls.iloc[train_index]
-                print("Original y length " + str(len(y_cls)))
+                #print("Original y length " + str(len(y_cls)))
                 y_cls = y_cls.iloc[train_index_] #reducing all y to training y
-                print("New y length " + str(len(y_cls)))
+                #print("New y length " + str(len(y_cls)))
                 #pandas.concat(objs=[x_cls,y_cls], axis=1).to_csv("test_data/sub_classifier"+classifier.kb.Y+"_train_"+str(id_))+".csv"
                 y_cls_train,y_cls_test = y_cls.iloc[train_index], y_cls.iloc[test_index]
                 classifier.fit(train_x_train, y_cls_train)
