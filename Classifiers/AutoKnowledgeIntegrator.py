@@ -104,7 +104,7 @@ class AutoKnowledgeIntegrator:
                 print("Original y length " + str(len(y_cls)))
                 y_cls = y_cls.iloc[train_index_] #reducing all y to training y
                 print("New y length " + str(len(y_cls)))
-                pandas.concat(objs=[x_cls,y_cls], axis=1).to_csv("test_data/"+classifier.name+"_train_"+str(id_))+".csv"
+                pandas.concat(objs=[x_cls,y_cls], axis=1).to_csv("test_data/sub_classifier"+classifier.kb.Y+"_train_"+str(id_))+".csv"
                 y_cls_train,y_cls_test = y_cls.iloc[train_index], y_cls.iloc[test_index]
                 classifier.fit(train_x_train, y_cls_train)
                 predictions[i].extend(classifier.predict(train_x_test))
