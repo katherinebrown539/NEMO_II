@@ -47,7 +47,7 @@ class AutoKnowledgeIntegrator:
         results['Confusion_Matrix'] = []
         id_ = random.randint(0,100)
         j = 1
-        print("Data Length: " + str(len(data)))
+        print("Data Length: " + str(len(self.data)))
         kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)
         for train_index, test_index in kf.split(self.data):
             print("Iteration: " + str(j))
