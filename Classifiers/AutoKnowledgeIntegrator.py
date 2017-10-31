@@ -179,7 +179,7 @@ class AutoKnowledgeIntegrator:
             predictions.append([])
         names = list(x.columns.values)
 
-        train_index_ = df.index[pandas.isnull(x[names[0]])].tolist()
+        train_index_ = x.index[pandas.isnull(x[names[0]])].tolist()
         x.index = list(range(len(x)))
         y.index = list(range(len(y)))
 
