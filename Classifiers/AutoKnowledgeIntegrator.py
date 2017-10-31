@@ -183,7 +183,7 @@ class AutoKnowledgeIntegrator:
         x.index = list(range(len(x)))
         y.index = list(range(len(y)))
 
-
+        kf = KFold(n_splits=10)
         i = 0
         for train_index, test_index in kf.split(train):
             training, testing = train.iloc[train_index], train.iloc[test_index]
