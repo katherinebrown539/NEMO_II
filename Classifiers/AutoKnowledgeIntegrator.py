@@ -178,9 +178,10 @@ class AutoKnowledgeIntegrator:
         names = list(x.columns.values)
 
         train_index_ = x.index[pandas.isnull(x[names[0]]) == False].tolist()
+        x = x.iloc[train_index_]
+        y = y.iloc[train_index_]
         x.index = list(range(len(x)))
         y.index = list(range(len(y)))
-
         kf = KFold(n_splits=10)
         i = 0
         for train_index, test_index in kf.split(train):
@@ -193,7 +194,7 @@ class AutoKnowledgeIntegrator:
                 x_cls, y_cls = classifier.kb.splitDataIntoXY()
                 #x_cls = x_cls.iloc[train_index]
                 #print("Original y length " + str(len(y_cls)))
-                y_cls = y_cls.iloc[train_index_] #reducing all y to training y
+                #y_cls = y_cls.iloc[train_index_] #reducing all y to training y
                 y_cls_train,y_cls_test = y_cls.iloc[train_index], y_cls.iloc[test_index]
                 classifier.fit(train_x_train, y_cls_train)
                 predictions[i].extend(classifier.predict(train_x_test))
