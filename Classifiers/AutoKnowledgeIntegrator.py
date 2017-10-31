@@ -184,7 +184,9 @@ class AutoKnowledgeIntegrator:
         #x, y = self.splitDataIntoXY(train)
         i = 0
         for classifier in self.level1_classifiers:
-            #classifier.fit(train_x_train, train_y_train)
+            x_cls, y_cls = classifier.kb.splitDataIntoXY()
+            y_cls = y_cls.iloc[train_index_]
+            y_cls_train,y_cls_test = y_cls.iloc[train_index], y_cls.iloc[test_index]
             predictions[i].extend(classifier.predict(x))
             i = i+1
 
@@ -215,7 +217,7 @@ class AutoKnowledgeIntegrator:
 
         i = 0
         for classifier in self.level1_classifiers:
-            #classifier.fit(train_x_train, train_y_train)
+            classifier.fit(train_x_train, train_y_train)
             predictions[i].extend(classifier.predict(x))
             i = i+1
 
@@ -227,12 +229,7 @@ class AutoKnowledgeIntegrator:
         predictions.columns = columns
         #print("PREDICTIONS:")
         #print(predictions)
-        if y is not None:
-            #print("Y" + str(y))
-            output = pandas.concat(objs=[x,predictions,y], axis=1)
-            output_name = self.name + "_" + str(random.randint(1,100)) + ".csv"
-            output.to_csv("test_data/"+output_name)
-
+        
         predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         stacking_predictions = self.stacking_classifier.predict(predictions_x)
         return stacking_predictions
