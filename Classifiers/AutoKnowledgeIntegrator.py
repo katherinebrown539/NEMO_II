@@ -177,19 +177,29 @@ class AutoKnowledgeIntegrator:
         predictions = []
         for classifier in self.level1_classifiers:
             predictions.append([])
-        x.index = list(range(len(x)))
-        #shuffle data, will do this later
-        #split training data into k folds
-        #fit first stage models on k-1 folds
-        #x, y = self.splitDataIntoXY(train)
-        i = 0
-        for classifier in self.level1_classifiers:
-            x_cls, y_cls = classifier.kb.splitDataIntoXY()
-            y_cls = y_cls.iloc[train_index_]
-            y_cls_train,y_cls_test = y_cls.iloc[train_index], y_cls.iloc[test_index]
-            predictions[i].extend(classifier.predict(x))
-            i = i+1
+        names = list(x.columns.values)
 
+        train_index_ = df.index[pandas.notna(df[names[0]])].tolist()
+        x.index = list(range(len(x)))
+        y.index = list(range(len(y)))
+
+
+        i = 0
+        for train_index, test_index in kf.split(train):
+            training, testing = train.iloc[train_index], train.iloc[test_index]
+            train_x_train, train_y_train = self.splitDataIntoXY(training)
+            train_x_test, test_y_test = self.splitDataIntoXY(testing)
+            i = 0
+            for classifier in self.level1_classifiers:
+                #print("Training sub-classifier: " + classifier.name)
+                x_cls, y_cls = classifier.kb.splitDataIntoXY()
+                #x_cls = x_cls.iloc[train_index]
+                #print("Original y length " + str(len(y_cls)))
+                y_cls = y_cls.iloc[train_index] #reducing all y to training y
+                y_cls_train,y_cls_test = y_cls.iloc[train_index], y_cls.iloc[test_index]
+                classifier.fit(train_x_train, y_cls_train)
+                predictions[i].extend(classifier.predict(train_x_test))
+                i = i+1
         columns = []
         for classifier in self.level1_classifiers:
             columns.append(classifier.name)
@@ -229,7 +239,7 @@ class AutoKnowledgeIntegrator:
         predictions.columns = columns
         #print("PREDICTIONS:")
         #print(predictions)
-        
+
         predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         stacking_predictions = self.stacking_classifier.predict(predictions_x)
         return stacking_predictions
