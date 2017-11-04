@@ -12,6 +12,7 @@ import copy
 from ConstraintLanguage import ConstraintLanguage
 from sklearn.metrics import classification_report,confusion_matrix, accuracy_score, precision_score, f1_score, recall_score, precision_recall_fscore_support,roc_curve,roc_auc_score
 from sklearn.model_selection import train_test_split, KFold
+
 class NELController:
     def __init__(self, facts_file, config_file, output_file):
         with open(facts_file) as fd:
@@ -26,10 +27,7 @@ class NELController:
         self.createClassifiers(classifiers)
         self.results = []
         j = 1
-        # for classifier in self.classifiers:
-        #     print("Model #"+ str(j))
-        #     self.runModel(classifier['Classifier'])
-        #     j = j+1
+
         self.constraints = []
         self.blankets = []
         self.parseConstraints(json_data['Constraints'])
@@ -45,90 +43,7 @@ class NELController:
         self.runTraumaBlanketsInKI()
         #self.runORNLBlanketsInKI()
 
-    def execute(self):
-        print("in execute")
-        results = []
-        i = 0
-        j = 1
-        data_ = self.classifiers[0].get('Classifier').kb.getData()
-        for classifier in self.classifiers:
-            r = {}
-            r['Classifier'] = classifier['Classifier']
-            r['Name'] = classifier['Classifier'].getName()+"_"+classifier['Classifier'].kb.Y
-            r['Accuracy'] = []
-            r['Precision'] = []
-            r['Recall'] = []
-            r['F1'] = []
-            r['Support'] = []
-            r['ROC'] = []
-            r['ROC_AUC'] = []
-            r['Confusion_Matrix'] = []
-            results.append(r)
-            i = i+1
-        kis = self.generateTraumaKI()
-        print("Generated KIs")
-        ki_res = []
-        for ki in kis:
-            r = {}
-            r['Classifier'] = ki
-            r['Name'] = ki.name
-            r['Accuracy'] = []
-            r['Precision'] = []
-            r['Recall'] = []
-            r['F1'] = []
-            r['Support'] = []
-            r['ROC'] = []
-            r['ROC_AUC'] = []
-            r['Confusion_Matrix'] = []
-            ki_res.append(r)
-        kf = KFold(n_splits=10)
-        #print("KI_RES = " + str(ki_res))
-        #return
-        for train_index, test_index in kf.split(data_):
-            classifiers = []
-            print("About to train level 1 models for iteration #" + str(j))
-            i = 1
-            for result in results:
-                print(result['Classifier'].name)
-                X,Y = result['Classifier'].kb.splitDataIntoXY()
-                self.updateResult(result, X,Y, train_index, test_index)
-                print("Trained model" + str(i))
-                i = i+1
-                classifiers.append({"Classifier_Name": result['Classifier'].name, "Class": result['Classifier'].kb.Y, "Classifier": result['Classifier']})
-            i = 1
-            self.classifiers = classifiers
-            #rebuild trauma ki
-            kis = self.generateTraumaKI()
-            for result in ki_res:
-                #replace ki in result
-                for ki in kis:
-                    if ki.name == result['Classifier'].name:
-                        print(ki.name)
-                        result['Classifier'] = ki
-                X,Y = result['Classifier'].kb.splitDataIntoXY()
-                self.updateResult(result, X,Y, train_index, test_index)
-                print("Trained model" + str(i))
-                i = i+1
-            j = j+1
 
-        for result in results:
-            result['Accuracy'] = numpy.mean(result['Accuracy'])
-            result['Precision'] = numpy.mean(result['Precision'])
-            result['Recall'] = numpy.mean(result['Recall'])
-            result['F1'] = numpy.mean(result['F1'])
-            result['Support'] = numpy.mean(result['Support'])
-            result['ROC_AUC'] = numpy.mean(result['ROC_AUC'])
-
-        for result in ki_res:
-            result['Accuracy'] = numpy.mean(result['Accuracy'])
-            result['Precision'] = numpy.mean(result['Precision'])
-            result['Recall'] = numpy.mean(result['Recall'])
-            result['F1'] = numpy.mean(result['F1'])
-            result['Support'] = numpy.mean(result['Support'])
-            result['ROC'] = numpy.mean(result['ROC'])
-            result['ROC_AUC'] = numpy.mean(result['ROC_AUC'])
-            results.append(result)
-        self.results = results
 
     def writeToCSV(self):
         #f = open(self.output_file, 'w')
@@ -170,6 +85,7 @@ class NELController:
 
     def runTraumaBlanketsInKI(self):
         print("Beginning processing KnowledgeIntegrators")
+        random_seed = random.randint(0,100)
         kis = []
         ed2or = []
         icuadmit = []
@@ -187,79 +103,29 @@ class NELController:
                 earlydeath.append(classifiers['Classifier'])
 
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier='Decision Tree', use_features=False)
-        results = ki.testKI()
+        results = ki.testKI(random_seed = random_seed)
         results['Name'] = ki.name
         self.results.append(results)
         kis.append(ki)
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier='Decision Tree', use_features=False)
         kis.append(ki)
-        results = ki.testKI()
+        results = ki.testKI(random_seed = random_seed)
         results['Name'] = ki.name
         self.results.append(results)
         kis.append(ki)
         ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier='Decision Tree', use_features=False)
         kis.append(ki)
-        results = ki.testKI()
+        results = ki.testKI(random_seed = random_seed)
         results['Name'] = ki.name
         self.results.append(results)
         kis.append(ki)
         for blanket in self.blankets:
             if blanket['RIGHT_MEMBER'] in ['ISS16', 'NeedTC']:
                 c = blanket['RIGHT_MEMBER']
-                self.executeBlanket(blanket,c, clses_=kis)
-                #self.executeBlanket(blanket,c, clses_=None)
+                self.executeBlanket(blanket,c, clses_=kis, random_seed = random_seed)
+                #self.executeBlanket(blanket,c, clses_=None, random_seed = random_seed)
 
-    def generateTraumaKI(self, classifiers = None):
-        kis = []
-        ed2or = []
-        icuadmit = []
-        earlydeath = []
-        #Get all classifiers that classify the same thing
-        if classifiers is None:
-            classifiers = self.classifiers
-        for classifiers in classifiers:
-            if classifiers['Class'] == 'ED2OR':
-                #classifiers['Classifier'].runModel()
-                ed2or.append(classifiers['Classifier'])
-            elif classifiers['Class'] == 'ICUAdmit':
-                #classifiers['Classifier'].runModel()
-                icuadmit.append(classifiers['Classifier'])
-            elif classifiers['Class'] == 'EarlyDeath':
-                #classifiers['Classifier'].runModel()
-                earlydeath.append(classifiers['Classifier'])
-        ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier='Decision Tree', use_features=False)
-        print("Evaluating " + ki.name)
-        r = ki.testKI(k = 10, random_seed = random_seed)
-        r['Name'] = ki.name
-        self.results(r)
-        kis.append(ki)
-
-        ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier='Decision Tree', use_features=False)
-        print("Evaluating " + ki.name)
-        r = ki.testKI(k = 10, random_seed = random_seed)
-        r['Name'] = ki.name
-        self.results(r)
-        kis.append(ki)
-
-        ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier='Decision Tree', use_features=False)
-        print("Evaluating " + ki.name)
-        r = ki.testKI(k = 10, random_seed = random_seed)
-        r['Name'] = ki.name
-        self.results(r)
-        kis.append(ki)
-        stacked = kis
-        blanket_kis = []
-        for blanket in self.blankets:
-            if blanket['RIGHT_MEMBER'] in ['ISS16', 'NeedTC']:
-                c = blanket['RIGHT_MEMBER']
-                #blanket_kis.extend(self.executeBlanket(blanket,c, clses_=stacked, exec_=False))
-                blanket_kis.extend(self.executeBlanket(blanket,c, clses_=None, exec_=True))
-        # for k in blanket_kis:
-        #     k.fit(x,y)
-        kis.extend(blanket_kis)
-        return kis
-
-    def executeBlanket(self, blanket, class_, clses_=None, exec_=True):
+    def executeBlanket(self, blanket, class_, clses_=None, exec_=True, random_seed = 0):
         kis = []
         kb = None
         if clses_ is None:
@@ -268,7 +134,7 @@ class NELController:
             clses = clses_
         results = []
         num_folds = 10
-        random_seed = 0
+
         for classifier in blanket['CLASSIFIERS_THAT_INFLUENCE']:
             if classifier['Class'] == class_:
                 kb = classifier['Classifier'].kb
