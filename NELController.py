@@ -26,7 +26,12 @@ class NELController:
         classifiers = json_data['Classifiers']
         self.createClassifiers(classifiers)
         self.results = []
-        j = 1
+
+        # j = 1
+        # for classifiers in self.classifiers:
+        #     print("Model #" + str(j))
+        #     self.runModel(classifier['Classifier'])
+        #     j = j+1
 
         self.constraints = []
         self.blankets = []
