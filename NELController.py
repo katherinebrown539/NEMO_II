@@ -26,26 +26,27 @@ class NELController:
         classifiers = json_data['Classifiers']
         self.createClassifiers(classifiers)
         self.results = []
+        random_seed = random.randint(0,100)
 
         # j = 1
         # for classifiers in self.classifiers:
         #     print("Model #" + str(j))
-        #     self.runModel(classifier['Classifier'])
+        #     self.runModel(classifier['Classifier'], random_seed = random_seed)
         #     j = j+1
 
         self.constraints = []
         self.blankets = []
         self.parseConstraints(json_data['Constraints'])
         self.generateMarkovBlanket()
-        self.runBlanketsInKI()
+        self.runBlanketsInKI(random_seed = random_seed)
         #self.execute()
         sys.stdout = save_stdout
         # for r in self.results:
         #     #print(r)
         self.writeToCSV()
     #will need to generalize for other data sets......
-    def runBlanketsInKI(self):
-        self.runTraumaBlanketsInKI()
+    def runBlanketsInKI(self, random_seed = None):
+        self.runTraumaBlanketsInKI(random_seed = random_seed)
         #self.runORNLBlanketsInKI()
 
 
@@ -88,9 +89,9 @@ class NELController:
         graph = graphviz.Source(dot_data)
         graph.render(name)
 
-    def runTraumaBlanketsInKI(self):
+    def runTraumaBlanketsInKI(self, random_seed = None):
         print("Beginning processing KnowledgeIntegrators")
-        random_seed = random.randint(0,100)
+
         kis = []
         ed2or = []
         icuadmit = []
@@ -281,7 +282,7 @@ class NELController:
         ##print d
         return d
 
-    def runModel(self, classifier):
+    def runModel(self, classifier, random_seed = None):
         print("Evaluating: " + classifier.name)
         accs = []
         precs = []
