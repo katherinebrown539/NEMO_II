@@ -7,7 +7,7 @@ import MySQLdb
 from collections import deque
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
-import threading, sys, os, time, json, traceback, pandas, numpy
+import threading, sys, os, time, json, traceback, pandas, numpy, random
 import copy
 from ConstraintLanguage import ConstraintLanguage
 from sklearn.metrics import classification_report,confusion_matrix, accuracy_score, precision_score, f1_score, recall_score, precision_recall_fscore_support,roc_curve,roc_auc_score
@@ -96,6 +96,8 @@ class NELController:
         ed2or = []
         icuadmit = []
         earlydeath = []
+        iss16 = []
+        needtc = []
         #Get all classifiers that classify the same thing
         for classifiers in self.classifiers:
             if classifiers['Class'] == 'ED2OR':
@@ -107,29 +109,60 @@ class NELController:
             elif classifiers['Class'] == 'EarlyDeath':
                 #classifiers['Classifier'].runModel()
                 earlydeath.append(classifiers['Classifier'])
+            elif classifiers['Class'] == 'ISS16':
+                iss16.append(classifiers['Classifier'])
+            elif classifiers['Class'] == 'NeedTC':
+                needTC.append(classifiers['Classifier'])
 
-        ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier='Decision Tree', use_features=False)
-        results = ki.testKI(random_seed = random_seed)
-        results['Name'] = ki.name
-        self.results.append(results)
-        kis.append(ki)
-        ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier='Decision Tree', use_features=False)
-        kis.append(ki)
-        results = ki.testKI(random_seed = random_seed)
-        results['Name'] = ki.name
-        self.results.append(results)
-        kis.append(ki)
-        ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier='Decision Tree', use_features=False)
-        kis.append(ki)
-        results = ki.testKI(random_seed = random_seed)
-        results['Name'] = ki.name
-        self.results.append(results)
-        kis.append(ki)
+        ed2or_ki = None
+        best = 0
+        for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
+            ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier='Decision Tree', use_features=False)
+            results = ki.testKI(random_seed = random_seed)
+            results['Name'] = ki.name
+            self.results.append(results)
+            if results['Accuracy'] > best:
+                ed2or_ki = ki
+                best = results['Accuracy']
+
+        icuadmit_ki = None
+        best = 0
+        for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
+            ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier='Decision Tree', use_features=False)
+            kis.append(ki)
+            results = ki.testKI(random_seed = random_seed)
+            results['Name'] = ki.name
+            self.results.append(results)
+            if results['Accuracy'] > best:
+                icuadmit_ki = ki
+                best = results['Accuracy']
+
+
+
+        earlydeath_ki = None
+        best = 0
+        for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
+            ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier='Decision Tree', use_features=False)
+            kis.append(ki)
+            results = ki.testKI(random_seed = random_seed)
+            results['Name'] = ki.name
+            self.results.append(results)
+            if results['Accuracy'] > best:
+                earlydeath_ki = ki
+                best = results['Accuracy']
+
+        kis.append(ed2or_ki)
+        kis.append(icuadmit_ki)
+        kis.append(earlydeath_ki)
+
+
+
         for blanket in self.blankets:
             if blanket['RIGHT_MEMBER'] in ['ISS16', 'NeedTC']:
                 c = blanket['RIGHT_MEMBER']
                 self.executeBlanket(blanket,c, clses_=kis, random_seed = random_seed)
                 #self.executeBlanket(blanket,c, clses_=None, random_seed = random_seed)
+
 
     def executeBlanket(self, blanket, class_, clses_=None, exec_=True, random_seed = 0):
         kis = []
@@ -151,13 +184,15 @@ class NELController:
         kis.append(KI)
         KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(kb, clses, stacking_classifier='Logistic Regression', use_features=False)
         kis.append(KI)
+        KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(kb, clses, stacking_classifier='Ridge', use_features=False)
+        kis.append(KI)
         for KI in kis:
             if(clses_ is not None):
                 KI.name = KI.name + "_usingStackers"
             if exec_:
                 print("Evaluating " + KI.name)
                 r = KI.testKI(k = 10, random_seed = random_seed)
-                r['Name'] = KI.name
+                r['Name'] = KI.name+"_blanket"
                 self.results.append(r)
         return kis
 
@@ -292,7 +327,7 @@ class NELController:
         rocs = []
         aucs = []
         cms = []
-        kf = KFold(n_splits=10)
+        kf = KFold(n_splits=10, random_state = random_state)
         X,Y = classifier.kb.splitDataIntoXY()
 
         for train_index, test_index in kf.split(X):

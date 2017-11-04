@@ -1,5 +1,5 @@
 from sklearn import preprocessing
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression, RidgeClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import SVC
 from KnowledgeBase import KnowledgeBase
@@ -25,6 +25,9 @@ class AutoKnowledgeIntegrator:
         elif stacking_classifier == "SVM":
             self.algorithm_name = "KI_SVM"
             self.stacking_classifier = SVC()
+        elif stacking_classifier == "Ridge":
+            self.algorithm_name = "KI_Ridge"
+            self.stacking_classifier = RidgeClassifier()
         self.algorithm_id = "KI"+str(random.randint(1,101))
         self.use_features = use_features
         self.data = self.kb.getData()
@@ -34,7 +37,7 @@ class AutoKnowledgeIntegrator:
 
     def testKI(self, k = 10, random_seed = None):
         print("Evaluating " + self.name)
-        self.data = shuffle(self.data)
+        #self.data = shuffle(self.data)
         self.data.index = list(range(len(self.data)))
         results = {}
         results['Accuracy'] = []
@@ -48,7 +51,7 @@ class AutoKnowledgeIntegrator:
         id_ = random.randint(0,100)
         j = 1
         print("Data Length: " + str(len(self.data)))
-        kf = KFold(n_splits=k, random_state=random_seed, shuffle=False)
+        kf = KFold(n_splits=k, random_state=random_seed, shuffle=True)
         for train_index, test_index in kf.split(self.data):
             print("Iteration: " + str(j))
             train, holdout = self.data.iloc[train_index], self.data.iloc[test_index]
