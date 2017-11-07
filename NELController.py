@@ -151,6 +151,19 @@ class NELController:
                 earlydeath_ki = ki
                 best = results['Accuracy']
 
+        for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
+            ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(iss16[0].kb, iss16, stacking_classifier=stk, use_features=False)
+            kis.append(ki)
+            results = ki.testKI(random_seed = random_seed)
+            results['Name'] = ki.name
+            self.results.append(results)
+            ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(needtc[0].kb, needtc, stacking_classifier=stk, use_features=False)
+            kis.append(ki)
+            results = ki.testKI(random_seed = random_seed)
+            results['Name'] = ki.name
+            self.results.append(results)
+
+
         kis.append(ed2or_ki)
         kis.append(icuadmit_ki)
         kis.append(earlydeath_ki)
