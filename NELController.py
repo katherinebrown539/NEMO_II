@@ -117,7 +117,7 @@ class NELController:
         ed2or_ki = None
         best = 0
         for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
-            ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier='Decision Tree', use_features=False)
+            ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier=stk, use_features=False)
             results = ki.testKI(random_seed = random_seed)
             results['Name'] = ki.name
             self.results.append(results)
@@ -128,7 +128,7 @@ class NELController:
         icuadmit_ki = None
         best = 0
         for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
-            ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier='Decision Tree', use_features=False)
+            ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier=stk, use_features=False)
             kis.append(ki)
             results = ki.testKI(random_seed = random_seed)
             results['Name'] = ki.name
@@ -142,7 +142,7 @@ class NELController:
         earlydeath_ki = None
         best = 0
         for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
-            ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier='Decision Tree', use_features=False)
+            ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier=stk, use_features=False)
             kis.append(ki)
             results = ki.testKI(random_seed = random_seed)
             results['Name'] = ki.name
@@ -194,6 +194,7 @@ class NELController:
                 r = KI.testKI(k = 10, random_seed = random_seed)
                 r['Name'] = KI.name+"_blanket"
                 self.results.append(r)
+                print(r)
         return kis
 
     def runORNLBlanketsInKI(self):
