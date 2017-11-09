@@ -202,8 +202,6 @@ class AutoKnowledgeIntegrator:
                 y_cls_train,y_cls_test = y_cls.iloc[train_index], y_cls.iloc[test_index]
                 y_cls_train = y_cls_train.dropna()
                 y_cls_test = y_cls_test.dropna()
-                print(train_x_train)
-                print(y_cls_train)
                 classifier.fit(train_x_train, y_cls_train)
                 predictions[i].extend(classifier.predict(train_x_test))
                 i = i+1
