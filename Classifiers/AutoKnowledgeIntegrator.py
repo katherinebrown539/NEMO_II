@@ -198,8 +198,7 @@ class AutoKnowledgeIntegrator:
             for classifier in self.level1_classifiers:
                 #print("Training sub-classifier: " + classifier.name)
                 x_cls, y_cls = classifier.kb.splitDataIntoXY()
-                x_cls = x_cls.dropna()
-                y_cls = y_cls.iloc[train_index_]
+                y_cls = y_cls.iloc[train_index_].dropna()
                 y_cls_train,y_cls_test = y_cls.iloc[train_index], y_cls.iloc[test_index]
                 y_cls_train = y_cls_train.dropna()
                 y_cls_test = y_cls_test.dropna()
