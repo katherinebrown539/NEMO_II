@@ -215,7 +215,7 @@ class AutoKnowledgeIntegrator:
         predictions = pandas.DataFrame(predictions)
         predictions = predictions.transpose()
         predictions.columns = columns
-
+        x = x.dropna()
         predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         predictions_y = y
         # print("in fit itself")
