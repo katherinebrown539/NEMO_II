@@ -178,19 +178,21 @@ class AutoKnowledgeIntegrator:
         for classifier in self.level1_classifiers:
             predictions.append([])
         names = list(x.columns.values)
-
-        train_index_ = x.index[pandas.isnull(x[names[0]]) == False].tolist()
-        x.index = list(range(len(x)))
-        y.index = list(range(len(y)))
-        x = x.iloc[train_index_]
-        y = y.iloc[train_index_]
-        x.index = list(range(len(x)))
-        y.index = list(range(len(y)))
+        train_index_ = x.index
+        # train_index_ = x.index[pandas.isnull(x[names[0]]) == False].tolist()
+        # x.index = list(range(len(x)))
+        # y.index = list(range(len(y)))
+        # x = x.iloc[train_index_]
+        # y = y.iloc[train_index_]
+        # x.index = list(range(len(x)))
+        # y.index = list(range(len(y)))
         kf = KFold(n_splits=10)
         i = 0
-        for train_index, test_index in kf.split(train):
+        for train_index, test_index in kf.split(x):
             #training, testing = train.iloc[train_index], train.iloc[test_index]
             train_x_train, train_x_test = x.iloc[train_index], x.iloc[test_index]
+            train_x_train = train_x_train.dropna()
+            train_x_test = train_x_test.dropna()
             #train_x_test, test_y_test = self.splitDataIntoXY(testing)
             i = 0
             for classifier in self.level1_classifiers:
@@ -198,6 +200,8 @@ class AutoKnowledgeIntegrator:
                 x_cls, y_cls = classifier.kb.splitDataIntoXY()
                 y_cls = y_cls.iloc[train_index_]
                 y_cls_train,y_cls_test = y_cls.iloc[train_index], y_cls.iloc[test_index]
+                y_cls_train = y_cls_train.dropna()
+                y_cls_test = y_cls_test.dropna()
                 classifier.fit(train_x_train, y_cls_train)
                 predictions[i].extend(classifier.predict(train_x_test))
                 i = i+1
