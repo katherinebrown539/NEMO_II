@@ -73,7 +73,7 @@ class AutoKnowledgeIntegrator:
         results['Recall'] = numpy.mean(results['Recall'])
         results['F1'] = numpy.mean(results['F1'])
         results['Support'] = numpy.mean(results['Support'])
-        results['ROC'] = numpy.mean(results['ROC'])
+        #results['ROC'] = numpy.mean(results['ROC'])
         results['ROC_AUC'] = numpy.mean(results['ROC_AUC'])
         #print(results)
         self.results = results
@@ -104,7 +104,6 @@ class AutoKnowledgeIntegrator:
                 #x_cls = x_cls.iloc[train_index]
                 #print("Original y length " + str(len(y_cls)))
                 y_cls = y_cls.iloc[train_index_] #reducing all y to training y
-                #print("New y length " + str(len(y_cls)))
                 #pandas.concat(objs=[x_cls,y_cls], axis=1).to_csv("test_data/sub_classifier"+classifier.kb.Y+"_train_"+str(id_))+".csv"
                 y_cls_train,y_cls_test = y_cls.iloc[train_index], y_cls.iloc[test_index]
                 classifier.fit(train_x_train, y_cls_train)
