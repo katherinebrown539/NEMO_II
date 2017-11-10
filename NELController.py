@@ -12,7 +12,7 @@ import copy
 from ConstraintLanguage import ConstraintLanguage
 from sklearn.metrics import classification_report,confusion_matrix, accuracy_score, precision_score, f1_score, recall_score, precision_recall_fscore_support,roc_curve,roc_auc_score
 from sklearn.model_selection import train_test_split, KFold
-
+from sklearn.neural_network import MLPClassifier
 class NELController:
     def __init__(self, facts_file, config_file, output_file):
         with open(facts_file) as fd:
@@ -37,9 +37,10 @@ class NELController:
         self.constraints = []
         self.blankets = []
         self.parseConstraints(json_data['Constraints'])
-        self.generateMarkovBlanket()
-        self.runBlanketsInKI(random_seed = random_seed)
+        #self.generateMarkovBlanket()
+        #self.runBlanketsInKI(random_seed = random_seed)
         #self.execute()
+        self.runDeepNN(random_seed = random_seed)
         sys.stdout = save_stdout
         # for r in self.results:
         #     #print(r)
@@ -88,6 +89,64 @@ class NELController:
         dot_data = tree.export_graphviz(model, out_file=None)
         graph = graphviz.Source(dot_data)
         graph.render(name)
+
+
+    def runDeepNN(self, random_seed = None):
+        iss16_kb = None
+        needtc_kb = None
+        for classifier in self.classifiers:
+            if classifier['Class'] == "ISS16":
+                iss16_kb = classifier['Classifier'].kb
+            if classifier['Class'] == "NeedTC":
+                needTC_kb = classifier['Classifier'].kb
+        #get ISS16 KB
+        #get needTC KB
+
+        def_ = 100
+
+        # Def, def, 1
+        name_ = "NeuralNetwork_def_def"
+        mlp = MLPClassifier(hidden_layer_sizes = (def_,def_,))
+        self.runModel(mlp, random_seed = random_seed, name = name_, kb = iss16_kb)
+        self.runModel(mlp, random_seed = random_seed, name = name_, kb = needtc_kb)
+
+        # Def, def, def, 1
+        name_ = "NeuralNetwork_def_def_def"
+        mlp = MLPClassifier(hidden_layer_sizes = (def_,def_,def_,))
+        self.runModel(mlp, random_seed = random_seed, name = name_, kb = iss16_kb)
+        self.runModel(mlp, random_seed = random_seed, name = name_, kb = needtc_kb)
+
+        iss16_X, Y = iss16_kb.splitDataIntoXY()
+        needtc_X, Y = needtc_kb.splitDataIntoXY()
+        iss16_n = iss16_X.shape[1]
+        needtc_n = needtc_X.shape[1]
+        # N, N, N, 1
+        name_ = "NeuralNetwork_N_N"
+        mlp = MLPClassifier(hidden_layer_sizes = (iss16_n,iss16_n,))
+        self.runModel(mlp, random_seed = random_seed, name = name_, kb = iss16_kb)
+        mlp = MLPClassifier(hidden_layer_sizes = (needtc_n,needtc_n,))
+        self.runModel(mlp, random_seed = random_seed, name = name_, kb = needtc_kb)
+        # N,N,N,N,1
+        name_ = "NeuralNetwork_N_N_N"
+        mlp = MLPClassifier(hidden_layer_sizes = (iss16_n,iss16_n,iss16_n,))
+        self.runModel(mlp, random_seed = random_seed, name = name_, kb = iss16_kb)
+        mlp = MLPClassifier(hidden_layer_sizes = (needtc_n,needtc_n,needtc_n,))
+        self.runModel(mlp, random_seed = random_seed, name = name_, kb = needtc_kb)
+        # N,N,N/2,1
+        name_ = "NeuralNetwork_N_0.5N"
+        mlp = MLPClassifier(hidden_layer_sizes = (iss16_n, int( 0.5*iss16_n),))
+        self.runModel(mlp, random_seed = random_seed, name = name_, kb = iss16_kb)
+        mlp = MLPClassifier(hidden_layer_sizes = (needtc_n,int( 0.5*needTC_n),))
+        self.runModel(mlp, random_seed = random_seed, name = name_, kb = needtc_kb)
+        # N,N/2,N,1
+        name_ = "NeuralNetwork_N_0.5N_N"
+        mlp = MLPClassifier(hidden_layer_sizes = (iss16_n,int( 0.5*iss16_n),iss16_n,))
+        self.runModel(mlp, random_seed = random_seed, name = name_, kb = iss16_kb)
+        mlp = MLPClassifier(hidden_layer_sizes = (needtc_n,int( 0.5*needTC_n),needtc_n,))
+        self.runModel(mlp, random_seed = random_seed, name = name_, kb = needtc_kb)
+
+
+
 
     def runTraumaBlanketsInKI(self, random_seed = None):
         print("Beginning processing KnowledgeIntegrators")
@@ -339,7 +398,7 @@ class NELController:
         ##print d
         return d
 
-    def runModel(self, classifier, random_seed = None):
+    def runModel(self, classifier, random_seed = None, name = None, kb = None):
         print("Evaluating: " + classifier.name)
         accs = []
         precs = []
@@ -350,7 +409,10 @@ class NELController:
         aucs = []
         cms = []
         kf = KFold(n_splits=10, random_state = random_state)
-        X,Y = classifier.kb.splitDataIntoXY()
+        if kb is None:
+            X,Y = classifier.kb.splitDataIntoXY()
+        else:
+            X,Y = kb.splitDataIntoXY()
 
         for train_index, test_index in kf.split(X):
             X_train, X_test = X.iloc[train_index], X.iloc[test_index]
@@ -369,7 +431,10 @@ class NELController:
             aucs.append(roc_auc_score(y_test, predict))
             cms.append(confusion_matrix(y_test, predict))
         r = {}
-        r['Name'] = classifier.name
+        if name is None:
+            r['Name'] = classifier.name
+        else:
+            r['Name'] = name
         r['Accuracy'] = numpy.mean(accs)
         r['Precision'] = numpy.mean(precs)
         r['Recall'] = numpy.mean(recs)
@@ -379,7 +444,7 @@ class NELController:
         r['ROC_AUC'] = numpy.mean(aucs)
         r['Confusion'] = cms
         self.results.append(r)
-
+        return r
     #update comment
     def parseFeatures(self, feature_string, target, all_features):
         ##print("Feature String: " + feature_string)
