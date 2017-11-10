@@ -95,6 +95,7 @@ class NELController:
         iss16_kb = None
         needtc_kb = None
         for classifier in self.classifiers:
+            print(classifier['Class'])
             if classifier['Class'] == "ISS16":
                 iss16_kb = classifier['Classifier'].kb
             if classifier['Class'] == "NeedTC":
