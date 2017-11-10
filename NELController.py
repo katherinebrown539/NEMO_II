@@ -407,7 +407,7 @@ class NELController:
         rocs = []
         aucs = []
         cms = []
-        kf = KFold(n_splits=10, random_state = random_state)
+        kf = KFold(n_splits=10, random_state = random_seed)
         if kb is None:
             X,Y = classifier.kb.splitDataIntoXY()
         else:
