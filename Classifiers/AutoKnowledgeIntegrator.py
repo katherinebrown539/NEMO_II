@@ -1,6 +1,7 @@
 from sklearn import preprocessing
 from sklearn.linear_model import LogisticRegression, RidgeClassifier
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
 from KnowledgeBase import KnowledgeBase
 from Classifiers import ML_Controller
@@ -28,9 +29,9 @@ class AutoKnowledgeIntegrator:
         elif stacking_classifier == "Ridge":
             self.algorithm_name = "KI_Ridge"
             self.stacking_classifier = RidgeClassifier()
-        else:
-            self.algorithm_name = "KI_"+stacking_classifier
-            self.stacking_classifier = stacking_classifier()
+        elif stacking_classifier == "Neural Network":
+            self.algorithm_name = "KI_NeuralNetwork"
+            self.stacking_classifier = MLPClassifier()
         self.algorithm_id = "KI"+str(random.randint(1,101))
         self.use_features = use_features
         self.data = self.kb.getData()

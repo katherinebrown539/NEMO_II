@@ -130,7 +130,7 @@ class NELController:
         icuadmit_ki = None
         best = 0
         #for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
-        for stk in ['Ridge', 'Logistic Regression','MLPClassifier']:
+        for stk in ['Ridge', 'Logistic Regression','Neural Network']:
             ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier=stk, use_features=False)
             kis.append(ki)
             # results = ki.testKI(random_seed = random_seed)
