@@ -399,7 +399,6 @@ class NELController:
         return d
 
     def runModel(self, classifier, random_seed = None, name = None, kb = None):
-        print("Evaluating: " + classifier.name)
         accs = []
         precs = []
         recs = []
@@ -413,7 +412,9 @@ class NELController:
             X,Y = classifier.kb.splitDataIntoXY()
         else:
             X,Y = kb.splitDataIntoXY()
-
+        if name is None:
+            name = classifier.name
+        print("Evaluating: " + name)
         for train_index, test_index in kf.split(X):
             X_train, X_test = X.iloc[train_index], X.iloc[test_index]
             y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
@@ -431,10 +432,7 @@ class NELController:
             aucs.append(roc_auc_score(y_test, predict))
             cms.append(confusion_matrix(y_test, predict))
         r = {}
-        if name is None:
-            r['Name'] = classifier.name
-        else:
-            r['Name'] = name
+        r['Name'] = name
         r['Accuracy'] = numpy.mean(accs)
         r['Precision'] = numpy.mean(precs)
         r['Recall'] = numpy.mean(recs)
