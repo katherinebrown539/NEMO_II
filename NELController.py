@@ -171,7 +171,7 @@ class NELController:
         kis.append(earlydeath_ki)
 
 
-
+        print("KIS: " + kis)
         for blanket in self.blankets:
             if blanket['RIGHT_MEMBER'] in ['ISS16', 'NeedTC']:
                 c = blanket['RIGHT_MEMBER']
