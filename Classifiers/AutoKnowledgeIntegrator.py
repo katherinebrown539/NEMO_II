@@ -28,6 +28,9 @@ class AutoKnowledgeIntegrator:
         elif stacking_classifier == "Ridge":
             self.algorithm_name = "KI_Ridge"
             self.stacking_classifier = RidgeClassifier()
+        else:
+            self.algorithm_name = "KI_"+stacking_classifier
+            self.stacking_classifier = stacking_classifier()
         self.algorithm_id = "KI"+str(random.randint(1,101))
         self.use_features = use_features
         self.data = self.kb.getData()
