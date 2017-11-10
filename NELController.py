@@ -99,7 +99,8 @@ class NELController:
             if classifier['Class'] == "ISS16":
                 iss16_kb = classifier['Classifier'].kb
             if classifier['Class'] == "NeedTC":
-                needTC_kb = classifier['Classifier'].kb
+                needtc_kb = classifier['Classifier'].kb
+
         #get ISS16 KB
         #get needTC KB
 
