@@ -178,6 +178,7 @@ class AutoKnowledgeIntegrator:
         for classifier in self.level1_classifiers:
             predictions.append([])
         names = list(x.columns.values)
+        x.dropna(inplace=True)
         train_index_ = x.index
         # train_index_ = x.index[pandas.isnull(x[names[0]]) == False].tolist()
         # x.index = list(range(len(x)))
@@ -213,9 +214,7 @@ class AutoKnowledgeIntegrator:
         predictions = pandas.DataFrame(predictions)
         predictions = predictions.transpose()
         predictions.columns = columns
-        x = x.dropna()
         predictions_x = pandas.concat(objs=[x,predictions], axis=1)
-        predictions_x.dropna(inplace=True)
         predictions_y = y
         # print("in fit itself")
         # print(self.name)
