@@ -117,7 +117,7 @@ class NELController:
         ed2or_ki = None
         best = 0
         #for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
-        for stk in ['Ridge', 'Logistic Regression','MLPClassifier']:
+        for stk in ['Ridge', 'Logistic Regression',MLPClassifier]:
             ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier=stk, use_features=False)
             #results = ki.testKI(random_seed = random_seed)
             #results['Name'] = ki.name
