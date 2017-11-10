@@ -99,7 +99,7 @@ class AutoKnowledgeIntegrator:
             train_x_test, test_y_test = self.splitDataIntoXY(testing)
             i = 0
             for classifier in self.level1_classifiers:
-                #print("Training sub-classifier: " + classifier.name)
+                print("Training sub-classifier: " + classifier.name)
                 x_cls, y_cls = classifier.kb.splitDataIntoXY()
                 #x_cls = x_cls.iloc[train_index]
                 #print("Original y length " + str(len(y_cls)))
