@@ -181,7 +181,7 @@ class AutoKnowledgeIntegrator:
 
 
 
-        train_index_ = x.dropna().index.tolist #get list of remaining indices after dropping nulls
+        train_index_ = x.dropna().index #get list of remaining indices after dropping nulls
         x = x.iloc[train_index_]
         y = y.iloc[train_index_]
         x.index = list(range(len(x)))
