@@ -109,8 +109,8 @@ class NELController:
         # Def, def, 1
         name_ = "NeuralNetwork_def_def"
         mlp = MLPClassifier(hidden_layer_sizes = (def_,def_,))
-        self.runModel(mlp, random_seed = random_seed, name = name_, kb = iss16_kb)
-        self.runModel(mlp, random_seed = random_seed, name = name_, kb = needtc_kb)
+        self.runModel(mlp, random_seed = random_seed, name = name_+"_ISS16", kb = iss16_kb)
+        self.runModel(mlp, random_seed = random_seed, name = name_+"_NeedTC", kb = needtc_kb)
 
         # Def, def, def, 1
         name_ = "NeuralNetwork_def_def_def"
