@@ -178,11 +178,14 @@ class AutoKnowledgeIntegrator:
         for classifier in self.level1_classifiers:
             predictions.append([])
         names = list(x.columns.values)
-        train_index_ = x.index[pandas.isnull(x[names[0]]) == False].tolist()
-        x.index = list(range(len(x)))
-        y.index = list(range(len(y)))
+
+
+
+        train_index_ = x.dropna.index.tolist() #get list of remaining indices after dropping nulls
         x = x.iloc[train_index_]
         y = y.iloc[train_index_]
+        x.index = list(range(len(x)))
+        y.index = list(range(len(y)))
         # x.index = list(range(len(x)))
         # y.index = list(range(len(y)))
         kf = KFold(n_splits=10)
