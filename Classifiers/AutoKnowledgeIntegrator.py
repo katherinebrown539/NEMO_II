@@ -230,7 +230,6 @@ class AutoKnowledgeIntegrator:
 
         i = 0
         for classifier in self.level1_classifiers:
-            classifier.fit(train_x_train, train_y_train)
             predictions[i].extend(classifier.predict(x))
             i = i+1
 
