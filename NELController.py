@@ -138,13 +138,13 @@ class NELController:
         name_ = "NeuralNetwork_N_0.5N"
         mlp = MLPClassifier(hidden_layer_sizes = (iss16_n, int( 0.5*iss16_n),))
         self.runModel(mlp, random_seed = random_seed, name = name_+"ISS16", kb = iss16_kb)
-        mlp = MLPClassifier(hidden_layer_sizes = (needtc_n,int( 0.5*needTC_n),))
+        mlp = MLPClassifier(hidden_layer_sizes = (needtc_n,int( 0.5*needtc_n),))
         self.runModel(mlp, random_seed = random_seed, name = name_+"NeedTC", kb = needtc_kb)
         # N,N/2,N,1
         name_ = "NeuralNetwork_N_0.5N_N"
         mlp = MLPClassifier(hidden_layer_sizes = (iss16_n,int( 0.5*iss16_n),iss16_n,))
         self.runModel(mlp, random_seed = random_seed, name = name_+"ISS16", kb = iss16_kb)
-        mlp = MLPClassifier(hidden_layer_sizes = (needtc_n,int( 0.5*needTC_n),needtc_n,))
+        mlp = MLPClassifier(hidden_layer_sizes = (needtc_n,int( 0.5*needtc_n),needtc_n,))
         self.runModel(mlp, random_seed = random_seed, name = name_+"NeedTC", kb = needtc_kb)
 
 
