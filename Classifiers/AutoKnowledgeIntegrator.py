@@ -9,6 +9,7 @@ from collections import deque
 from sklearn.utils import shuffle
 from sklearn.metrics import classification_report,confusion_matrix, accuracy_score, precision_score, f1_score, recall_score, precision_recall_fscore_support,roc_curve,roc_auc_score
 from sklearn.model_selection import train_test_split, KFold
+from sklearn.feature_selection import SelectFromModel
 import pandas, MySQLdb, threading, sys, os, time, random, numpy
 #comment for git
 
@@ -19,7 +20,7 @@ class AutoKnowledgeIntegrator:
         self.level1_classifiers = level1_classifiers
         if stacking_classifier is None or stacking_classifier == "Logistic Regression":
             self.algorithm_name = "KI_LogisticRegression"
-            self.stacking_classifier = LogisticRegression()
+            self.stacking_classifier = LogisticRegression(penalty = 'l1')
         elif stacking_classifier == "Decision Tree":
             self.algorithm_name = "KI_DecisionTree"
             self.stacking_classifier = DecisionTreeClassifier()
@@ -132,6 +133,7 @@ class AutoKnowledgeIntegrator:
 
         #train stacker
         self.stacking_classifier.fit(predictions_x, predictions_y)
+        self.getFeatures( predictions_x)
         #now predict holdout
         x, y = self.splitDataIntoXY(holdout)
         # #print("X for Holdout:")
@@ -171,6 +173,12 @@ class AutoKnowledgeIntegrator:
         results['Confusion_Matrix'] = confusion_matrix(y, stacking_predictions)
         #s#print(results)
         return results
+
+    def getFeatures(self, X):
+        rand_int = random.randint(0,100)
+        r = SelectFromModel(self.stacking_classifier, prefit=True)
+        r.Transform(X)
+        numpy.savetxt(self.name+str(rand_int)+".csv", r, delimiter=",")
 
 
     def fitLevel1Classifiers(self,x,y):
