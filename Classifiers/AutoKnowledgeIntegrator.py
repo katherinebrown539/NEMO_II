@@ -178,7 +178,7 @@ class AutoKnowledgeIntegrator:
         rand_int = random.randint(0,100)
         r = SelectFromModel(self.stacking_classifier, prefit=True)
         r.Transform(X)
-        numpy.savetxt(self.name+str(rand_int)+".csv", r, delimiter=",")
+        numpy.savetxt("features/"+self.name+str(rand_int)+".csv", r, delimiter=",")
 
 
     def fitLevel1Classifiers(self,x,y):
