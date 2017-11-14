@@ -176,6 +176,7 @@ class AutoKnowledgeIntegrator:
 
     def getFeatures(self, X):
         rand_int = random.randint(0,100)
+        print(list(X.columns.values))
         r = SelectFromModel(self.stacking_classifier, prefit=True)
         r_ = pandas.DataFrame(r.transform(X))
         r_.to_csv(path_or_buf="features/"+self.name+str(rand_int)+".csv")
