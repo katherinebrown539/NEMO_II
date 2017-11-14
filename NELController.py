@@ -175,45 +175,45 @@ class NELController:
             elif classifiers['Class'] == 'NeedTC':
                 needtc.append(classifiers['Classifier'])
 
-        # ed2or_ki = None
-        # best = 0
-        # for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
-        #     ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier=stk, use_features=False)
-        #     results = ki.testKI(random_seed = random_seed)
-        #     results['Name'] = ki.name
-        #     self.results.append(results)
-        #     if results['Accuracy'] > best:
-        #     ed2or_ki = ki
-        #     #     ed2or_ki = ki
-        #     #     best = results['Accuracy']
-        #
-        # icuadmit_ki = None
-        # best = 0
-        # for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
-        #     ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier=stk, use_features=False)
-        #     kis.append(ki)
-        #     results = ki.testKI(random_seed = random_seed)
-        #     results['Name'] = ki.name
-        #     self.results.append(results)
-        #     if results['Accuracy'] > best:
-        #     icuadmit_ki = ki
-        #          icuadmit_ki = ki
-        #          best = results['Accuracy']
-        #
-        #
-        #
-        # earlydeath_ki = None
-        # best = 0
-        # for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
-        #     ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier=stk, use_features=False)
-        #     kis.append(ki)
-        #     results = ki.testKI(random_seed = random_seed)
-        #     results['Name'] = ki.name
-        #     self.results.append(results)
-        #     if results['Accuracy'] > best:
-        #     earlydeath_ki = ki
-        #         earlydeath_ki = ki
-        #         best = results['Accuracy']
+        ed2or_ki = None
+        best = 0
+        for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
+            ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier=stk, use_features=False)
+            results = ki.testKI(random_seed = random_seed)
+            results['Name'] = ki.name
+            self.results.append(results)
+            if results['Accuracy'] > best:
+            #ed2or_ki = ki
+                 ed2or_ki = ki
+                 best = results['Accuracy']
+
+        icuadmit_ki = None
+        best = 0
+        for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
+            ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier=stk, use_features=False)
+            kis.append(ki)
+            results = ki.testKI(random_seed = random_seed)
+            results['Name'] = ki.name
+            self.results.append(results)
+            if results['Accuracy'] > best:
+            #icuadmit_ki = ki
+                 icuadmit_ki = ki
+                 best = results['Accuracy']
+
+
+
+        earlydeath_ki = None
+        best = 0
+        for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
+            ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier=stk, use_features=False)
+            kis.append(ki)
+            results = ki.testKI(random_seed = random_seed)
+            results['Name'] = ki.name
+            self.results.append(results)
+            if results['Accuracy'] > best:
+            #earlydeath_ki = ki
+                earlydeath_ki = ki
+                best = results['Accuracy']
 
         #for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
         for stk in ['Decision Tree', 'Logistic Regression']:
