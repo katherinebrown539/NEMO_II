@@ -180,7 +180,7 @@ class AutoKnowledgeIntegrator:
         #r = SelectFromModel(self.stacking_classifier, prefit=True)
         #r_ = pandas.DataFrame(r.transform(X))
         coef_dict = {}
-        for coef, feat in zip(stacking_classifier.coef_,list(X.columns.values)):
+        for coef, feat in zip(self.stacking_classifier.coef_,list(X.columns.values)):
             coef_dict[feat] = coef
         import pickle
         with open("features/"+self.name+str(rand_int)+".pickle", 'wb') as handle:
