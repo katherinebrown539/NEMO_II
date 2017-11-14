@@ -274,6 +274,7 @@ class NELController:
             if exec_:
                 print("Evaluating " + KI.name)
                 r = KI.testKI(k = 10, random_seed = random_seed)
+                r['Name'] = KI.name
                 self.results.append(r)
                 print(r)
         return kis
