@@ -187,6 +187,8 @@ class AutoKnowledgeIntegrator:
                 new_features.append(feature)
 
         print(new_features)
+        r_ = pandas.DataFrame(r_)
+        r_.columns = new_features
         r_.to_csv(path_or_buf="features/"+self.name+str(rand_int)+".csv")
 
 
