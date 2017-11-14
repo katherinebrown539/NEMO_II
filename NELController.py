@@ -268,9 +268,9 @@ class NELController:
         # kis.append(KI)
         for KI in kis:
             if(clses_ is not None):
-                KI.name = KI.name + "_usingStackers_blanket"
+                KI.name = KI.name + "_blanket_nested"
             else:
-                KI.name = KI.name + "_usingStackers"
+                KI.name = KI.name + "blanket"
             if exec_:
                 print("Evaluating " + KI.name)
                 r = KI.testKI(k = 10, random_seed = random_seed)
