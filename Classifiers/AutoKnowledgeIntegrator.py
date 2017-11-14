@@ -182,6 +182,7 @@ class AutoKnowledgeIntegrator:
         r_ = r.transform(X)
         support = r.get_support()
         features_dataframe_new = X[support]
+        print(list(features_dataframe_new.columns.values))
         r_.to_csv(path_or_buf="features/"+self.name+str(rand_int)+".csv")
 
 
