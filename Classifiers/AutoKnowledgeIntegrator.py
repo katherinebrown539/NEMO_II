@@ -180,9 +180,13 @@ class AutoKnowledgeIntegrator:
 
         r = SelectFromModel(self.stacking_classifier, prefit=True)
         r_ = r.transform(X)
-        support = r.get_support(indices = True)
-        features_dataframe_new = X[support]
-        print(list(features_dataframe_new.columns.values))
+        new_features = []
+        support = r.get_support()
+        for bool, feature in zip(support, X.columns.values):
+            if bool:
+                new_features.append(feature)
+
+        print(new_features)
         r_.to_csv(path_or_buf="features/"+self.name+str(rand_int)+".csv")
 
 
