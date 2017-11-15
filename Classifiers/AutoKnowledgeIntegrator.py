@@ -174,22 +174,35 @@ class AutoKnowledgeIntegrator:
         #s#print(results)
         return results
 
-    def getFeatures(self, X):
+    def getFeatures(self, X, y):
+        from sklearn.feature_selection import SelectKBest, chi2, f_classif, mutual_info_classif
+        import csv
         rand_int = random.randint(0,100)
         print(list(X.columns.values))
+        to_return = {}
+        for f in [chi2, f_classif, mutual_info_classif]:
+            r = SelectKBest(f, k = 10)
+            r_ = r.fit_transform(X, y)
+            new_features = []
+            support = r.get_support()
+            for bool, feature in zip(support, X.columns.values):
+                if bool:
+                    new_features.append(feature)
+            if f == chi2:
+                to_return['Chi2'] = new_features
+            elif f == f_classif:
+                to_return['f_classif'] = new_features
+            elif f == mutual_info_classif:
+                to_return['mutual_info_classif'] = new_features
 
-        r = SelectFromModel(self.stacking_classifier, prefit=True)
-        r_ = r.transform(X)
-        new_features = []
-        support = r.get_support()
-        for bool, feature in zip(support, X.columns.values):
-            if bool:
-                new_features.append(feature)
+        w = csv.writer(open("output.csv", "w"))
+        for key, val in to_return.items():
+            w.writerow([key, val])
 
-        print(new_features)
-        r_ = pandas.DataFrame(r_)
-        r_.columns = new_features
-        r_.to_csv(path_or_buf="features/"+self.name+str(rand_int)+".csv")
+        # print(new_features)
+        # r_ = pandas.DataFrame(r_)
+        # r_.columns = new_features
+        # r_.to_csv(path_or_buf="features/"+self.name+str(rand_int)+".csv")
 
 
     def fitLevel1Classifiers(self,x,y):
