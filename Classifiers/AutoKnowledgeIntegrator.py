@@ -182,8 +182,9 @@ class AutoKnowledgeIntegrator:
             df = pandas.DataFrame(objs = numpy.column_stack([X.columns.values, self.stacking_classifier.coef_]))
             df.to_csv(path_or_buf="features/"+self.name+str(rand_int)+".csv")
         elif self.algorithm_name in ['KI_DecisionTree']:
-            tree.export_graphviz(self.stacking_classifier, out_file="features/"+self.name+str(rand_int)+".pdf")
-
+            dot_data = tree.export_graphviz(self.stacking_classifier, out_file=None)
+            graph = graphviz.Source(dot_data) 
+            graph.render("features/"+self.name+str(rand_int)+".csv")
 
 
 
