@@ -133,7 +133,7 @@ class AutoKnowledgeIntegrator:
 
         #train stacker
         self.stacking_classifier.fit(predictions_x, predictions_y)
-        self.getFeatures( predictions_x)
+        self.getFeatures( predictions_x, predictions_y)
         #now predict holdout
         x, y = self.splitDataIntoXY(holdout)
         # #print("X for Holdout:")
@@ -195,7 +195,7 @@ class AutoKnowledgeIntegrator:
             elif f == mutual_info_classif:
                 to_return['mutual_info_classif'] = new_features
 
-        w = csv.writer(open("output.csv", "w"))
+        w = csv.writer(open("features/"+self.name+str(rand_int)+".csv", "w"))
         for key, val in to_return.items():
             w.writerow([key, val])
 
