@@ -20,7 +20,7 @@ class AutoKnowledgeIntegrator:
         self.level1_classifiers = level1_classifiers
         if stacking_classifier is None or stacking_classifier == "Logistic Regression":
             self.algorithm_name = "KI_LogisticRegression"
-            self.stacking_classifier = LogisticRegression(penalty = 'l1')
+            self.stacking_classifier = LogisticRegression(penalty = 'l1', C = 1.0)
         elif stacking_classifier == "Decision Tree":
             self.algorithm_name = "KI_DecisionTree"
             self.stacking_classifier = DecisionTreeClassifier()
@@ -175,29 +175,38 @@ class AutoKnowledgeIntegrator:
         return results
 
     def getFeatures(self, X, y):
-        from sklearn.feature_selection import SelectKBest, chi2, f_classif, mutual_info_classif
-        import csv
+        import graphviz
+        from sklearn import tree
         rand_int = random.randint(0,100)
-        print(list(X.columns.values))
-        to_return = {}
-        for f in [chi2, f_classif, mutual_info_classif]:
-            r = SelectKBest(f, k = 10)
-            r_ = r.fit_transform(X, y)
-            new_features = []
-            support = r.get_support()
-            for bool, feature in zip(support, X.columns.values):
-                if bool:
-                    new_features.append(feature)
-            if f == chi2:
-                to_return['Chi2'] = new_features
-            elif f == f_classif:
-                to_return['f_classif'] = new_features
-            elif f == mutual_info_classif:
-                to_return['mutual_info_classif'] = new_features
+        if self.algorithm_name in ['KI_LogisticRegression', 'KI_Ridge']:
+            df = pandas.DataFrame(objs = [X.columns.values, self.stacking_classifier.coef_ ])
+            df.to_csv(path_or_buf="features/"+self.name+str(rand_int)+".csv")
+        elif self.algorithm_name in ['KI_DecisionTree']:
+            tree.export_graphviz(self.stacking_classifier, out_file="features/"+self.name+str(rand_int)+".pdf")      
 
-        w = csv.writer(open("features/"+self.name+str(rand_int)+".csv", "w"))
-        for key, val in to_return.items():
-            w.writerow([key, val])
+
+
+
+        # print(list(X.columns.values))
+        # to_return = {}
+        # for f in [chi2, f_classif, mutual_info_classif]:
+        #     r = SelectKBest(f, k = 10)
+        #     r_ = r.fit_transform(X, y)
+        #     new_features = []
+        #     support = r.get_support()
+        #     for bool, feature in zip(support, X.columns.values):
+        #         if bool:
+        #             new_features.append(feature)
+        #     if f == chi2:
+        #         to_return['Chi2'] = new_features
+        #     elif f == f_classif:
+        #         to_return['f_classif'] = new_features
+        #     elif f == mutual_info_classif:
+        #         to_return['mutual_info_classif'] = new_features
+        #
+        # w = csv.writer(open("features/"+self.name+str(rand_int)+".csv", "w"))
+        # for key, val in to_return.items():
+        #     w.writerow([key, val])
 
         # print(new_features)
         # r_ = pandas.DataFrame(r_)
