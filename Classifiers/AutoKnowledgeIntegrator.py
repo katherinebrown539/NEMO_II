@@ -180,7 +180,9 @@ class AutoKnowledgeIntegrator:
         rand_int = random.randint(0,100)
         if self.algorithm_name in ['KI_LogisticRegression', 'KI_Ridge']:
             print(X.columns.values)
+            print(len(X.columns.values))
             print(self.stacking_classifier.coef_)
+            print(len(self.stacking_classifier.coef_))
             df = pandas.DataFrame(objs = numpy.column_stack([X.columns.values, self.stacking_classifier.coef_]))
             df.to_csv(path_or_buf="features/"+self.name+str(rand_int)+".csv")
         elif self.algorithm_name in ['KI_DecisionTree']:
