@@ -123,6 +123,7 @@ class AutoKnowledgeIntegrator:
         predictions = predictions.transpose()
         predictions.columns = columns
         predictions_x = predictions
+        print(predictions_x)
         #predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         predictions_y = y
 
