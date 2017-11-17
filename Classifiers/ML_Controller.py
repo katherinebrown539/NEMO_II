@@ -4,7 +4,7 @@ import pandas
 from pandas import DataFrame
 import pandas.io.sql as psql
 import KnowledgeBase
-from Classifiers import NeuralNetworkController, DecisionTreeController, RandomForestController, SVMController
+from Classifiers import NeuralNetworkController, DecisionTreeController, RandomForestController, SVMController, LogisticRegressionController
 import random
 ##############################################################################################################
 # ML-Controller class																					     #
@@ -48,6 +48,8 @@ class ML_Controller:
 			self.algorithm = SVMController.SVMController(self.kb)
 		elif algorithm_type == "Random Forest":
 			self.algorithm = RandomForestController.RandomForestController(self.kb)
+		elif algorithm_type == "Logistic Regression":
+			self.algorithm == LogisticRegressionController.LogisticRegressionController(self.kb)
 		else:
 			self.algorithm = DecisionTreeController.DecisionTreeController(self.kb)
 

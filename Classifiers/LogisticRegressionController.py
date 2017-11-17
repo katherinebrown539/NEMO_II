@@ -50,11 +50,7 @@ class LogisticRegression:
 		self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(x,y)
 		self.lr = LogisticRegression(penalty = "l1", C = c)
 
-
-
-
 		self.lr.fit(self.X_train, self.y_train)
-
 
 	def createModelPreSplit(self, xtrain, xtest, ytrain, ytest, attributes=None):
 		pass
