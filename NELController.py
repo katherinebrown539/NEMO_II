@@ -178,9 +178,9 @@ class NELController:
 
         ed2or_ki = None
         best = 0
-        for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
-            ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier=stk, use_features=False)
-            kis.append(ki)
+        # for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
+        #     ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier=stk, use_features=False)
+        #     kis.append(ki)
             # results['Name'] = ki.name
             # self.results.append(results)
             # results = ki.testKI(random_seed = random_seed)
@@ -190,9 +190,9 @@ class NELController:
 
         icuadmit_ki = None
         best = 0
-        for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
-            ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier=stk, use_features=False)
-            kis.append(ki)
+        # for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
+        #     ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier=stk, use_features=False)
+        #     kis.append(ki)
             # results = ki.testKI(random_seed = random_seed)
             # results['Name'] = ki.name
             # self.results.append(results)
@@ -205,9 +205,9 @@ class NELController:
 
         earlydeath_ki = None
         best = 0
-        for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
-            ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier=stk, use_features=False)
-            kis.append(ki)
+        # for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
+        #     ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier=stk, use_features=False)
+        #     kis.append(ki)
             # results = ki.testKI(random_seed = random_seed)
             # results['Name'] = ki.name
             # self.results.append(results)
@@ -266,8 +266,8 @@ class NELController:
                 if classifier['Class'] != blanket['RIGHT_MEMBER']:
                     clses.append(classifier['Classifier'])
 
-        #KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(kb, clses, stacking_classifier='Decision Tree', use_features=False)
-        #kis.append(KI)
+        KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(kb, clses, stacking_classifier='Decision Tree', use_features=False)
+        kis.append(KI)
         KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(kb, clses, stacking_classifier='Logistic Regression', use_features=False)
         kis.append(KI)
         # KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(kb, clses, stacking_classifier='Ridge', use_features=False)
