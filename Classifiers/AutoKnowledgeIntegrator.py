@@ -20,7 +20,7 @@ class AutoKnowledgeIntegrator:
         self.level1_classifiers = level1_classifiers
         if stacking_classifier is None or stacking_classifier == "Logistic Regression":
             self.algorithm_name = "KI_LogisticRegression"
-            self.stacking_classifier = LogisticRegression(penalty = 'l1', C = 0.5)
+            self.stacking_classifier = LogisticRegression(penalty = 'l1', C = 1)
         elif stacking_classifier == "Decision Tree":
             self.algorithm_name = "KI_DecisionTree"
             self.stacking_classifier = DecisionTreeClassifier()
