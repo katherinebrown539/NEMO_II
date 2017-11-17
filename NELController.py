@@ -400,11 +400,11 @@ class NELController:
         #new_kb.Y = y
         #print("Algorithm: " + algorithm)
         ml = ML_Controller.ML_Controller(new_kb, algorithm)
-        if algorithm == "Logistic Regression" && target == "EarlyDeath":
+        if algorithm == "Logistic Regression" and target == "EarlyDeath":
             ml.algorithm = LogisticRegression(penalty = "l1" , C = 0.25)
-        elif algorithm == "Logistic Regression" && target == "ED2OR":
+        elif algorithm == "Logistic Regression" and target == "ED2OR":
             ml.algorithm = LogisticRegression(penalty = "l1" , C = 0.25)
-        elif algorithm == "Logistic Regression" && target == "ICUAdmit":
+        elif algorithm == "Logistic Regression" and target == "ICUAdmit":
             ml.algorithm = LogisticRegression(penalty = "l1" , C = 0.25)
         #ml = AutoMLController.AutoMLController(new_kb, algorithm)
         ml.createModel()
