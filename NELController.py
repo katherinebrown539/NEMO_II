@@ -13,6 +13,7 @@ from ConstraintLanguage import ConstraintLanguage
 from sklearn.metrics import classification_report,confusion_matrix, accuracy_score, precision_score, f1_score, recall_score, precision_recall_fscore_support,roc_curve,roc_auc_score
 from sklearn.model_selection import train_test_split, KFold
 from sklearn.neural_network import MLPClassifier
+from sklearn.linear_model import LogisticRegression
 class NELController:
     def __init__(self, facts_file, config_file, output_file):
         with open(facts_file) as fd:
@@ -216,7 +217,7 @@ class NELController:
             #     best = results['Accuracy']
 
         #for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
-        for stk in ['Decision Tree', 'Logistic Regression']:
+        for stk in [ 'Decision Tree','Logistic Regression']:
             # print(iss16)
             ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(iss16[0].kb, iss16, stacking_classifier=stk, use_features=False)
             #####
@@ -265,8 +266,8 @@ class NELController:
                 if classifier['Class'] != blanket['RIGHT_MEMBER']:
                     clses.append(classifier['Classifier'])
 
-        KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(kb, clses, stacking_classifier='Decision Tree', use_features=False)
-        kis.append(KI)
+        #KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(kb, clses, stacking_classifier='Decision Tree', use_features=False)
+        #kis.append(KI)
         KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(kb, clses, stacking_classifier='Logistic Regression', use_features=False)
         kis.append(KI)
         # KI = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(kb, clses, stacking_classifier='Ridge', use_features=False)
@@ -399,6 +400,12 @@ class NELController:
         #new_kb.Y = y
         #print("Algorithm: " + algorithm)
         ml = ML_Controller.ML_Controller(new_kb, algorithm)
+        if algorithm == "Logistic Regression" && target == "EarlyDeath":
+            ml.algorithm = LogisticRegression(penalty = "l1" , C = 0.25)
+        elif algorithm == "Logistic Regression" && target == "ED2OR":
+            ml.algorithm = LogisticRegression(penalty = "l1" , C = 0.25)
+        elif algorithm == "Logistic Regression" && target == "ICUAdmit":
+            ml.algorithm = LogisticRegression(penalty = "l1" , C = 0.25)
         #ml = AutoMLController.AutoMLController(new_kb, algorithm)
         ml.createModel()
         d =  {"Classifier_Name": classifier_name, "Class": target, "Classifier": ml}
