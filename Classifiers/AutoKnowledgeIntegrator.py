@@ -154,6 +154,7 @@ class AutoKnowledgeIntegrator:
         holdout_predictions = holdout_predictions.transpose()
         holdout_predictions.columns = columns
         predictions_x = holdout_predictions
+        print(predictions_x)
         #predictions_x = pandas.concat(objs=[x,holdout_predictions], axis=1)
         predictions_y = y
         #if self.name == "TRAUMA_TRIAGE_ISS16_KI_Decision Tree":
