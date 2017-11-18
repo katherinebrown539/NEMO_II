@@ -176,9 +176,10 @@ class NELController:
             elif classifiers['Class'] == 'NeedTC':
                 needtc.append(classifiers['Classifier'])
 
-        ed2or_ki = None
+        ed2or_ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier="Logistic Regression", use_features=False)
         best = 0
-        # for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
+        #for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
+        # for stk in ['Logistic Regression']:
         #     ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier=stk, use_features=False)
         #     kis.append(ki)
             # results['Name'] = ki.name
@@ -188,11 +189,12 @@ class NELController:
             #      ed2or_ki = ki
             #      best = results['Accuracy']
 
-        icuadmit_ki = None
+        icuadmit_ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier="Logistic Regression", use_features=False)
         best = 0
         # for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
-        #     ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier=stk, use_features=False)
-        #     kis.append(ki)
+        # for stk in ['Logistic Regression']:
+        #      ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier=stk, use_features=False)
+        #      kis.append(ki)
             # results = ki.testKI(random_seed = random_seed)
             # results['Name'] = ki.name
             # self.results.append(results)
@@ -203,9 +205,10 @@ class NELController:
 
 
 
-        earlydeath_ki = None
+        earlydeath_ki =  AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier="Logistic Regression", use_features=False)
         best = 0
         # for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
+        #for stk in ['Logistic Regression']:
         #     ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier=stk, use_features=False)
         #     kis.append(ki)
             # results = ki.testKI(random_seed = random_seed)
@@ -219,7 +222,7 @@ class NELController:
         #for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
         for stk in [ 'Decision Tree','Logistic Regression']:
             # print(iss16)
-            ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(iss16[0].kb, iss16, stacking_classifier=stk, use_features=False)
+            #ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(iss16[0].kb, iss16, stacking_classifier=stk, use_features=False)
             #####
             # kis.append(ki)
             #results = ki.testKI(random_seed = random_seed)
@@ -227,7 +230,7 @@ class NELController:
             # self.results.append(results)
             #####
             # print(needtc)
-            ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(needtc[0].kb, needtc, stacking_classifier=stk, use_features=False)
+            #ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(needtc[0].kb, needtc, stacking_classifier=stk, use_features=False)
             ######
             # kis.append(ki)
             # results = ki.testKI(random_seed = random_seed)
@@ -245,8 +248,8 @@ class NELController:
         for blanket in self.blankets:
             if blanket['RIGHT_MEMBER'] in ['ISS16', 'NeedTC']:
                 c = blanket['RIGHT_MEMBER']
-                #self.executeBlanket(blanket,c, clses_=kis, random_seed = random_seed)
-                self.executeBlanket(blanket,c, clses_=None, random_seed = random_seed)
+                self.executeBlanket(blanket,c, clses_=kis, random_seed = random_seed)
+                #self.executeBlanket(blanket,c, clses_=None, random_seed = random_seed)
 
 
     def executeBlanket(self, blanket, class_, clses_=None, exec_=True, random_seed = 0):
