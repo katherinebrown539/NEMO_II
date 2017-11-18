@@ -49,7 +49,7 @@ class ML_Controller:
 		elif algorithm_type == "Random Forest":
 			self.algorithm = RandomForestController.RandomForestController(self.kb)
 		elif algorithm_type == "Logistic Regression":
-			self.algorithm == LogisticRegressionController.LogisticRegressionController(self.kb)
+			self.algorithm == LogisticRegressionController(self.kb)
 		else:
 			self.algorithm = DecisionTreeController.DecisionTreeController(self.kb)
 
