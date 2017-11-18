@@ -239,9 +239,9 @@ class NELController:
             ######
 
 
-        # kis.append(ed2or_ki)
-        # kis.append(icuadmit_ki)
-        # kis.append(earlydeath_ki)
+        kis.append(ed2or_ki)
+        kis.append(icuadmit_ki)
+        kis.append(earlydeath_ki)
 
 
         print("KIS: " + str(kis))
