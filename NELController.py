@@ -220,7 +220,7 @@ class NELController:
             #     best = results['Accuracy']
 
         #for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
-        for stk in [ 'Decision Tree','Logistic Regression']:
+        #for stk in [ 'Decision Tree','Logistic Regression']:
             # print(iss16)
             #ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(iss16[0].kb, iss16, stacking_classifier=stk, use_features=False)
             #####
@@ -248,8 +248,8 @@ class NELController:
         for blanket in self.blankets:
             if blanket['RIGHT_MEMBER'] in ['ISS16', 'NeedTC']:
                 c = blanket['RIGHT_MEMBER']
-                self.executeBlanket(blanket,c, clses_=kis, random_seed = random_seed)
-                #self.executeBlanket(blanket,c, clses_=None, random_seed = random_seed)
+                #self.executeBlanket(blanket,c, clses_=kis, random_seed = random_seed)
+                self.executeBlanket(blanket,c, clses_=None, random_seed = random_seed)
 
 
     def executeBlanket(self, blanket, class_, clses_=None, exec_=True, random_seed = 0):
