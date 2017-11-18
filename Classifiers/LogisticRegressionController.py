@@ -10,7 +10,7 @@ import KnowledgeBase
 import random
 import numpy
 
-class LogisticRegression:
+class LogisticRegressionController:
 
 	def __init__(self, kb, c = 1.0):
 		self.c = c
