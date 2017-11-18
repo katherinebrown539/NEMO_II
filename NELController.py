@@ -248,8 +248,8 @@ class NELController:
         for blanket in self.blankets:
             if blanket['RIGHT_MEMBER'] in ['ISS16', 'NeedTC']:
                 c = blanket['RIGHT_MEMBER']
-                #self.executeBlanket(blanket,c, clses_=kis, random_seed = random_seed)
-                self.executeBlanket(blanket,c, clses_=None, random_seed = random_seed)
+                self.executeBlanket(blanket,c, clses_=kis, random_seed = random_seed)
+                #self.executeBlanket(blanket,c, clses_=None, random_seed = random_seed)
 
 
     def executeBlanket(self, blanket, class_, clses_=None, exec_=True, random_seed = 0):
