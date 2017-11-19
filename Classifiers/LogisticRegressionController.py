@@ -34,7 +34,7 @@ class LogisticRegressionController:
 		self.mlp = None
 		self.x = []
 		self.y = []
-		#self.lr = LogisticRegression(penalty = "l1", C = self.c)
+		self.lr = LogisticRegression(penalty = "l1", C = self.c)
 
 	def createModelFromID(self, x, y, id):
 		pass
@@ -48,7 +48,7 @@ class LogisticRegressionController:
 		self.x = x
 		self.y = y
 		self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(x,y)
-		self.lr = LogisticRegression(penalty = "l1", C = self.c)
+		#self.lr = LogisticRegression(penalty = "l1", C = self.c)
 
 		self.lr.fit(self.X_train, self.y_train)
 
