@@ -176,10 +176,10 @@ class NELController:
             elif classifiers['Class'] == 'NeedTC':
                 needtc.append(classifiers['Classifier'])
 
-        ed2or_ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier="Logistic Regression", use_features=False)
-        #results = ed2or_ki.testKI(random_seed = random_seed)
-        results['Name'] = ed2or_ki.name
-        self.results.append(results)
+        # ed2or_ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier="Logistic Regression", use_features=False)
+        # results = ed2or_ki.testKI(random_seed = random_seed)
+        # results['Name'] = ed2or_ki.name
+        # self.results.append(results)
         best = 0
         #for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
         # for stk in ['Logistic Regression']:
@@ -192,11 +192,11 @@ class NELController:
             #      ed2or_ki = ki
             #      best = results['Accuracy']
 
-        icuadmit_ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier="Logistic Regression", use_features=False)
-        best = 0
-        #results = icuadmit_ki.testKI(random_seed = random_seed)
-        results['Name'] = icuadmit_ki.name
-        self.results.append(results)
+        # icuadmit_ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier="Logistic Regression", use_features=False)
+        # best = 0
+        # results = icuadmit_ki.testKI(random_seed = random_seed)
+        # results['Name'] = icuadmit_ki.name
+        # self.results.append(results)
 
         # for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
         # for stk in ['Logistic Regression']:
@@ -212,11 +212,11 @@ class NELController:
 
 
 
-        earlydeath_ki =  AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier="Logistic Regression", use_features=False)
-        best = 0
-        #results = earlydeath_ki.testKI(random_seed = random_seed)
-        results['Name'] = earlydeath_ki.name
-        self.results.append(results)
+        # earlydeath_ki =  AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier="Logistic Regression", use_features=False)
+        # best = 0
+        # results = earlydeath_ki.testKI(random_seed = random_seed)
+        # results['Name'] = earlydeath_ki.name
+        # self.results.append(results)
         # for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
         #for stk in ['Logistic Regression']:
         #     ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier=stk, use_features=False)
