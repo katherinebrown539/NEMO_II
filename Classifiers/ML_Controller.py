@@ -73,6 +73,7 @@ class ML_Controller:
 
 	def createModel(self, id=None):
 		if id is None:
+			print(type(self.algorithm))
 			self.algorithm.createModel(self.data, self.target)
 		else:
 			self.algorithm.createModelFromID(self.data, self.target, id)
