@@ -177,7 +177,7 @@ class NELController:
                 needtc.append(classifiers['Classifier'])
 
         ed2or_ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(ed2or[0].kb, ed2or, stacking_classifier="Logistic Regression", use_features=False)
-        results = ed2or_ki.testKI(random_seed = random_seed)
+        #results = ed2or_ki.testKI(random_seed = random_seed)
         results['Name'] = ed2or_ki.name
         self.results.append(results)
         best = 0
@@ -194,7 +194,7 @@ class NELController:
 
         icuadmit_ki = AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(icuadmit[0].kb, icuadmit, stacking_classifier="Logistic Regression", use_features=False)
         best = 0
-        results = icuadmit_ki.testKI(random_seed = random_seed)
+        #results = icuadmit_ki.testKI(random_seed = random_seed)
         results['Name'] = icuadmit_ki.name
         self.results.append(results)
 
@@ -214,7 +214,7 @@ class NELController:
 
         earlydeath_ki =  AutoKnowledgeIntegrator.AutoKnowledgeIntegrator(earlydeath[0].kb, earlydeath, stacking_classifier="Logistic Regression", use_features=False)
         best = 0
-        results = earlydeath_ki.testKI(random_seed = random_seed)
+        #results = earlydeath_ki.testKI(random_seed = random_seed)
         results['Name'] = earlydeath_ki.name
         self.results.append(results)
         # for stk in ['Decision Tree', 'Logistic Regression', 'Ridge']:
@@ -249,17 +249,17 @@ class NELController:
             ######
 
 
-        kis.append(ed2or_ki)
-        kis.append(icuadmit_ki)
-        kis.append(earlydeath_ki)
+        # kis.append(ed2or_ki)
+        # kis.append(icuadmit_ki)
+        # kis.append(earlydeath_ki)
 
 
         print("KIS: " + str(kis))
         for blanket in self.blankets:
             if blanket['RIGHT_MEMBER'] in ['ISS16', 'NeedTC']:
                 c = blanket['RIGHT_MEMBER']
-                self.executeBlanket(blanket,c, clses_=kis, random_seed = random_seed)
-                #self.executeBlanket(blanket,c, clses_=None, random_seed = random_seed)
+                #self.executeBlanket(blanket,c, clses_=kis, random_seed = random_seed)
+                self.executeBlanket(blanket,c, clses_=None, random_seed = random_seed)
 
 
     def executeBlanket(self, blanket, class_, clses_=None, exec_=True, random_seed = 0):
