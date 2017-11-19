@@ -50,6 +50,7 @@ class ML_Controller:
 			self.algorithm = RandomForestController.RandomForestController(self.kb)
 		elif algorithm_type == "Logistic Regression":
 			self.algorithm = LogisticRegressionController.LogisticRegressionController(self.kb)
+			print(type(self.algorithm))
 		else:
 			self.algorithm = DecisionTreeController.DecisionTreeController(self.kb)
 
