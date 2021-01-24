@@ -1,0 +1,139 @@
+{
+"Classifiers": [
+    {
+      "Classifier_Name": "NeedTC_DT",
+      "Data_Source": "TRAUMA_TRIAGE",
+      "Algorithm": "Decision Tree",
+      "Target": "NeedTC",
+      "Features": "{AGE, ED_RESP, ED_PULSE, ED_BP, ED_EYE, ED_VRB, ED_MTR, ED_GCS, Gender, ABG, EDBPRTS, EDRespRTS, EDGCSRTS, EDRTSc}"
+    },
+    {
+    "Classifier_Name": "NeedTC_NN",
+    "Data_Source": "TRAUMA_TRIAGE",
+    "Algorithm": "Neural Network",
+    "Target": "NeedTC",
+    "Features": "{AGE, ED_RESP, ED_PULSE, ED_BP, ED_EYE, ED_VRB, ED_MTR, ED_GCS, Gender, ABG, EDBPRTS, EDRespRTS, EDGCSRTS, EDRTSc}"
+    },
+    {
+    "Classifier_Name": "NeedTC_LR",
+    "Data_Source": "TRAUMA_TRIAGE",
+    "Algorithm": "Logistic Regression",
+    "Target": "NeedTC",
+    "Features": "{AGE, ED_RESP, ED_PULSE, ED_BP, ED_EYE, ED_VRB, ED_MTR, ED_GCS, Gender, ABG, EDBPRTS, EDRespRTS, EDGCSRTS, EDRTSc}"
+    },
+
+
+
+  {
+    "Classifier_Name": "ISS16_DT",
+    "Data_Source": "TRAUMA_TRIAGE",
+    "Algorithm": "Decision Tree",
+    "Target": "ISS16",
+    "Features": "{AGE, ED_RESP, ED_PULSE, ED_BP, ED_EYE, ED_VRB, ED_MTR, ED_GCS, Gender, ABG, EDBPRTS, EDRespRTS, EDGCSRTS, EDRTSc}"
+  },
+  {
+    "Classifier_Name": "ISS16_NN",
+    "Data_Source": "TRAUMA_TRIAGE",
+    "Algorithm": "Neural Network",
+    "Target": "ISS16",
+    "Features": "{AGE, ED_RESP, ED_PULSE, ED_BP, ED_EYE, ED_VRB, ED_MTR, ED_GCS, Gender, ABG, EDBPRTS, EDRespRTS, EDGCSRTS, EDRTSc}"
+},
+{
+  "Classifier_Name": "ISS16_LR",
+  "Data_Source": "TRAUMA_TRIAGE",
+  "Algorithm": "Logistic Regression",
+  "Target": "ISS16",
+  "Features": "{AGE, ED_RESP, ED_PULSE, ED_BP, ED_EYE, ED_VRB, ED_MTR, ED_GCS, Gender, ABG, EDBPRTS, EDRespRTS, EDGCSRTS, EDRTSc}"
+},
+
+
+
+{
+  "Classifier_Name": "EarlyDeath_DT",
+  "Data_Source": "TRAUMA_TRIAGE",
+  "Algorithm": "Decision Tree",
+  "Target": "EarlyDeath",
+  "Features": "{AGE, ED_RESP, ED_PULSE, ED_BP, ED_EYE, ED_VRB, ED_MTR, ED_GCS, Gender, ABG, EDBPRTS, EDRespRTS, EDGCSRTS, EDRTSc}"
+},
+{
+  "Classifier_Name": "EarlyDeath_NN",
+  "Data_Source": "TRAUMA_TRIAGE",
+  "Algorithm": "Neural Network",
+  "Target": "EarlyDeath",
+  "Features": "{AGE, ED_RESP, ED_PULSE, ED_BP, ED_EYE, ED_VRB, ED_MTR, ED_GCS, Gender, ABG, EDBPRTS, EDRespRTS, EDGCSRTS, EDRTSc}"
+},
+{
+  "Classifier_Name": "EarlyDeath_LR",
+  "Data_Source": "TRAUMA_TRIAGE",
+  "Algorithm": "Logistic Regression",
+  "Target": "EarlyDeath",
+  "Features": "{AGE, ED_RESP, ED_PULSE, ED_BP, ED_EYE, ED_VRB, ED_MTR, ED_GCS, Gender, ABG, EDBPRTS, EDRespRTS, EDGCSRTS, EDRTSc}"
+},
+
+
+
+{
+  "Classifier_Name": "ICUAdmit_DT",
+  "Data_Source": "TRAUMA_TRIAGE",
+  "Algorithm": "Decision Tree",
+  "Target": "ICUAdmit",
+  "Features": "{AGE, ED_RESP, ED_PULSE, ED_BP, ED_EYE, ED_VRB, ED_MTR, ED_GCS, Gender, ABG, EDBPRTS, EDRespRTS, EDGCSRTS, EDRTSc}"
+},
+{
+  "Classifier_Name": "ICUAdmit_NN",
+  "Data_Source": "TRAUMA_TRIAGE",
+  "Algorithm": "Neural Network",
+  "Target": "ICUAdmit",
+  "Features": "{AGE, ED_RESP, ED_PULSE, ED_BP, ED_EYE, ED_VRB, ED_MTR, ED_GCS, Gender, ABG, EDBPRTS, EDRespRTS, EDGCSRTS, EDRTSc}"
+},
+{
+  "Classifier_Name": "ICUAdmit_LR",
+  "Data_Source": "TRAUMA_TRIAGE",
+  "Algorithm": "Logistic Regression",
+  "Target": "ICUAdmit",
+  "Features": "{AGE, ED_RESP, ED_PULSE, ED_BP, ED_EYE, ED_VRB, ED_MTR, ED_GCS, Gender, ABG, EDBPRTS, EDRespRTS, EDGCSRTS, EDRTSc}"
+},
+
+
+
+{
+  "Classifier_Name": "ED2OR_DT",
+  "Data_Source": "TRAUMA_TRIAGE",
+  "Algorithm": "Decision Tree",
+  "Target": "ED2OR",
+  "Features": "{AGE, ED_RESP, ED_PULSE, ED_BP, ED_EYE, ED_VRB, ED_MTR, ED_GCS, Gender, ABG, EDBPRTS, EDRespRTS, EDGCSRTS, EDRTSc}"
+},
+{
+  "Classifier_Name": "ED2OR_NN",
+  "Data_Source": "TRAUMA_TRIAGE",
+  "Algorithm": "Neural Network",
+  "Target": "ED2OR",
+  "Features": "{AGE, ED_RESP, ED_PULSE, ED_BP, ED_EYE, ED_VRB, ED_MTR, ED_GCS, Gender, ABG, EDBPRTS, EDRespRTS, EDGCSRTS, EDRTSc}"
+},
+{
+  "Classifier_Name": "ED2OR_LR",
+  "Data_Source": "TRAUMA_TRIAGE",
+  "Algorithm": "Logistic Regression",
+  "Target": "ED2OR",
+  "Features": "{AGE, ED_RESP, ED_PULSE, ED_BP, ED_EYE, ED_VRB, ED_MTR, ED_GCS, Gender, ABG, EDBPRTS, EDRespRTS, EDGCSRTS, EDRTSc}"
+}
+
+],
+
+  "Constraints":[
+    {
+      "Comment": "",
+      "Relationship": "EarlyDeath:SUBSET:ISS16"
+    },
+
+    {
+      "Comment": "",
+      "Relationship": "ICUAdmit:SUBSET:ISS16"
+    },
+
+    {
+      "Comment": "",
+      "Relationship": "ED2OR:SUBSET:ISS16"
+    }
+  ]
+}

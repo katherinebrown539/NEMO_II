@@ -1,0 +1,69 @@
+{
+
+ "DATA_1":{
+	"DATA_NAME": "ORNL_Multiclass",
+	"DATA": "data/ORNL.data",
+	"SCHEMA": "data/ORNL.schema",
+	"CLASS": "truth",
+	"MULTI-CLASS": "True"
+	},
+
+ "DATA_2":{
+	"DATA_NAME": "IRIS",
+	"DATA": "data/iris.data",
+	"SCHEMA": "data/iris.schema",
+	"CLASS": "CLASS",
+	"MULTI-CLASS": "True"
+	},
+
+ "DATA_3":{
+	"DATA_NAME": "ORNL_Binary",
+	"DATA": "data/ornl_binary.data",
+	"SCHEMA": "data/ornl_binary.schema",
+	"CLASS": "major_organ",
+	"MULTI-CLASS": "False"
+    },
+ 
+ "DATA_4":{
+	"DATA_NAME": "SPECT",
+	"DATA": "data/SPECT.data",
+	"SCHEMA": "data/SPECT.schema",
+	"CLASS": "OVERALL_DIAGNOSIS",
+	"MULTI-CLASS": "False"
+ },
+ "DATA_5":{
+	"DATA_NAME": "SPECTF",
+	"DATA": "data/SPECTF.data",
+	"SCHEMA": "data/SPECTF.schema",
+	"CLASS": "OVERALL_DIAGNOSIS",
+	"MULTI-CLASS": "False"
+ },
+ "DATA_6":{
+	"DATA_NAME": "ORNL_BINARY_SUBSITES",
+	"DATA": "data/ORNL_BINARY_SUBSITES.data",
+	"SCHEMA": "data/ORNL_BINARY_SUBSITES.schema",
+	"CLASS": "c340",
+	"MULTI-CLASS": "False"
+ },
+ "DATA_7": {
+	"DATA_NAME": "TRAUMA",
+	"DATA": "data/trauma.data",
+	"SCHEMA": "data/trauma.schema",
+	"CLASS": "ISS16",
+	"MULTI-CLASS": "False"
+ },
+ "DATA_7": {
+	"DATA_NAME": "TEST",
+	"DATA": "data/test.data",
+	"SCHEMA": "data/test.schema",
+	"CLASS": "CLASS",
+	"MULTI-CLASS": "True"
+ },
+"DATA_8":{
+ "DATA_NAME": "TRAUMA_TRIAGE",
+ "DATA": "data/TRAUMA_TRIAGE.data",
+ "SCHEMA": "data/TRAUMA_TRIAGE.schema",
+ "CLASS": "ISS16",
+ "MULTI-CLASS": "False"
+}
+}

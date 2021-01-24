@@ -1,0 +1,38 @@
+{
+
+ "DATABASE": {
+    "HOST": "localhost",
+    "PORT": 3306,
+    "USER": "NEMO_II",
+    "PASS": "techYEAH",
+    "DB": "NEMO_KB"
+	},
+	
+ "DATA":{
+	"DATA": "data/ORNL.data",
+	"SCHEMA": "data/ORNL.schema",
+	"CLASS": "truth",
+	"MULTI-CLASS": "True"
+	},
+
+ "KNOWLEDGE_INTEGRATOR":{
+	"STACKER": "SVM",
+	"USE_FEATURES": "True",
+	"OTHER_PREDICTIONS": "None"
+	},
+ 
+ "SEMI_SUPERVISED":{
+	"SPLIT_METHOD": "kRandomSplit",
+	"k": 0.1
+ },
+ 
+ "EXPERIMENT":{
+	"ALGORITHMS": ["Neural Network", "Decision Tree", "SVM", "Random Forest"],
+	"EXPERIMENT": 3,
+	"NUM_FOLDS" : 10,
+	"RANDOM_SEED": 0,
+	"NUM_PARTITIONS": 3,
+	"METRIC": "Accuracy",
+	"OUTPUT_FILE": "results/experiment3.csv"
+ }
+}

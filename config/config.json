@@ -1,0 +1,26 @@
+{
+
+ "DATABASE": {
+    "HOST": "149.149.134.22",
+    "PORT": 3306,
+    "USER": "kebrown46",
+    "PASS": "4s5ATp4U",
+    "DB": "nemo_kb"
+	},
+	
+ "DATA":{
+	"DATA_JSON": "config/data.json",
+	"DATA_NAME": "ORNL_Multiclass",
+	"DATA": "data/ORNL.data",
+	"SCHEMA": "data/ORNL.schema",
+	"CLASS": "truth",
+	"MULTI-CLASS": "True"
+	},
+	
+ "KNOWLEDGE_INTEGRATOR":{
+	"STACKER": "Decision Tree",
+	"OTHER_PREDICTIONS": "None"
+	}
+	
+  
+}
