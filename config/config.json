@@ -1,18 +1,18 @@
 {
 
  "DATABASE": {
-    "HOST": "149.149.134.22",
+    "HOST": "",
     "PORT": 3306,
     "USER": "kebrown46",
-    "PASS": "4s5ATp4U",
+    "PASS": "",
     "DB": "nemo_kb"
 	},
 	
  "DATA":{
 	"DATA_JSON": "config/data.json",
-	"DATA_NAME": "ORNL_Multiclass",
-	"DATA": "data/ORNL.data",
-	"SCHEMA": "data/ORNL.schema",
+	"DATA_NAME": "Multiclass",
+	"DATA": "data/data.data",
+	"SCHEMA": "data/data.schema",
 	"CLASS": "truth",
 	"MULTI-CLASS": "True"
 	},
