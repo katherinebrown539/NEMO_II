@@ -20,7 +20,7 @@ class AutoKnowledgeIntegrator:
         self.level1_classifiers = level1_classifiers
         if stacking_classifier is None or stacking_classifier == "Logistic Regression":
             self.algorithm_name = "KI_LogisticRegression"
-            self.stacking_classifier = LogisticRegression(penalty = 'l1')
+            self.stacking_classifier = LogisticRegression(penalty = 'l1', C = 1)
         elif stacking_classifier == "Decision Tree":
             self.algorithm_name = "KI_DecisionTree"
             self.stacking_classifier = DecisionTreeClassifier()
@@ -122,7 +122,9 @@ class AutoKnowledgeIntegrator:
         predictions = pandas.DataFrame(predictions)
         predictions = predictions.transpose()
         predictions.columns = columns
-        predictions_x = pandas.concat(objs=[x,predictions], axis=1)
+        predictions_x = predictions
+        print(predictions_x)
+        #predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         predictions_y = y
 
         #rint("PREDICTIONS:")
@@ -133,7 +135,7 @@ class AutoKnowledgeIntegrator:
 
         #train stacker
         self.stacking_classifier.fit(predictions_x, predictions_y)
-        self.getFeatures( predictions_x)
+        self.getFeatures( predictions_x, predictions_y)
         #now predict holdout
         x, y = self.splitDataIntoXY(holdout)
         # #print("X for Holdout:")
@@ -151,7 +153,9 @@ class AutoKnowledgeIntegrator:
         holdout_predictions = pandas.DataFrame(holdout_predictions)
         holdout_predictions = holdout_predictions.transpose()
         holdout_predictions.columns = columns
-        predictions_x = pandas.concat(objs=[x,holdout_predictions], axis=1)
+        predictions_x = holdout_predictions
+        print(predictions_x)
+        #predictions_x = pandas.concat(objs=[x,holdout_predictions], axis=1)
         predictions_y = y
         #if self.name == "TRAUMA_TRIAGE_ISS16_KI_Decision Tree":
             #pandas.concat(objs=[predictions_x, predictions_y], axis=1).to_csv("test_data/iss16_ki_train"+str(val)+".csv")
@@ -174,11 +178,49 @@ class AutoKnowledgeIntegrator:
         #s#print(results)
         return results
 
-    def getFeatures(self, X):
+    def getFeatures(self, X, y):
+        import graphviz
+        from sklearn import tree
         rand_int = random.randint(0,100)
-        r = SelectFromModel(self.stacking_classifier, prefit=True)
-        r.transform(X)
-        numpy.savetxt("features/"+self.name+str(rand_int)+".csv", r, delimiter=",")
+        if self.algorithm_name in ['KI_LogisticRegression', 'KI_Ridge']:
+            print(X.columns.values)
+            print(len(X.columns.values))
+            print(self.stacking_classifier.coef_)
+            print(len(self.stacking_classifier.coef_))
+            df = pandas.DataFrame(data = { "input": X.columns.values, "coef": self.stacking_classifier.coef_[0] } )
+            df.to_csv(path_or_buf="features/"+self.name+str(rand_int)+".csv")
+        elif self.algorithm_name in ['KI_DecisionTree']:
+            dot_data = tree.export_graphviz(self.stacking_classifier, out_file=None, feature_names = X.columns.values)
+            graph = graphviz.Source(dot_data)
+            graph.render("features/"+self.name+str(rand_int)+".pdf")
+
+
+
+        # print(list(X.columns.values))
+        # to_return = {}
+        # for f in [chi2, f_classif, mutual_info_classif]:
+        #     r = SelectKBest(f, k = 10)
+        #     r_ = r.fit_transform(X, y)
+        #     new_features = []
+        #     support = r.get_support()
+        #     for bool, feature in zip(support, X.columns.values):
+        #         if bool:
+        #             new_features.append(feature)
+        #     if f == chi2:
+        #         to_return['Chi2'] = new_features
+        #     elif f == f_classif:
+        #         to_return['f_classif'] = new_features
+        #     elif f == mutual_info_classif:
+        #         to_return['mutual_info_classif'] = new_features
+        #
+        # w = csv.writer(open("features/"+self.name+str(rand_int)+".csv", "w"))
+        # for key, val in to_return.items():
+        #     w.writerow([key, val])
+
+        # print(new_features)
+        # r_ = pandas.DataFrame(r_)
+        # r_.columns = new_features
+        # r_.to_csv(path_or_buf="features/"+self.name+str(rand_int)+".csv")
 
 
     def fitLevel1Classifiers(self,x,y):
@@ -224,7 +266,8 @@ class AutoKnowledgeIntegrator:
         predictions = pandas.DataFrame(predictions)
         predictions = predictions.transpose()
         predictions.columns = columns
-        predictions_x = pandas.concat(objs=[x,predictions], axis=1)
+        predictions_x = predictions
+        #predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         predictions_y = y
         # print("in fit itself")
         # print(self.name)
@@ -254,7 +297,8 @@ class AutoKnowledgeIntegrator:
         #print("PREDICTIONS:")
         #print(predictions)
 
-        predictions_x = pandas.concat(objs=[x,predictions], axis=1)
+        predictions_x = predictions #pandas.concat(objs=[x,predictions], axis=1)
+        #predictions_x = pandas.concat(objs=[x,predictions], axis=1)
         stacking_predictions = self.stacking_classifier.predict(predictions_x)
         return stacking_predictions
 
